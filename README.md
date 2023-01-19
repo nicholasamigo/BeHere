@@ -4,7 +4,7 @@ BeHere is an application that encourages connectivity in real-world locations th
 ## Members
 Nicholas Amigo - Front-End 
 
-Aidan Persuad - Front-End
+Aidan Persaud - Front-End
 
 John Glass - Back-End
 
