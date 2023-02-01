@@ -9,13 +9,15 @@ import {HelloWorldService} from './hello-world.service';
 })
 export class AppComponent implements OnInit {
 
-  title:any;
+  title:string = "";
 
   constructor(private hw: HelloWorldService) {}
 
   ngOnInit() {
+    
+    // Read from getTitle which is on backend API. Convert back from JSON into a struct
     this.hw.getTitle()
-      .subscribe(data => this.title = data);
+      .subscribe(data => this.title = JSON.parse(JSON.stringify(data)).title);
     console.log(this.title);
   }
 

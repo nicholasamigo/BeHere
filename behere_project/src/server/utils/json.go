@@ -1,16 +1,26 @@
 package utils
 
 import (
-	"bytes"
 	"encoding/json"
 )
 
 func StructToJSON(data interface{}) ([]byte, error) {
-	buf := new(bytes.Buffer)
+	b, err := json.Marshal(data)
 
-	if err := json.NewEncoder(buf).Encode(data); err != nil {
+	if err != nil {
 		return nil, err
 	}
 
-	return buf.Bytes(), nil
+	return b, nil
+}
+
+/* json data, raw json data to be converted
+*  ptr* interface{}, pointer to a struct
+ */
+func JSONToStruct(jsondata []byte, structptr *interface{}) error {
+	err := json.Unmarshal(jsondata, structptr)
+	if err != nil {
+		return err
+	}
+	return nil
 }
