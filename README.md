@@ -18,6 +18,6 @@ CEN3031 - Group 63
 - Install gin utility: `go install github.com/codegangsta/gin@latest`
 
 ### Installation and Running
-1. Clone repository in your GOPATH directory. (Usually $Home/Go/src or C:\Users\yourname\go\src. Often, you will have to make the "src" folder.)
+1. Clone repository in your GOPATH directory. (Usually $Home/Go/src or C:\Users\yourname\go\src. Often, **you will have to make the "src" folder yourself**.)
 2. Navigate with terminal to `/behere_project` and run `./serve.sh` to launch Go server and Angular.
 
