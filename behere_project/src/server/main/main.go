@@ -11,6 +11,26 @@ import (
 	"github.com/rs/cors"
 )
 
+type Location struct {
+	x float32
+	y float32
+	z float32
+}
+
+type Person struct {
+	name string
+	age  int
+	loc  Location
+	// profile picture
+	// friends
+}
+
+type Event struct {
+	loc       Location
+	hosts     []Person
+	attendees []Person
+}
+
 func main() {
 	r := mux.NewRouter()
 
