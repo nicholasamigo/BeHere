@@ -7,13 +7,16 @@ import { HelloWorldService } from './hello-world.service';
 
 import { AppComponent } from './app.component';
 
+import { GmapModule } from './gmap/gmap.module';
+
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    GmapModule
   ],
   providers: [HelloWorldService],
   bootstrap: [AppComponent]

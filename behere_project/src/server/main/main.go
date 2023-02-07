@@ -54,7 +54,7 @@ func helloWorld(w http.ResponseWriter, r *http.Request) {
 	var data = struct {
 		Title string `json:"title"`
 	}{
-		Title: "Golang + Angular Starter Kit",
+		Title: "Golang Backend",
 	}
 
 	jsonBytes, err := utils.StructToJSON(data)
