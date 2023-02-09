@@ -16,8 +16,10 @@ CEN3031 - Group 63
 ### Prerequisites
 - Install [Node.js](https://nodejs.org/en/download/), [Angular](https://angular.io/guide/setup-local), and [Go](https://go.dev/doc/install)
 - Install gin utility: `go install github.com/codegangsta/gin@latest`
+- To run the go-sqlite server on Windows, you may need the mingw64bit version [download here](https://sourceforge.net/projects/mingw-w64/)
 
 ### Installation and Running
 1. Clone repository in your GOPATH directory. (Usually $Home/Go/src or C:\Users\yourname\go\src. Often, **you will have to make the "src" folder yourself**.)
-2. Navigate with terminal to `/behere_project` and run `./serve.sh` to launch Go server and Angular.
+2. Navigate with terminal to `/behere_project` run `npm install` to update the npm packages.
+3. `./serve.sh` to launch both the Go server and Angular.
 
