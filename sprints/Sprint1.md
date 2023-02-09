@@ -37,14 +37,21 @@ https://youtu.be/tp3eQJp5xPU
 		- I should have at least one sample event to click on and show data about.
 
 ## User Stories Intended to be Completed:
-Interactive map with events and geolocation
+5. Interactive map with events and geolocation
 	- As a novice user of BeHere, I want a detailed, interactive, and visually-appealing map so that I could find events I could be interested in near my location.
 		- The map should be navigable either by search or dragging.
 		- The map should center on the current location of the user.
 		- I should have at least one sample event to click on and show data about.
+4. Event database + REST API for getting/setting data
+	- As a Front-End developer of BeHere, I want a database to store events + an API from the Back-End so that I can pull event data and display on the map with event details.
+		- Database exists in Go, implemented with GORM.
+		- Database is populated with at least two “events”.
+		- Some REST API functionality that is able to get and set fields.
 
 ## User Stories we Completed:
-Although we did not fully complete the intended user story, we were able to complete two of the three criteria for it as visible on GitHub. The only remaining task is the implementation of a sample event that displays data. Our next step is to make the information display on the side of the map rather than the small window above the location.
+We completed a basic skeleton for our Event database (or Person database). We used the GORM wrapper to implement a sqlite server, and we implemented a simple datapath from the database file all the way to our front end (this is demo'd in backend video part 2). Thus, user story 4 is complete!
+
+Although we did not fully complete the front-end one (story 5), we were able to complete two of the three criteria for it as visible on GitHub Projects. The only remaining task is the implementation of a sample event that displays data. Our next step is to make the information display on the side of the map rather than the small window above the location.
 
 ## User Stories we are Unable to Complete:
-We were unable to complete the remaining user stories because they are scheduled for the near future. We will prioritize one user story at a time, and will go through the remaining soon.
+We were unable to complete the remaining user stories because they are scheduled for the near future. We will prioritize one-two user stories at a time, based on feasibility and dependencies needed.
