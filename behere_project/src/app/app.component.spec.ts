@@ -22,6 +22,12 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('behere-project');
   });
 
+  it(`should have another compenent title 'test'`, () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    expect(app.title).toEqual('test');
+  });
+
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
