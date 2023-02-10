@@ -1,14 +1,14 @@
 # BeHere
+This project is dedicated to the late **Erik Rushford**, the originator of this idea. Rest in peace.
+
 BeHere is an application that encourages connectivity in real-world locations through in-person events. The main user-interface is an interactive map on which upcoming events are overlayed. Users or groups can post time-sensitive events to a map, which other users can discover and attend. Furthermore, joining the map enables a group-specific chat in which attendees can talk before, during, or after events.
 
 ## Members
-Nicholas Amigo - Front-End 
+Nicholas Amigo
 
-Aidan Persaud - Front-End
+Aidan Persaud
 
-John Glass - Back-End
-
-Erik Rushford - Back-End
+John Glass
 
 CEN3031 - Group 63
 
