@@ -76,6 +76,8 @@ func main() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/hello-world", helloWorld)
+	//r.HandleFunc("/create-account", createAccount)
+	//r.HandleFunc("/delete-account", deleteAccount)
 
 	// Solves Cross Origin Access Issue
 	c := cors.New(cors.Options{
@@ -109,5 +111,16 @@ func helloWorld(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(jsonBytes)
+	return
+}
+
+func createAccount(n string, a uint) {
+	db.Create(&Person{ID: (sqlite.count("ID") + 1), Name: n, Age: a})
+	return
+}
+
+func deleteAccount(id uint) {
+	var person Person
+	db.delete(&person, id)
 	return
 }
