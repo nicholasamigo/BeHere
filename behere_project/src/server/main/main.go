@@ -36,6 +36,7 @@ type Event struct {
 
 // Global declaration of the database
 var db *gorm.DB
+var eventDB *gorm.DB
 
 func main() {
 	var err error
@@ -45,8 +46,14 @@ func main() {
 		panic("failed to connect database")
 	}
 
+	eventDB, err = gorm.Open(sqlite.Open("src/server/internal/events.db"), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect database")
+	}
+
 	// Migrate the schema
 	db.AutoMigrate(Person{})
+	eventDB.AutoMigrate(Event{})
 
 	// Create
 	var p1Loc Location
@@ -54,6 +61,39 @@ func main() {
 	p1Loc.y = 100.0
 	p1Loc.z = 50.0
 
+	var h1 Person
+	var a1 Person
+	var a2 Person
+	var a3 Person
+
+	h1.ID = 2
+	h1.Name = "Host"
+	h1.Age = 21
+	a1.ID = 3
+	a1.Name = "Attendee_1"
+	a1.Age = 22
+	a2.ID = 4
+	a2.Name = "Attendee_2"
+	a2.Age = 23
+	a3.ID = 5
+	a3.Name = "Attendee_3"
+	a3.Age = 31
+
+	var hostArray = []Person{h1}
+	var attendeeArray1 = []Person{a1, a2}
+	var attendeeArray2 = []Person{a3}
+
+	var e1 Event
+	e1.loc = p1Loc
+	e1.hosts = hostArray
+	e1.attendees = attendeeArray1
+	var e2 Event
+	e2.loc = p1Loc
+	e2.hosts = hostArray
+	e2.attendees = attendeeArray2
+
+	eventDB.Create(e1)
+	eventDB.Create(e2)
 	/*
 		db.Create(&Person{ID: 1, Name: "Golang w GORM Sqlite", Age: 20})
 		db.Create(&Person{ID: 2, Name: "aj", Age: 20})
@@ -114,13 +154,10 @@ func helloWorld(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func createAccount(n string, a uint) {
-	db.Create(&Person{ID: (sqlite.count("ID") + 1), Name: n, Age: a})
-	return
-}
-
-func deleteAccount(id uint) {
-	var person Person
-	db.delete(&person, id)
-	return
+func getEvents() []Event {
+	var p Person
+	// Get all records
+	result := db.Find(&p)
+	// SELECT * FROM users;
+	return result
 }
