@@ -23,3 +23,6 @@ CEN3031 - Group 63
 2. Navigate with terminal to `/behere_project` run `npm install` to update the npm packages.
 3. `./serve.sh` to launch both the Go server and Angular.
 
+### Running tests
+1. `cd behere_project`
+2. Open Cypress by running `npx cypress open`
