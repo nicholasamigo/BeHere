@@ -1,0 +1,8 @@
+.grid-layout-custom{
+    width: 100%;
+    height: 100%;
+}
+
+mat-grid-tile {
+    background: lightblue;
+}

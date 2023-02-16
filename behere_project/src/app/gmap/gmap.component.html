@@ -1,9 +1,20 @@
 <google-map height="700px"
             width="950px"
+            float="left"
             [center]="center"
             [zoom]="zoom"
             (mapClick)="addMarker($event)"
             (mapMousemove)="move($event)">
+
+    <style>
+        #container {
+            height: 100%;
+            display: flex;
+            justify-content: left;
+            align-items: left;
+        }
+    </style>
+    
     <map-marker #marker="mapMarker"
         *ngFor="let markerPosition of markerPositions"
         [position]="markerPosition"
@@ -13,3 +24,6 @@
 
 <div>Latitude: {{display.lat}}</div>
 <div>Longitude: {{display.lng}}</div>
+
+
+<!--             width="950px" -->
