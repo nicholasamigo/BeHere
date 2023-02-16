@@ -154,10 +154,38 @@ func helloWorld(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func getEvents() []Event {
+func getEvents(db *gorm.DB) []Event {
 	var p Person
 	// Get all records
 	result := db.Find(&p)
 	// SELECT * FROM users;
 	return result
+}
+
+func getEventsAroundLocation(db *gorm.DB, location Location, radius uint) []Event {
+	var p Person
+	result := db.Where("loc.x <= ? AND loc.y <= ?", radius, radius).Find(&p)
+	return result
+}
+
+func getEventByID(db *gorm.DB, id uint) Event {
+	var e Event
+	// Get all records
+	result := db.Find(&e, id)
+	// SELECT * FROM users;
+	return result
+}
+
+func createEvent(edb *gorm.DB, event Event) bool {
+	edb.Create(event)
+	return true
+}
+
+func editEvent(edb *gorm.DB, id int, event Event) bool {
+	var e Event
+	db.Model(&e).Find(id).Update("loc", event.loc)
+	db.Model(&e).Find(id).Update("hosts", event.hosts)
+	db.Model(&e).Find(id).Update("attendees", event.attendees)
+
+	return true
 }
