@@ -1,6 +1,21 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
 
+
+class DummyEvent {
+id: number;
+date: number;
+loc: google.maps.LatLngLiteral;
+name: string;
+
+  constructor(id: number, date: number, loc: google.maps.LatLngLiteral, name: string) {
+    this.id = id;
+    this.date = date;
+    this.loc = loc;
+    this.name = name;
+  }
+}
+
 @Component({
   selector: 'app-gmap',
   templateUrl: './gmap.component.html',
@@ -9,19 +24,29 @@ import {GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
 export class GmapComponent implements OnInit{
 
   // Allow reading of the child object, InfoWindow
-  @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow;
+  @ViewChild(MapInfoWindow, { static: false }) infoWindow: MapInfoWindow;
+  infoContent = '';
+
 
   // instantiate the GMap
   display: google.maps.LatLngLiteral = {lat: 24, lng: 12};
   center: google.maps.LatLngLiteral = {lat: 24, lng: 12};
   zoom = 12;
-  markerPositions: google.maps.LatLngLiteral[] = [];
+  // markerPositions: google.maps.LatLngLiteral[] = [];
+  eventList: DummyEvent[]=[];
 
   options: google.maps.MapOptions = {
     minZoom: 8
   };
 
   ngOnInit() {
+    /* load in events */
+    /* TODO - update this to interface with backend */
+    this.eventList = [];
+
+    let dummy = new DummyEvent(1, 24, { lat: 29.644954782334302, lng: -82.35255807676796}, "candyland");
+    this.eventList.push(dummy);
+    /* set position on user's location */
     navigator.geolocation.getCurrentPosition((position) => {
       this.center = {
         lat: position.coords.latitude,
@@ -31,12 +56,15 @@ export class GmapComponent implements OnInit{
   }
 
   addMarker(event: google.maps.MapMouseEvent) {
-    this.markerPositions.pop();
-    this.markerPositions.push(event.latLng.toJSON());
+    //this.markerPositions.pop();
+    //this.markerPositions.push(event.latLng.toJSON());
   }
 
-  openInfoWindow(marker: MapMarker) {
+  openInfoWindow(marker: MapMarker, content) {
+    this.infoContent = content;
     this.infoWindow.open(marker);
+    
+    // TODO - Put event details
   }
 
   move(event: google.maps.MapMouseEvent) {
