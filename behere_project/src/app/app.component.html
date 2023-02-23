@@ -460,18 +460,20 @@
   -->
   </div>
 
-  <mat-grid-list cols="2" rowHeight="1:2" class="grid-layout-custom">
-    <mat-grid-tile> 
-      <div>
-        <app-gmap></app-gmap>
-      </div>
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <div>
-        <app-gmap></app-gmap>
-      </div>
-    </mat-grid-tile>
-  </mat-grid-list>
+  <div class="flex-container">
+    <app-gmap class="app-gmap">
+    </app-gmap>
+
+    <div class="gmap-popup">
+
+      THIS IS WHERE THE INFO FOR MARKERS WILL GO!
+
+
+    <div>
+
+  </div>
+
+  
 
 
   <!-- Footer -->

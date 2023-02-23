@@ -6,8 +6,8 @@ body {
 
 /* use viewport-relative units to cover page fully */
 body {
-  height: 100%;
-  width: 100%;
+  height: 50%;
+  width: 50%;
 }
 
 /* include border and padding in element width and height */
@@ -17,7 +17,7 @@ body {
 
 /* full-sized  container that fills up the page */
 div {
-  height: 100%;
-  width: 100%;
+  height: 50%;
+  width: 50%;
 
 }
