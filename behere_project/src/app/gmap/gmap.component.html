@@ -1,15 +1,34 @@
-<google-map height="700px"
-            width="950px"
+<google-map height="70vh"
+            width="50vw"
+            float="left"
             [center]="center"
             [zoom]="zoom"
             (mapClick)="addMarker($event)"
             (mapMousemove)="move($event)">
+
+    <style>
+        #container {
+            width: 50%;
+        float: left;
+        padding: 20px;
+        border: 2px solid red;
+        }
+    </style>
+    
     <map-marker #marker="mapMarker"
-        *ngFor="let even_t of eventList"
+           *ngFor="let even_t of eventList"
         [position]="even_t.loc"
         (mapClick)="openInfoWindow(marker, even_t.name)"></map-marker>
     <map-info-window>{{infoContent}}</map-info-window>
 </google-map>
 
-<div>Latitude: {{display.lat}}</div>
-<div>Longitude: {{display.lng}}</div>
+    <div> 
+        <p> 
+            Latitude: {{display.lat}}         
+        </p> 
+        <p>
+            Longitude: {{display.lng}}
+        </p>
+    </div>
+
+</google-map>

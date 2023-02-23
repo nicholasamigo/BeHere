@@ -9,6 +9,9 @@ import { AppComponent } from './app.component';
 
 import { GmapModule } from './gmap/gmap.module';
 
+import {MatGridListModule} from '@angular/material/grid-list';
+
+
 @NgModule({
   declarations: [
     AppComponent
@@ -16,7 +19,8 @@ import { GmapModule } from './gmap/gmap.module';
   imports: [
     BrowserModule,
     HttpClientModule,
-    GmapModule
+    GmapModule,
+    MatGridListModule
   ],
   providers: [HelloWorldService],
   bootstrap: [AppComponent]
