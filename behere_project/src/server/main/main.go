@@ -50,6 +50,7 @@ func main() {
 	if err != nil {
 		panic("failed to connect database")
 	}
+	fmt.Print("World!")
 
 	// Migrate the schema
 	db.AutoMigrate(Person{})
