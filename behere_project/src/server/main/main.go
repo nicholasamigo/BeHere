@@ -100,6 +100,7 @@ func main() {
 	var p1 Person
 	db.First(&p1) // should find person with integer primary key, but just gets first record
 
+	//Testing all of the event helper functions
 	fmt.Print(p1.Name)
 	getEventsAroundLocation(db, e1.Lat, e1.Lng, 50)
 	fmt.Println("--------------------")
@@ -145,6 +146,7 @@ func main() {
 	log.Fatal(srv.ListenAndServe())
 }
 
+// Reference Function for RestFULLY interacting with frontend from backend
 func helloWorld(w http.ResponseWriter, r *http.Request) {
 
 	var p2 Person
@@ -166,6 +168,8 @@ func helloWorld(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+// Function that returns the Events within a specified square radius around a location
+// Returns a list of Events
 func getEventsAroundLocation(db *gorm.DB, Lat float32, Lng float32, radius float32) []Event {
 	var result []Event
 	//db.Where("((Lat <= ? AND Lat >= ?) OR (Lat >= ? AND Lat <= ?)) AND ((Lng <= ? AND Lng >= ?) OR (Lng >= ? AND Lng <= ?))", float32(math.Abs(float64(Lat)))+float32(math.Abs(float64(radius))), float32(math.Abs(float64(Lat)))-float32(math.Abs(float64(radius))), float32(math.Abs(float64(Lng)))+float32(math.Abs(float64(radius))),
@@ -179,21 +183,21 @@ func getEventsAroundLocation(db *gorm.DB, Lat float32, Lng float32, radius float
 
 	db.Where("lat >= ? AND lat <= ? AND lng >= ? AND lng <= ?", westBar, eastBar, southBar, northBar).Find(&result)
 	/*
-
-	 */
-	for i := 0; i < len(result); i++ {
-		fmt.Print(result[i].Lat)
-		fmt.Print("   ")
-		fmt.Print(result[i].Lng)
-		fmt.Print("|")
-		fmt.Print(result[i].Model.ID)
-		fmt.Print("|")
-		fmt.Println("--------------------")
-	}
+		for i := 0; i < len(result); i++ {
+			fmt.Print(result[i].Lat)
+			fmt.Print("   ")
+			fmt.Print(result[i].Lng)
+			fmt.Print("|")
+			fmt.Print(result[i].Model.ID)
+			fmt.Print("|")
+			fmt.Println("--------------------")
+		}
+	*/
 
 	return result
 }
 
+// Function that returns the ID of a passed in event
 func getEventID(db *gorm.DB, e Event) uint {
 	var result Event
 	db.Where("host_id = ? AND Name = ? AND Lat = ? AND Lng = ?", e.HostId, e.Name, e.Lat, e.Lng).Find(&result)
@@ -201,6 +205,8 @@ func getEventID(db *gorm.DB, e Event) uint {
 	return result.Model.ID
 }
 
+// Function that gets an Event by a given id
+// This id is the id within the database
 func getEventByID(db *gorm.DB, id uint) Event {
 	var result Event
 	// Get all records
@@ -210,11 +216,14 @@ func getEventByID(db *gorm.DB, id uint) Event {
 	return result
 }
 
+// Function that takes in a passed in event and creates it within the database
 func createEvent(edb *gorm.DB, event Event) bool {
 	edb.Create(&event)
 	return true
 }
 
+// Function that edits an event
+// Takes in an event id and replaces it with all the member attributes of a given event
 func editEvent(edb *gorm.DB, id uint, event Event) bool {
 	// Get all records
 	db.Model(&Event{}).Where("id = ?", id).Update("Name", event.Name)
