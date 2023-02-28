@@ -13,14 +13,8 @@ import (
 	"gorm.io/gorm"
 )
 
-type Location struct {
-	x float32
-	y float32
-	z float32
-}
-
 type Person struct {
-	ID   uint `gorm:"primarykey"`
+	gorm.Model
 	Name string
 	Age  uint
 	// loc  Location
@@ -28,78 +22,78 @@ type Person struct {
 	// friends
 }
 
+// FUCK OFF GORM
+// Make sure you USE CAPS or your shit won't show up
+// in the DB
 type Event struct {
-	loc       Location
-	hosts     []Person
-	attendees []Person
+	gorm.Model
+	Name   string
+	HostId uint
+	Lat    float32
+	Lng    float32
+}
+type AttendRelation struct {
+	gorm.Model
+	PID uint
+	EID uint
 }
 
 // Global declaration of the database
 var db *gorm.DB
-var eventDB *gorm.DB
 
 func main() {
 	var err error
 	/* Database initialization */
-	db, err = gorm.Open(sqlite.Open("src/server/internal/test.db"), &gorm.Config{})
+	db, err = gorm.Open(sqlite.Open("test2.db"), &gorm.Config{})
 	if err != nil {
+		println(err)
 		panic("failed to connect database")
 	}
-
-	eventDB, err = gorm.Open(sqlite.Open("src/server/internal/events.db"), &gorm.Config{})
-	if err != nil {
-		panic("failed to connect database")
-	}
-	fmt.Print("World!")
 
 	// Migrate the schema
-	db.AutoMigrate(Person{})
-	eventDB.AutoMigrate(Event{})
+	db.AutoMigrate(Person{}, Event{}, AttendRelation{})
 
 	// Create
-	var p1Loc Location
-	p1Loc.x = 50.0
-	p1Loc.y = 100.0
-	p1Loc.z = 50.0
 
 	var h1 Person
 	var a1 Person
 	var a2 Person
 	var a3 Person
 
-	h1.ID = 2
 	h1.Name = "Host"
 	h1.Age = 21
-	a1.ID = 3
 	a1.Name = "Attendee_1"
 	a1.Age = 22
-	a2.ID = 4
 	a2.Name = "Attendee_2"
 	a2.Age = 23
-	a3.ID = 5
 	a3.Name = "Attendee_3"
 	a3.Age = 31
 
-	var hostArray = []Person{h1}
-	var attendeeArray1 = []Person{a1, a2}
-	var attendeeArray2 = []Person{a3}
+	/*
+	   var hostArray = []Person{h1}
+	   var attendeeArray1 = []Person{a1, a2}
+	   var attendeeArray2 = []Person{a3}
+	*/
 
 	var e1 Event
-	e1.loc = p1Loc
-	e1.hosts = hostArray
-	e1.attendees = attendeeArray1
-	var e2 Event
-	e2.loc = p1Loc
-	e2.hosts = hostArray
-	e2.attendees = attendeeArray2
+	e1.Name = "metro ping"
+	e1.Lat, e1.Lng = 29.633665697496742, -82.37285317141043
+	e1.HostId = 1
 
-	eventDB.Create(e1)
-	eventDB.Create(e2)
+	var e2 Event
+	e2.Lat, e2.Lng = 29.63681751889846, -82.37009641100245
+	e2.Name = "idek"
+	e2.HostId = 2
+
+	db.Create(&Event{Name: "wtf", Lat: 29.633665697496742, Lng: -82.37285317141043, HostId: 4})
+	db.Create(&e1)
+	db.Create(&e2)
+
+	db.Create(&Person{Name: "Golang w GORM Sqlite", Age: 20})
 	/*
-		db.Create(&Person{ID: 1, Name: "Golang w GORM Sqlite", Age: 20})
-		db.Create(&Person{ID: 2, Name: "aj", Age: 20})
-		db.Create(&Person{ID: 3, Name: "john", Age: 19})
-		db.Create(&Person{ID: 4, Name: "Nick", Age: 21})
+	   db.Create(&Person{ID: 2, Name: "aj", Age: 20})
+	   db.Create(&Person{ID: 3, Name: "john", Age: 19})
+	   db.Create(&Person{ID: 4, Name: "Nick", Age: 21})
 	*/
 
 	// Read
@@ -107,6 +101,7 @@ func main() {
 	db.First(&p1) // should find person with integer primary key, but just gets first record
 
 	fmt.Print(p1.Name)
+	getEventsAroundLocation(db, e1.Lat, e1.Lng, 50)
 
 	// Update - update person's name
 	//db.Model(&p1).Update("name", "John")
@@ -155,24 +150,24 @@ func helloWorld(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func getEvents(db *gorm.DB) []Event {
-	var p Person
-	// Get all records
-	result := db.Find(&p)
-	// SELECT * FROM users;
-	return result
-}
-
-func getEventsAroundLocation(db *gorm.DB, location Location, radius uint) []Event {
-	var p Person
-	result := db.Where("loc.x <= ? AND loc.y <= ?", radius, radius).Find(&p)
+func getEventsAroundLocation(db *gorm.DB, Lat float32, Lng float32, radius uint) []Event {
+	var result []Event
+	db.Where("Lat <= ? AND Lng <= ?", Lat, Lng).Find(&result)
+	/*
+	   for i := 0; i < len(result); i++ {
+	       fmt.Print(result[i].Lat)
+	       fmt.Print("   ")
+	       fmt.Print(result[i].Lng)
+	   }
+	*/
 	return result
 }
 
 func getEventByID(db *gorm.DB, id uint) Event {
-	var e Event
+	var result Event
 	// Get all records
-	result := db.Find(&e, id)
+	db.Find(&result, id)
+	fmt.Print(result.Name)
 	// SELECT * FROM users;
 	return result
 }
@@ -184,9 +179,7 @@ func createEvent(edb *gorm.DB, event Event) bool {
 
 func editEvent(edb *gorm.DB, id int, event Event) bool {
 	var e Event
-	db.Model(&e).Find(id).Update("loc", event.loc)
-	db.Model(&e).Find(id).Update("hosts", event.hosts)
-	db.Model(&e).Find(id).Update("attendees", event.attendees)
-
+	db.Model(&e).Find(id).Update("Name", "testEdit")
+	db.Model(&e).Find(id).Update("Lat", 1.5)
 	return true
 }
