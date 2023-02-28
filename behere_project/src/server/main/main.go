@@ -102,6 +102,21 @@ func main() {
 
 	fmt.Print(p1.Name)
 	getEventsAroundLocation(db, e1.Lat, e1.Lng, 50)
+	fmt.Printf("--------------------")
+	var e3 Event
+	e3.Lat, e3.Lng = 1600, -800
+	e3.Name = "CreateEvent"
+	e3.HostId = 2
+	createEvent(db, e3)
+	getEventsAroundLocation(db, e3.Lat, e3.Lng, 50)
+	fmt.Printf("--------------------")
+	ed_ID := getEventID(db, e3)
+	e3.Lat, e3.Lng = 9000, 9000
+	e3.Name = "EDITED_EVENT"
+	e3.HostId = 3
+	editEvent(db, ed_ID, e3)
+	fmt.Printf("--------------------")
+	getEventsAroundLocation(db, e3.Lat, e3.Lng, 50)
 
 	// Update - update person's name
 	//db.Model(&p1).Update("name", "John")
@@ -154,32 +169,49 @@ func getEventsAroundLocation(db *gorm.DB, Lat float32, Lng float32, radius uint)
 	var result []Event
 	db.Where("Lat <= ? AND Lng <= ?", Lat, Lng).Find(&result)
 	/*
-	   for i := 0; i < len(result); i++ {
-	       fmt.Print(result[i].Lat)
-	       fmt.Print("   ")
-	       fmt.Print(result[i].Lng)
-	   }
+		for i := 0; i < len(result); i++ {
+			fmt.Print(result[i].Lat)
+			fmt.Print("   ")
+			fmt.Print(result[i].Lng)
+			fmt.Print("|")
+			fmt.Print(result[i].Model.ID)
+			fmt.Print("|")
+		}
 	*/
+
 	return result
+}
+
+func getEventID(db *gorm.DB, e Event) uint {
+	var result Event
+	db.Where("HostId = ? AND Name = ? AND Lat = ? AND Lng = ?", e.HostId, e.Name, e.Lat, e.Lng).Find(&result)
+
+	return result.Model.ID
 }
 
 func getEventByID(db *gorm.DB, id uint) Event {
 	var result Event
 	// Get all records
 	db.Find(&result, id)
-	fmt.Print(result.Name)
+	//fmt.Print(result.Name)
 	// SELECT * FROM users;
 	return result
 }
 
 func createEvent(edb *gorm.DB, event Event) bool {
-	edb.Create(event)
+	edb.Create(&event)
 	return true
 }
 
-func editEvent(edb *gorm.DB, id int, event Event) bool {
-	var e Event
-	db.Model(&e).Find(id).Update("Name", "testEdit")
-	db.Model(&e).Find(id).Update("Lat", 1.5)
+func editEvent(edb *gorm.DB, id uint, event Event) bool {
+	var result Event
+	// Get all records
+	db.Find(&result, id)
+
+	db.Find(id).Update("Name", event.Name)
+	db.Find(id).Update("Lat", event.HostId)
+	db.Find(id).Update("Lat", event.Lat)
+	db.Find(id).Update("Lng", event.Lng)
+
 	return true
 }
