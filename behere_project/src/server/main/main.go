@@ -102,21 +102,22 @@ func main() {
 
 	fmt.Print(p1.Name)
 	getEventsAroundLocation(db, e1.Lat, e1.Lng, 50)
-	fmt.Printf("--------------------")
+	fmt.Println("--------------------")
 	var e3 Event
 	e3.Lat, e3.Lng = 1600, -800
 	e3.Name = "CreateEvent"
 	e3.HostId = 2
 	createEvent(db, e3)
 	getEventsAroundLocation(db, e3.Lat, e3.Lng, 50)
-	fmt.Printf("--------------------")
+	fmt.Println("--------------------")
 	ed_ID := getEventID(db, e3)
 	e3.Lat, e3.Lng = 9000, 9000
 	e3.Name = "EDITED_EVENT"
 	e3.HostId = 3
 	editEvent(db, ed_ID, e3)
-	fmt.Printf("--------------------")
+	fmt.Println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
 	getEventsAroundLocation(db, e3.Lat, e3.Lng, 50)
+	fmt.Println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
 
 	// Update - update person's name
 	//db.Model(&p1).Update("name", "John")
@@ -165,26 +166,37 @@ func helloWorld(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func getEventsAroundLocation(db *gorm.DB, Lat float32, Lng float32, radius uint) []Event {
+func getEventsAroundLocation(db *gorm.DB, Lat float32, Lng float32, radius float32) []Event {
 	var result []Event
-	db.Where("Lat <= ? AND Lng <= ?", Lat, Lng).Find(&result)
+	//db.Where("((Lat <= ? AND Lat >= ?) OR (Lat >= ? AND Lat <= ?)) AND ((Lng <= ? AND Lng >= ?) OR (Lng >= ? AND Lng <= ?))", float32(math.Abs(float64(Lat)))+float32(math.Abs(float64(radius))), float32(math.Abs(float64(Lat)))-float32(math.Abs(float64(radius))), float32(math.Abs(float64(Lng)))+float32(math.Abs(float64(radius))),
+	//	float32(math.Abs(float64(Lng)))+float32(math.Abs(float64(radius))), float32(math.Abs(float64(Lat)))+float32(math.Abs(float64(radius))), float32(math.Abs(float64(Lat)))-float32(math.Abs(float64(radius))), float32(math.Abs(float64(Lng)))+float32(math.Abs(float64(radius))),
+	//	float32(math.Abs(float64(Lng)))+float32(math.Abs(float64(radius)))).Find(&result)
+
+	eastBar := Lat + radius
+	westBar := Lat - radius
+	northBar := Lng + radius
+	southBar := Lng - radius
+
+	db.Where("lat >= ? AND lat <= ? AND lng >= ? AND lng <= ?", westBar, eastBar, southBar, northBar).Find(&result)
 	/*
-		for i := 0; i < len(result); i++ {
-			fmt.Print(result[i].Lat)
-			fmt.Print("   ")
-			fmt.Print(result[i].Lng)
-			fmt.Print("|")
-			fmt.Print(result[i].Model.ID)
-			fmt.Print("|")
-		}
-	*/
+
+	 */
+	for i := 0; i < len(result); i++ {
+		fmt.Print(result[i].Lat)
+		fmt.Print("   ")
+		fmt.Print(result[i].Lng)
+		fmt.Print("|")
+		fmt.Print(result[i].Model.ID)
+		fmt.Print("|")
+		fmt.Println("--------------------")
+	}
 
 	return result
 }
 
 func getEventID(db *gorm.DB, e Event) uint {
 	var result Event
-	db.Where("HostId = ? AND Name = ? AND Lat = ? AND Lng = ?", e.HostId, e.Name, e.Lat, e.Lng).Find(&result)
+	db.Where("host_id = ? AND Name = ? AND Lat = ? AND Lng = ?", e.HostId, e.Name, e.Lat, e.Lng).Find(&result)
 
 	return result.Model.ID
 }
@@ -204,14 +216,11 @@ func createEvent(edb *gorm.DB, event Event) bool {
 }
 
 func editEvent(edb *gorm.DB, id uint, event Event) bool {
-	var result Event
 	// Get all records
-	db.Find(&result, id)
-
-	db.Find(id).Update("Name", event.Name)
-	db.Find(id).Update("Lat", event.HostId)
-	db.Find(id).Update("Lat", event.Lat)
-	db.Find(id).Update("Lng", event.Lng)
+	db.Model(&Event{}).Where("id = ?", id).Update("Name", event.Name)
+	db.Model(&Event{}).Where("id = ?", id).Update("host_id", event.HostId)
+	db.Model(&Event{}).Where("id = ?", id).Update("Lat", event.Lat)
+	db.Model(&Event{}).Where("id = ?", id).Update("Lng", event.Lng)
 
 	return true
 }
