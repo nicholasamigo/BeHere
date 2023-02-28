@@ -2,17 +2,19 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import {GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
 
 
-class DummyEvent {
+class DummyEvent { 
 id: number;
-date: number;
+title: string;
 loc: google.maps.LatLngLiteral;
-name: string;
+locationName: string;
+time: number;
 
-  constructor(id: number, date: number, loc: google.maps.LatLngLiteral, name: string) {
+  constructor(id: number, title: string, loc: google.maps.LatLngLiteral, locationName: string, time: number) {
     this.id = id;
-    this.date = date;
+    this.title = title;
     this.loc = loc;
-    this.name = name;
+    this.locationName = locationName;
+    this.time = time;
   }
 }
 
@@ -26,6 +28,9 @@ export class GmapComponent implements OnInit{
   // Allow reading of the child object, InfoWindow
   @ViewChild(MapInfoWindow, { static: false }) infoWindow: MapInfoWindow;
   infoContent = '';
+
+  // Fix this eventually. Works but can lead to memory leaks. Need to figure out a way to create events on initialization.
+  currevent = new DummyEvent(0, "", {lat: 0, lng: 0}, "", 0);
 
 
   // instantiate the GMap
@@ -42,10 +47,20 @@ export class GmapComponent implements OnInit{
   ngOnInit() {
     /* load in events */
     /* TODO - update this to interface with backend */
+
     this.eventList = [];
 
-    let dummy = new DummyEvent(1, 24, { lat: 29.644954782334302, lng: -82.35255807676796}, "candyland");
-    this.eventList.push(dummy);
+    // Test dummy events
+    let dummy1 = new DummyEvent(1, "Party at AJs!", { lat: 29.644954782334302, lng: -82.35255807676796}, "AJ's House", 7);
+
+    let dummy2 = new DummyEvent(2, "Dinner at Johns", { lat: 29.669247750220627, lng: -82.33697355656128}, "John's Apartment", 5);
+
+    let dummy3 = new DummyEvent(3, "Pool Night at Nicks", {lat: 29.685355319870283, lng: -82.38572538761596}, "Nick's Condo", 8);
+
+    this.eventList.push(dummy1);
+    this.eventList.push(dummy2);
+    this.eventList.push(dummy3);
+
     /* set position on user's location */
     navigator.geolocation.getCurrentPosition((position) => {
       this.center = {
@@ -60,11 +75,11 @@ export class GmapComponent implements OnInit{
     //this.markerPositions.push(event.latLng.toJSON());
   }
 
-  openInfoWindow(marker: MapMarker, content) {
-    this.infoContent = content;
-    this.infoWindow.open(marker);
+  openInfoWindow(marker: MapMarker, currevent : DummyEvent) {
+    // this.infoContent = currevent;
+    // this.infoWindow.open(marker);
+    this.currevent = currevent;
     
-    // TODO - Put event details
   }
 
   move(event: google.maps.MapMouseEvent) {

@@ -17,7 +17,22 @@ body {
 
 /* full-sized  container that fills up the page */
 div {
-  height: 50%;
-  width: 50%;
+  height: 100%;
+  width: 100%;
 
 }
+
+
+.flex-container {
+  display: flex;
+}
+
+.MAP {
+  flex: 1;
+}
+
+.MAP:gmap-popup {
+  margin-right: 20px;
+}
+
+

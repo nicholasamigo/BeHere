@@ -1,3 +1,7 @@
+<div class="flex-container">
+
+<div class="MAP">
+
 <google-map height="70vh"
             width="50vw"
             float="left"
@@ -11,24 +15,47 @@
             width: 50%;
         float: left;
         padding: 20px;
-        border: 2px solid red;
         }
     </style>
     
     <map-marker #marker="mapMarker"
            *ngFor="let even_t of eventList"
         [position]="even_t.loc"
-        (mapClick)="openInfoWindow(marker, even_t.name)"></map-marker>
-    <map-info-window>{{infoContent}}</map-info-window>
+        (mapClick)="openInfoWindow(marker, even_t)"></map-marker>
+    <map-info-window></map-info-window>
+
 </google-map>
 
-    <div> 
-        <p> 
-            Latitude: {{display.lat}}         
-        </p> 
+<p> 
+    Latitude: {{display.lat}}         
+</p> 
+<p>
+    Longitude: {{display.lng}}
+</p>
+
+</div>
+
+    <div class="gmap-popup">
+        
         <p>
-            Longitude: {{display.lng}}
+            ID: {{currevent.id}} 
         </p>
+        <p>
+            Title: {{currevent.title}}
+        </p>
+        <p>
+            Latitude: {{currevent.loc.lat}}
+        </p>
+        <p>
+            Longitude: {{currevent.loc.lng}}
+        </p>
+        <p>
+            Location Name: {{currevent.locationName}}
+        </p>
+        <p>
+            Time: {{currevent.time}}
+        </p>
+
     </div>
 
-</google-map>
+</div>
