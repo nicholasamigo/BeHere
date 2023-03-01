@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
+import { EventsMiddlemanService } from './events-middleman.service';
 
 
 class DummyEvent { 
@@ -44,6 +45,11 @@ export class GmapComponent implements OnInit{
     minZoom: 8
   };
 
+  // This component has full access to the EMS services
+  // Which handle all pulls from the Event DB
+  constructor(private ems: EventsMiddlemanService) {}
+
+
   ngOnInit() {
     /* load in events */
     /* TODO - update this to interface with backend */
@@ -80,6 +86,10 @@ export class GmapComponent implements OnInit{
     // this.infoWindow.open(marker);
     this.currevent = currevent;
     
+    // TODO NEXT - Use getEventsAroundLocation
+    // to refresh the map using dummy data
+    
+
   }
 
   move(event: google.maps.MapMouseEvent) {
