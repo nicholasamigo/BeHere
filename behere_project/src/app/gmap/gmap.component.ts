@@ -37,7 +37,7 @@ export class GmapComponent implements OnInit{
   infoContent = '';
 
   // Fix this eventually. Works but can lead to memory leaks. Need to figure out a way to create events on initialization.
-  currevent = new Event_t(0, "", 0, 0, 0);
+  currevent = new Event_t(0, "NA", 0, 0, 0);
 
 
   // instantiate the GMap
@@ -52,6 +52,10 @@ export class GmapComponent implements OnInit{
   options: google.maps.MapOptions = {
     minZoom: 8
   };
+
+  markerOptions: google.maps.MarkerOptions = {
+    optimized: false
+  }
 
   // This component has full access to the EMS services
   // Which handle all requests from the Event DB
