@@ -7,8 +7,10 @@
             float="left"
             [center]="center"
             [zoom]="zoom"
+            [options]="options"
             (mapClick)="addMarker($event)"
-            (mapMousemove)="move($event)">
+            (mapMousemove)="move($event)"
+            (boundsChanged)="updateEventList()">
 
     <style>
         #container {
@@ -19,9 +21,9 @@
     </style>
     
     <map-marker #marker="mapMarker"
-           *ngFor="let even_t of eventList"
-        [position]="even_t.loc"
-        (mapClick)="openInfoWindow(marker, even_t)"></map-marker>
+           *ngFor="let event_t of eventList"
+        [position]="{'lat': event_t.lat, 'lng': event_t.lng}"
+        (mapClick)="openInfoWindow(marker, event_t)"></map-marker>
     <map-info-window></map-info-window>
 
 </google-map>
@@ -37,24 +39,17 @@
 
     <div class="gmap-popup">
         
-        <p>
-            ID: {{currevent.id}} 
-        </p>
-        <p>
-            Title: {{currevent.title}}
-        </p>
-        <p>
-            Latitude: {{currevent.loc.lat}}
-        </p>
-        <p>
-            Longitude: {{currevent.loc.lng}}
-        </p>
-        <p>
+        <h1>Title: {{currevent.name}}</h1>
+        <p>ID: {{currevent.id}}</p>
+        <p>Latitude: {{currevent.lat}}</p>
+        <p>Longitude: {{currevent.lng}}</p>
+        <p>HostID: {{currevent.hostid}}</p>
+        <!-- <p>
             Location Name: {{currevent.locationName}}
         </p>
         <p>
             Time: {{currevent.time}}
-        </p>
+        </p> -->
 
     </div>
 
