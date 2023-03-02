@@ -1,3 +1,27 @@
+# Sprint 2
+
+## Demo Links:
+[Front End Demo with Nick](https://youtu.be/HLbSuMAy_90)
+[Backend Demo with John & Aidan](https://youtu.be/nb6d4ux4yf4)
+[Cypress Demo with Aidan](https://youtu.be/q9b-2o0F7MM)
+
+# Major Sprint Accomplishments
+- Created Sidebar to accompany the Google Map. Updates when Gmaps markers are clicked on. Issue #17
+- Developed first REST API http request handler in main.go. Issue #16
+- Populated our event database with a few local Gainesville locations for E2E testing. Issue #26
+- Developed scheme to lazy load in events from the backend depending on GoogleMaps viewport. Only "local" events will be loaded.
+- Implemented a few E2E tests in Cypress. Issue #20
+
+
+# Unit Tests
+## Front End
+- Check that default text is set when a map marker has not been clicked on (Passing)
+- Check that default text updates after map marker has been clicked (Failing)
+
+# Backend API
+- Test every database query function wrapper.
+- All tests located in main.go under `john_testing_func()`
+
 struct Person - struct for a user's account representing them. It is an implementation of a gorm.Model that contains their name, and age.
 
 ```
