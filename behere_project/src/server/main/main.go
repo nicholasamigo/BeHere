@@ -55,6 +55,45 @@ func main() {
 	// Migrate the schema
 	db.AutoMigrate(Person{}, Event{}, AttendRelation{})
 
+	// Testing here. Comment these out when running the server
+	//john_test_funcs()
+	//aj_populate()
+
+	/* Server initializaiton */
+	r := mux.NewRouter()
+
+	r.HandleFunc("/hello-world", helloWorld)
+	r.HandleFunc("/getEventsAroundLocation", restGetEventsAroundLocation)
+	//r.HandleFunc("/create-account", createAccount)
+	//r.HandleFunc("/delete-account", deleteAccount)
+
+	// Solves Cross Origin Access Issue
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"http://localhost:4200"},
+	})
+	handler := c.Handler(r)
+
+	srv := &http.Server{
+		Handler: handler,
+		Addr:    ":" + os.Getenv("PORT"),
+	}
+	//fmt.Print(srv.Addr)
+	log.Fatal(srv.ListenAndServe())
+}
+
+func aj_populate() {
+	// let dummy1 = new Event_t(1, "Party at AJs!", 1, 29.644954782334302, -82.35255807676796);
+	// let dummy2 = new Event_t(2, "Dinner at Johns", 1, 29.669247750220627, -82.33697355656128);
+	// let dummy3 = new Event_t(3, "Pool Night at Nicks", 1, 29.685355319870283, -82.38572538761596);
+	e1 := Event{Name: "Party at AJs!", HostId: 1, Lat: 29.644954782334302, Lng: -82.35255807676796}
+	e2 := Event{Name: "Dinner at Johns", HostId: 1, Lat: 29.669247750220627, Lng: -82.33697355656128}
+	e3 := Event{Name: "Pool Night at Nicks", HostId: 1, Lat: 29.685355319870283, Lng: -82.38572538761596}
+	db.Create(&e1)
+	db.Create(&e2)
+	db.Create(&e3)
+}
+
+func john_test_funcs() {
 	// Create
 
 	var h1 Person
@@ -72,9 +111,9 @@ func main() {
 	a3.Age = 31
 
 	/*
-	   var hostArray = []Person{h1}
-	   var attendeeArray1 = []Person{a1, a2}
-	   var attendeeArray2 = []Person{a3}
+		var hostArray = []Person{h1}
+		var attendeeArray1 = []Person{a1, a2}
+		var attendeeArray2 = []Person{a3}
 	*/
 
 	var e1 Event
@@ -93,17 +132,17 @@ func main() {
 
 	db.Create(&Person{Name: "Golang w GORM Sqlite", Age: 20})
 	/*
-	   db.Create(&Person{ID: 2, Name: "aj", Age: 20})
-	   db.Create(&Person{ID: 3, Name: "john", Age: 19})
-	   db.Create(&Person{ID: 4, Name: "Nick", Age: 21})
+		db.Create(&Person{ID: 2, Name: "aj", Age: 20})
+		db.Create(&Person{ID: 3, Name: "john", Age: 19})
+		db.Create(&Person{ID: 4, Name: "Nick", Age: 21})
 	*/
 
 	// Read
 	var p1 Person
 	db.First(&p1) // should find person with integer primary key, but just gets first record
+	fmt.Print(p1.Name)
 
 	//Testing all of the event helper functions
-	fmt.Print(p1.Name)
 	getEventsAroundLocation(db, e1.Lat, e1.Lng, 50)
 	fmt.Println("--------------------")
 	var e3 Event
@@ -127,25 +166,6 @@ func main() {
 	// Delete - delete product
 	//db.Delete(&p1, 1)
 
-	/* Server initializaiton */
-	r := mux.NewRouter()
-
-	r.HandleFunc("/hello-world", helloWorld)
-	//r.HandleFunc("/create-account", createAccount)
-	//r.HandleFunc("/delete-account", deleteAccount)
-
-	// Solves Cross Origin Access Issue
-	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"http://localhost:4200"},
-	})
-	handler := c.Handler(r)
-
-	srv := &http.Server{
-		Handler: handler,
-		Addr:    ":" + os.Getenv("PORT"),
-	}
-	//fmt.Print(srv.Addr)
-	log.Fatal(srv.ListenAndServe())
 }
 
 // Reference Function for RestFULLY interacting with frontend from backend
@@ -173,17 +193,35 @@ func helloWorld(w http.ResponseWriter, r *http.Request) {
 // Reference Function for RestFULLY interacting with frontend from backend
 func restGetEventsAroundLocation(w http.ResponseWriter, r *http.Request) {
 	// extract query params from URL
-	vars := mux.Vars(r)
-	lat, _ := strconv.ParseFloat(vars["lat"])
-	lng, _ := strconv.ParseFloat(vars["lng"])
-	radius, _ := strconv.ParseFloat(vars["radius"])
+	query := r.URL.Query()
+	lat := query.Get("lat")
+	lng := query.Get("lng")
+	radius := query.Get("radius")
+
+	// Convert parameter values to appropriate types
+	latValue, err := strconv.ParseFloat(lat, 64)
+	if err != nil {
+		http.Error(w, "Invalid 'lat' parameter", http.StatusBadRequest)
+		return
+	}
+	lngValue, err := strconv.ParseFloat(lng, 64)
+	if err != nil {
+		http.Error(w, "Invalid 'lng' parameter", http.StatusBadRequest)
+		return
+	}
+	radiusValue, err := strconv.ParseFloat(radius, 64)
+	if err != nil {
+		http.Error(w, "Invalid 'radius' parameter", http.StatusBadRequest)
+		return
+	}
+
+	fmt.Println("Received", latValue, lngValue, radiusValue)
 
 	// call DB func to get relevant events
-	eventlist := getEventsAroundLocation(db, lat, lng, radius)
+	eventlist := getEventsAroundLocation(db, latValue, lngValue, radiusValue)
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(eventlist)
-	return
 }
 
 // Function that returns the Events within a specified square radius around a location
@@ -211,6 +249,15 @@ func getEventsAroundLocation(db *gorm.DB, Lat float64, Lng float64, radius float
 			fmt.Println("--------------------")
 		}
 	*/
+
+	return result
+}
+
+// Function that returns the Events within a specified square radius around a location
+// Returns a list of Events
+func getEventsWithinBounds(db *gorm.DB, swLat float64, swLng float64, neLat float64, neLng float64) []Event {
+	var result []Event
+	db.Where("lat >= ? AND lat <= ? AND lng >= ? AND lng <= ?", swLat, neLat, swLng, neLng).Find(&result)
 
 	return result
 }
