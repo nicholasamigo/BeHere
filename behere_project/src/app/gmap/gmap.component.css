@@ -1,0 +1,38 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* use viewport-relative units to cover page fully */
+body {
+  height: 50%;
+  width: 50%;
+}
+
+/* include border and padding in element width and height */
+* {
+  box-sizing: border-box;
+}
+
+/* full-sized  container that fills up the page */
+div {
+  height: 100%;
+  width: 100%;
+
+}
+
+
+.flex-container {
+  display: flex;
+}
+
+.MAP {
+  flex: 1;
+}
+
+.MAP:gmap-popup {
+  margin-right: 20px;
+}
+
+
