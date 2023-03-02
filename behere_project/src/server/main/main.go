@@ -1,10 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"utils"
 
 	"github.com/gorilla/mux"
@@ -29,8 +31,8 @@ type Event struct {
 	gorm.Model
 	Name   string
 	HostId uint
-	Lat    float32
-	Lng    float32
+	Lat    float64
+	Lng    float64
 }
 type AttendRelation struct {
 	gorm.Model
@@ -168,9 +170,25 @@ func helloWorld(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+// Reference Function for RestFULLY interacting with frontend from backend
+func restGetEventsAroundLocation(w http.ResponseWriter, r *http.Request) {
+	// extract query params from URL
+	vars := mux.Vars(r)
+	lat, _ := strconv.ParseFloat(vars["lat"])
+	lng, _ := strconv.ParseFloat(vars["lng"])
+	radius, _ := strconv.ParseFloat(vars["radius"])
+
+	// call DB func to get relevant events
+	eventlist := getEventsAroundLocation(db, lat, lng, radius)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(eventlist)
+	return
+}
+
 // Function that returns the Events within a specified square radius around a location
 // Returns a list of Events
-func getEventsAroundLocation(db *gorm.DB, Lat float32, Lng float32, radius float32) []Event {
+func getEventsAroundLocation(db *gorm.DB, Lat float64, Lng float64, radius float64) []Event {
 	var result []Event
 	//db.Where("((Lat <= ? AND Lat >= ?) OR (Lat >= ? AND Lat <= ?)) AND ((Lng <= ? AND Lng >= ?) OR (Lng >= ? AND Lng <= ?))", float32(math.Abs(float64(Lat)))+float32(math.Abs(float64(radius))), float32(math.Abs(float64(Lat)))-float32(math.Abs(float64(radius))), float32(math.Abs(float64(Lng)))+float32(math.Abs(float64(radius))),
 	//	float32(math.Abs(float64(Lng)))+float32(math.Abs(float64(radius))), float32(math.Abs(float64(Lat)))+float32(math.Abs(float64(radius))), float32(math.Abs(float64(Lat)))-float32(math.Abs(float64(radius))), float32(math.Abs(float64(Lng)))+float32(math.Abs(float64(radius))),
