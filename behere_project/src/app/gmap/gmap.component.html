@@ -20,8 +20,9 @@
         }
     </style>
     
-    <map-marker #marker="mapMarker"
+    <map-marker class="marker-class" #marker="mapMarker"
            *ngFor="let event_t of eventList"
+        [options]="markerOptions"
         [position]="{'lat': event_t.lat, 'lng': event_t.lng}"
         (mapClick)="openInfoWindow(marker, event_t)"></map-marker>
     <map-info-window></map-info-window>
@@ -39,7 +40,7 @@
 
     <div class="gmap-popup">
         
-        <h1>Title: {{currevent.name}}</h1>
+        <h1 id="currEventTitle">Title: {{currevent.name}}</h1>
         <p>ID: {{currevent.id}}</p>
         <p>Latitude: {{currevent.lat}}</p>
         <p>Longitude: {{currevent.lng}}</p>
