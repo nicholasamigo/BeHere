@@ -2,7 +2,9 @@
 
 ## Demo Links:
 [Front End Demo with Nick](https://youtu.be/HLbSuMAy_90)
+
 [Backend Demo with John & Aidan](https://youtu.be/nb6d4ux4yf4)
+
 [Cypress Demo with Aidan](https://youtu.be/q9b-2o0F7MM)
 
 # Major Sprint Accomplishments
