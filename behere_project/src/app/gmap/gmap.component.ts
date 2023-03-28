@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
 import { EventsMiddlemanService, Event_t } from './events-middleman.service';
+import { DataServiceService } from '../data-service.service';
 
 /* 
 // From now on, use the offical Event_t class from events-middleman.service
@@ -29,6 +30,9 @@ time: number;
 })
 export class GmapComponent implements OnInit{
 
+  name = 'Angular';
+  dataArr = [];
+
   // Allow direct reading of the google map Angular component in "map"
   @ViewChild(GoogleMap, { static: false }) map: GoogleMap
 
@@ -55,7 +59,9 @@ export class GmapComponent implements OnInit{
 
   // This component has full access to the EMS services
   // Which handle all requests from the Event DB
-  constructor(private ems: EventsMiddlemanService) {}
+  constructor(private ems: EventsMiddlemanService, private dataService: DataServiceService) {}
+
+
 
   ngOnInit() {
     /* load in events */
@@ -158,5 +164,11 @@ export class GmapComponent implements OnInit{
     } else {
       alert("Geolocation is not supported by this browser.");
     }
+  }
+
+
+  onAddTimestamp() {
+    this.dataArr.push(this.display.lat);
+    this.dataService.setLatestData(this.display.lat);
   }
 }

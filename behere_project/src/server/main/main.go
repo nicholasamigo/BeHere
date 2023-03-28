@@ -63,6 +63,7 @@ func main() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/hello-world", helloWorld)
+	r.HandleFunc("/create-event", createEvent)
 	r.HandleFunc("/getEventsAroundLocation", restGetEventsAroundLocation)
 	//r.HandleFunc("/create-account", createAccount)
 	//r.HandleFunc("/delete-account", deleteAccount)
