@@ -63,7 +63,7 @@ func main() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/hello-world", helloWorld)
-	r.HandleFunc("/create-event", createEvent)
+	r.HandleFunc("/create-event", restCreateEvent)
 	r.HandleFunc("/getEventsAroundLocation", restGetEventsAroundLocation)
 	//r.HandleFunc("/create-account", createAccount)
 	//r.HandleFunc("/delete-account", deleteAccount)
@@ -223,6 +223,30 @@ func restGetEventsAroundLocation(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(eventlist)
+}
+
+func restCreateEvent(w http.ResponseWriter, r *http.Request) {
+	fmt.Print("asd")
+	query := r.URL.Query()
+	name := query.Get("name")
+	lat := query.Get("lat")
+	lng := query.Get("lng")
+
+	var e Event
+	e.Name = name
+	e.HostId = 0
+	lt, err := strconv.ParseFloat(lat, 64)
+	if err != nil {
+		fmt.Println(err)
+	}
+	lg, err := strconv.ParseFloat(lng, 64)
+	if err != nil {
+		fmt.Println(err)
+	}
+	e.Lat = lt
+	e.Lng = lg
+
+	db.Create(e)
 }
 
 // Function that returns the Events within a specified square radius around a location
