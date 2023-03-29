@@ -1,7 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import { Data } from '@angular/router';
 import {HelloWorldService} from './hello-world.service';
-import { GmapComponent } from './gmap/gmap.component';
 
 
 
