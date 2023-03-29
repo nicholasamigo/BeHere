@@ -39,17 +39,31 @@
 
     <div class="gmap-popup">
         
-        <h1>Title: {{currevent.name}}</h1>
-        <p>ID: {{currevent.id}}</p>
-        <p>Latitude: {{currevent.lat}}</p>
-        <p>Longitude: {{currevent.lng}}</p>
-        <p>HostID: {{currevent.hostid}}</p>
-        <!-- <p>
-            Location Name: {{currevent.locationName}}
-        </p>
-        <p>
-            Time: {{currevent.time}}
-        </p> -->
+        <div *ngIf="currevent.name; else elseBlock">
+            <span>
+                
+                <h1>{{currevent.name}}</h1>
+                <p><i>ID: </i> <b>{{currevent.id}}</b> </p>
+                <p><i>Latitude: </i> <b>{{currevent.lat}}</b> </p>
+                <p><i>Longitude: </i> <b>{{currevent.lng}}</b> </p>
+                <p><i>HostID: </i> <b>{{currevent.hostid}}</b> </p>
+                <p><i>Address: </i> <b>{{currevent.address}}</b> </p>
+                <p><i>Date: </i> <b>{{currevent.date}}</b> </p>
+                <p><i>Time: </i> <b>{{currevent.time}}</b> </p>
+                <p><i>Friends Attending: </i>   </p>
+                <p><i>Attendees: </i> </p>
+                <p><i>Tags: </i> </p>
+                <p><i>Distance: </i> </p>
+
+            </span>
+          </div>
+          <ng-template #elseBlock><span>
+
+            <h2>
+                Please click an event
+            </h2>
+
+          </span></ng-template>
 
     </div>
 
