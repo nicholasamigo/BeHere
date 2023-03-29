@@ -70,7 +70,7 @@ func main() {
 
 	// Solves Cross Origin Access Issue
 	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"http://localhost:4200"},
+		AllowedOrigins: []string{"*"},
 	})
 	handler := c.Handler(r)
 
@@ -246,7 +246,13 @@ func restCreateEvent(w http.ResponseWriter, r *http.Request) {
 	e.Lat = lt
 	e.Lng = lg
 
-	db.Create(e)
+	createEvent(db, e)
+
+	// call DB func to get relevant events
+	eventlist := getEventsAroundLocation(db, 0, 0, 0)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(eventlist)
 }
 
 // Function that returns the Events within a specified square radius around a location

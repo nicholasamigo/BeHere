@@ -8,8 +8,8 @@ import { HelloWorldService } from './hello-world.service';
 import { AppComponent } from './app.component';
 
 import { GmapModule } from './gmap/gmap.module';
-import { EventService } from './event.service';
 import { DataServiceService } from './data-service.service';
+import { EventsMiddlemanService } from './gmap/events-middleman.service';
 
 @NgModule({
   declarations: [
@@ -22,8 +22,8 @@ import { DataServiceService } from './data-service.service';
   ],
   providers: [
     HelloWorldService,
-    EventService,
-    DataServiceService
+    DataServiceService, 
+    EventsMiddlemanService
   ],
   bootstrap: [AppComponent]
 })

@@ -1,8 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
 import { EventsMiddlemanService, Event_t } from './events-middleman.service';
 import { DataServiceService } from '../data-service.service';
-
 /* 
 // From now on, use the offical Event_t class from events-middleman.service
 
@@ -52,6 +51,12 @@ export class GmapComponent implements OnInit{
 
   // Define the list of events currently stored in the browser
   eventList: Event_t[]=[];
+  throwaway: Event_t[]=[];
+
+  // Stuff for the create event feature
+  cE:string = "Create Event";
+  lat:number = 0;
+  lng:number = 0;
 
   options: google.maps.MapOptions = {
     minZoom: 8
@@ -170,5 +175,33 @@ export class GmapComponent implements OnInit{
   onAddTimestamp() {
     this.dataArr.push(this.display.lat);
     this.dataService.setLatestData(this.display.lat);
+  }
+
+  @ViewChild('nameInput')
+  nameInputReference!: ElementRef;
+
+  @ViewChild('latInput')
+  latInputReference!: ElementRef;
+
+  @ViewChild('lngInput')
+  lngInputReference!: ElementRef;
+
+  createEvent(){
+    this.ems.createEvent(this.nameInputReference.nativeElement.value,
+      this.latInputReference.nativeElement.value,
+      this.lngInputReference.nativeElement.value)
+    .subscribe(data => this.throwaway = JSON.parse(JSON.stringify(data)));
+    console.log("Throwaway list updated");
+  }
+
+  openCreateEvent(){
+    var x = document.getElementById("cE") as HTMLSelectElement;
+    if (x.style.display === "none") {
+      x.style.display = "block";
+      this.cE = "Close";
+    } else {
+      x.style.display = "none";
+      this.cE = "Create Event";
+    }
   }
 }
