@@ -13,8 +13,8 @@ export class EventService {
     .set('name', name)
     .set('lat', lat)
     .set('lng', lng)
-    this.http.get(`${environment.serverUrl}/create-event`);
-    const url = `${environment.serverUrl}/getEventsAroundLocation`;
+    // this.http.get(`${environment.serverUrl}/create-event`);
+    const url = `${environment.serverUrl}/create-event`;
     console.log("request to", url, params);
   }
 }
