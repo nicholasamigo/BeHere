@@ -53,4 +53,35 @@
 
     </div>
 
+  <div>
+    <button class="button button2" (click)="openCreateEvent()">{{ cE }}</button> 
+    
+    <div id="cE" style="display:none">
+
+        <a style="display:block;">
+        Event Name: 
+        <input 
+        type="text" 
+        placeholder="Enter Event Name" 
+        #nameInput/>
+        </a>
+        <a style="display:block;">
+        Latitude: 
+        <input 
+        type="text" 
+        placeholder="Enter Latitude" 
+        #latInput/>
+        </a>
+        <a style="display:block;">
+        Longitude:     
+        <input 
+        type="text" 
+        placeholder="Enter Longitude" 
+        #lngInput/>
+        </a>
+
+        <button class="button button2" (click)="createEvent()">Create Event</button> 
+    </div>
+  </div>
+
 </div>

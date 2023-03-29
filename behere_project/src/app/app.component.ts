@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import { Data } from '@angular/router';
 import {HelloWorldService} from './hello-world.service';
+import { DataServiceService } from './data-service.service';
 import { GmapComponent } from './gmap/gmap.component';
-
+import { EventsMiddlemanService } from './gmap/events-middleman.service';
 
 
 
@@ -14,8 +15,13 @@ import { GmapComponent } from './gmap/gmap.component';
 export class AppComponent implements OnInit {
 
   title:string = "";
+  lat:number = 0;
+  lng:number = 0;
 
-  constructor(private hw: HelloWorldService) {}
+  @Input() allData: [];
+  latData: any;
+
+  constructor(private hw: HelloWorldService, private ems: EventsMiddlemanService, private dataService: DataServiceService) {}
 
   ngOnInit() {
     
@@ -23,6 +29,15 @@ export class AppComponent implements OnInit {
     this.hw.getTitle()
       .subscribe(data => this.title = JSON.parse(JSON.stringify(data)).title);
     console.log(this.title);
+
+    this.dataService.dataUpdated.subscribe((data) => {
+      this.latData = data;
+    });
   }
 
+  updateData(){
+    this.dataService.dataUpdated.subscribe((data) => {
+      this.latData = data;
+    });
+  }
 }
