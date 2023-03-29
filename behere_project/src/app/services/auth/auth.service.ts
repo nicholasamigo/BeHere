@@ -1,29 +1,37 @@
-import { AngularFireAuth } from '@angular/fire/auth';
-import { auth } from 'firebase/app';
-import { BehaviorSubject, Observable, from } from 'rxjs';
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { UserCredential } from 'firebase/auth';
+import { User } from 'firebase/auth';
+import { from, Observable } from 'rxjs';
+import { getAuth, GoogleAuthProvider, onAuthStateChanged } from 'firebase/auth';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { signInWithPopup, signOut } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private user: BehaviorSubject<
-    Observable<firebase.User>
-  > = new BehaviorSubject<Observable<firebase.User>>(null);
-  user$ = this.user
-    .asObservable()
-    .pipe(switchMap((user: Observable<firebase.User>) => user));
+  private user: BehaviorSubject<Observable<User>> = new BehaviorSubject<Observable<User>>(null);
+
+  user$ = this.user.asObservable().pipe(switchMap((user: Observable<User>) => user));
 
   constructor(private afAuth: AngularFireAuth) {
-    this.user.next(this.afAuth.authState);
+    const auth = getAuth();
+    
+    onAuthStateChanged(auth, (user: User | null) => {
+      this.user.next(auth.);
+    });
   }
 
-  loginViaGoogle(): Observable<auth.UserCredential> {
-    return from(this.afAuth.signInWithPopup(new auth.GoogleAuthProvider()));
+  loginViaGoogle(): Observable<UserCredential> {
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+    return from(signInWithPopup(auth, provider));
   }
 
   logout(): Observable<void> {
-    return from(this.afAuth.signOut());
+    const auth = getAuth();
+    return from(signOut(auth));
   }
 }

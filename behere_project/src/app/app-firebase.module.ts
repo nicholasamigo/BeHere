@@ -1,6 +1,5 @@
-<>Copy
-import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AngularFireModule } from '@angular/fire/compat';
 import { NgModule } from '@angular/core';
 
 import { environment } from '../environments/environment';

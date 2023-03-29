@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 
 import { AuthService } from '../../services/auth/auth.service';
 import { FEED } from './../../consts/routes.const';
+import { User } from 'firebase/auth';
 
 @Component({
   selector: 'app-header',
@@ -13,7 +14,7 @@ import { FEED } from './../../consts/routes.const';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent {
-  user$: Observable<firebase.User> = this.auth.user$;
+  user$: Observable<User> = this.auth.user$;
 
   constructor(
     private readonly auth: AuthService,
