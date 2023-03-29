@@ -1,0 +1,47 @@
+<mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <button 
+        mat-button 
+        routerLink="/feed"
+        matTooltip="BeHere Home">
+        BeHere
+      </button>
+      <span class="spacer"></span>
+      <ng-container *ngIf="this.auth.user; else loginIcon">
+  
+        <button 
+          mat-icon-button
+          routerLink="/create"
+          matTooltip="Create an event"
+          >
+          <mat-icon
+            aria-hidden="false"
+            aria-label="Create an event"
+            >
+            cloud_upload
+          </mat-icon>
+        </button>
+  
+        <app-profile-card 
+          [user]="this.auth.user"
+          (logoutClick)="logout()">
+        </app-profile-card>
+  
+      </ng-container>
+      <ng-template #loginIcon>
+        <button 
+          mat-icon-button
+          (click)="login()"
+          matTooltip="Login"
+          >
+          <mat-icon
+            aria-hidden="false"
+            aria-label="Login"
+            >
+            fingerprint
+          </mat-icon>
+        </button>
+      </ng-template>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  

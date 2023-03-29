@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "behere2-1c02c": {
+      "hosting": {
+        "behere-project": [
+          "behere2-1c02c"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "behere2-1c02c"
+  }
+}
