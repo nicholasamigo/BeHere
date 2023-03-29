@@ -63,13 +63,14 @@ func main() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/hello-world", helloWorld)
+	r.HandleFunc("/create-event", restCreateEvent)
 	r.HandleFunc("/getEventsAroundLocation", restGetEventsAroundLocation)
 	//r.HandleFunc("/create-account", createAccount)
 	//r.HandleFunc("/delete-account", deleteAccount)
 
 	// Solves Cross Origin Access Issue
 	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"http://localhost:4200"},
+		AllowedOrigins: []string{"*"},
 	})
 	handler := c.Handler(r)
 
@@ -219,6 +220,36 @@ func restGetEventsAroundLocation(w http.ResponseWriter, r *http.Request) {
 
 	// call DB func to get relevant events
 	eventlist := getEventsAroundLocation(db, latValue, lngValue, radiusValue)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(eventlist)
+}
+
+func restCreateEvent(w http.ResponseWriter, r *http.Request) {
+	fmt.Print("asd")
+	query := r.URL.Query()
+	name := query.Get("name")
+	lat := query.Get("lat")
+	lng := query.Get("lng")
+
+	var e Event
+	e.Name = name
+	e.HostId = 0
+	lt, err := strconv.ParseFloat(lat, 64)
+	if err != nil {
+		fmt.Println(err)
+	}
+	lg, err := strconv.ParseFloat(lng, 64)
+	if err != nil {
+		fmt.Println(err)
+	}
+	e.Lat = lt
+	e.Lng = lg
+
+	createEvent(db, e)
+
+	// call DB func to get relevant events
+	eventlist := getEventsAroundLocation(db, 0, 0, 0)
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(eventlist)

@@ -8,6 +8,8 @@ import { HelloWorldService } from './hello-world.service';
 import { AppComponent } from './app.component';
 
 import { GmapModule } from './gmap/gmap.module';
+import { DataServiceService } from './data-service.service';
+import { EventsMiddlemanService } from './gmap/events-middleman.service';
 
 import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
@@ -56,8 +58,14 @@ import { AppRoutingModule } from './app-routing.module';
     provideRemoteConfig(() => getRemoteConfig()),
     provideStorage(() => getStorage()),
   ],
-  // https://medium.com/@danilrabizo/google-authentication-in-the-angular-application-e86df69be58a
-  providers: [HelloWorldService, ScreenTrackingService, UserTrackingService],
+
+  providers: [
+   ScreenTrackingService, 
+   UserTrackingService,
+    HelloWorldService,
+    DataServiceService, 
+    EventsMiddlemanService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
