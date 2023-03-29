@@ -8,7 +8,7 @@
             [center]="center"
             [zoom]="zoom"
             [options]="options"
-            (mapClick)="addMarker($event)"
+            (mapClick)="updateSelectedLocation($event)"
             (mapMousemove)="move($event)"
             (boundsChanged)="updateEventList()">
 
@@ -65,19 +65,13 @@
         placeholder="Enter Event Name" 
         #nameInput/>
         </a>
+        <a>Click Anywhere On The Map To Set Location:</a>
         <a style="display:block;">
-        Latitude: 
-        <input 
-        type="text" 
-        placeholder="Enter Latitude" 
-        #latInput/>
+        Latitude: {{ lat }}
         </a>
         <a style="display:block;">
         Longitude:     
-        <input 
-        type="text" 
-        placeholder="Enter Longitude" 
-        #lngInput/>
+        {{ lng }}
         </a>
 
         <button class="button button2" (click)="createEvent()">Create Event</button> 
