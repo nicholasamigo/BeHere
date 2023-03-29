@@ -3,11 +3,11 @@
       <button 
         mat-button 
         routerLink="/feed"
-        matTooltip="?Gram Home">
-        ?Gram
+        matTooltip="BeHere Home">
+        BeHere
       </button>
       <span class="spacer"></span>
-      <ng-container *ngIf="user$ | async as user; else loginIcon">
+      <ng-container *ngIf="this.auth.user; else loginIcon">
   
         <button 
           mat-icon-button
@@ -23,7 +23,7 @@
         </button>
   
         <app-profile-card 
-          [user]="user"
+          [user]="this.auth.user"
           (logoutClick)="logout()">
         </app-profile-card>
   

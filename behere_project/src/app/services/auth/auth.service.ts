@@ -12,15 +12,19 @@ import { signInWithPopup, signOut } from '@angular/fire/auth';
   providedIn: 'root',
 })
 export class AuthService {
-  private user: BehaviorSubject<Observable<User>> = new BehaviorSubject<Observable<User>>(null);
+  user: User;
 
-  user$ = this.user.asObservable().pipe(switchMap((user: Observable<User>) => user));
-
-  constructor(private afAuth: AngularFireAuth) {
+  constructor() {
     const auth = getAuth();
-    
+
     onAuthStateChanged(auth, (user: User | null) => {
-      this.user.next(auth.);
+      if (user) {
+        this.user = auth.currentUser;
+      }
+      else {
+        // User is signed out
+        this.user = null;
+      }
     });
   }
 

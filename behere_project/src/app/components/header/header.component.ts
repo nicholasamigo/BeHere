@@ -14,12 +14,12 @@ import { User } from 'firebase/auth';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent {
-  user$: Observable<User> = this.auth.user$;
 
   constructor(
-    private readonly auth: AuthService,
+    readonly auth: AuthService,
     private readonly snackBar: MatSnackBar,
     private readonly router: Router,
+
   ) {}
 
   login() {
@@ -38,7 +38,7 @@ export class HeaderComponent {
         (response) =>
           response &&
           this.snackBar.open(
-            `Oh! You're here. I demand that you feed me, Hooman. ?`,
+            `Logged in as ${this.auth.user.displayName}`,
             'Close',
             {
               duration: 4000,
@@ -53,7 +53,7 @@ export class HeaderComponent {
       .pipe(take(1))
       .subscribe((response) => {
         this.router.navigate([`/${FEED}`]);
-        this.snackBar.open('Come back soon with treats! ?', 'Close', {
+        this.snackBar.open('Successfully logged out.', 'Close', {
           duration: 4000,
         });
       });

@@ -9,12 +9,6 @@ import { AppComponent } from './app.component';
 
 import { GmapModule } from './gmap/gmap.module';
 
-import { RouterModule } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
 import { provideAnalytics,getAnalytics,ScreenTrackingService,UserTrackingService } from '@angular/fire/analytics';
@@ -32,6 +26,7 @@ import { CreateComponent } from './components/create/create.component';
 import { FeedComponent } from './components/feed/feed.component';
 import { ProfileCardComponent } from './components/profile-card/profile-card.component';
 import { HeaderComponent } from './components/header/header.component';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
@@ -48,14 +43,8 @@ import { HeaderComponent } from './components/header/header.component';
     GmapModule,
     AppFirebaseModule,
     AppMaterialModule,
-    RouterModule.forRoot([
-      //{path: '**', component: LoginComponent}
-    ]),
-    BrowserAnimationsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatButtonModule,
-    MatInputModule,
+    AppRoutingModule,
+
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAnalytics(() => getAnalytics()),
     provideAuth(() => getAuth()),
