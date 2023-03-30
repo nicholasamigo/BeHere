@@ -40,7 +40,7 @@ export class GmapComponent implements OnInit{
   infoContent = '';
 
   // Fix this eventually. Works but can lead to memory leaks. Need to figure out a way to create events on initialization.
-  currevent = new Event_t(0, "", 0, 0, 0);
+  currevent = new Event_t(0, "", 0, 0, 0, "", "", "");
 
 
   // instantiate the GMap
