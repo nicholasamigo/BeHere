@@ -12,11 +12,11 @@
 - Added further design to the presentation of event variables, such as bold and italics to make information more organized.
 - Implemented a rest-function to create an event in the database.
 - Created a front-end form to call the respective rest-function.
-- Added a user-login system with the use of Firebase.
+- Added a OAuth user-login system with Google Authprovider and Firebase API. Required external configuration of Firebase and Google Console
 - Implemented further end-to-end testing with Cypress.
 
 # Sprint Notes
-For this sprint, we were successful in closing multiple issues. AJ worked on the creation of new events from the front-end, Nick worked on finalizing the content of the Event class and displaying proper information on the front-end, and John worked on the back-end functionality of the new event system.
+For this sprint, we were successful in closing multiple issues. AJ implemented a Google login service using OAuth 2. After login, the front end is able to get data about the current user, like display name and and profile pciture. Nick worked on finalizing the content of the Event class, displaying proper information on the front-end, unit tests. John implemented a POST REST-API call in the back-end and integrated it with user input so users can create events in the backend.
 
 # Closed Issues
 - Account login/creation
