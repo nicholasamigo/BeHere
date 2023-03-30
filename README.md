@@ -21,7 +21,8 @@ CEN3031 - Group 63
 ### Installation and Running
 1. Clone repository in your GOPATH directory. (Usually $Home/Go/src or C:\Users\yourname\go\src. Often, **you will have to make the "src" folder yourself**.)
 2. Navigate with terminal to `/behere_project` run `npm install` to update the npm packages.
-3. `./serve.sh` to launch both the Go server and Angular.
+3. `npm install firebase` to download the firebase dependencies.
+4. `./serve.sh` to launch both the Go server and Angular.
 
 ### Configuring Google OAuth
 AJ Persaud has this configured on [Google Console](https://console.cloud.google.com/apis/credentials?project=smart-theory-377014)
