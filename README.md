@@ -25,3 +25,7 @@ CEN3031 - Group 63
 
 ### Configuring Google OAuth
 AJ Persaud has this configured on [Google Console](https://console.cloud.google.com/apis/credentials?project=smart-theory-377014)
+
+### Running tests
+1. `cd behere_project`
+2. Open Cypress by running `npx cypress open`

@@ -63,6 +63,10 @@ export class GmapComponent implements OnInit{
     minZoom: 8
   };
 
+  markerOptions: google.maps.MarkerOptions = {
+    optimized: false
+  }
+
   // This component has full access to the EMS services
   // Which handle all requests from the Event DB
   constructor(private ems: EventsMiddlemanService, private dataService: DataServiceService) {}

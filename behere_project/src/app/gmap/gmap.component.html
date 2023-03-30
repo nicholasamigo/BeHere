@@ -20,8 +20,9 @@
         }
     </style>
     
-    <map-marker #marker="mapMarker"
+    <map-marker class="marker-class" #marker="mapMarker"
            *ngFor="let event_t of eventList"
+        [options]="markerOptions"
         [position]="{'lat': event_t.lat, 'lng': event_t.lng}"
         (mapClick)="openInfoWindow(marker, event_t)"></map-marker>
     <map-info-window></map-info-window>
