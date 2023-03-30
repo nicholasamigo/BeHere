@@ -29,10 +29,20 @@ type Person struct {
 // in the DB
 type Event struct {
 	gorm.Model
-	Name   string
-	HostId uint
-	Lat    float64
-	Lng    float64
+	Name    string
+	HostId  uint
+	Lat     float64
+	Lng     float64
+	Address string
+	Date    string
+	Time    string
+
+	// Will be implemented later with specific classes because they are dynamic.
+	//FriendsInvolved AttendRelation
+	//Attendees uint
+	//EventTags VAR
+	//Distance float32
+
 }
 type AttendRelation struct {
 	gorm.Model
@@ -58,6 +68,8 @@ func main() {
 	// Testing here. Comment these out when running the server
 	//john_test_funcs()
 	//aj_populate()
+
+	//nick_test()
 
 	/* Server initializaiton */
 	r := mux.NewRouter()
@@ -92,6 +104,16 @@ func aj_populate() {
 	db.Create(&e1)
 	db.Create(&e2)
 	db.Create(&e3)
+}
+
+func nick_test() {
+	event1 := Event{Name: "Basketball at Nick's", HostId: 25, Lat: 29.744954782334302, Lng: -82.45255807676796,
+		Address: "9524 sw 101st Terr", Date: "2/4/2023", Time: "3:00 pm"}
+	db.Create(&event1)
+
+	event2 := Event{Name: "Ice Cream Time", HostId: 12, Lat: 29.544954782334302, Lng: -81.45255807676796,
+		Address: "1232 sw 3rd Ave", Date: "3/21/2023", Time: "5:00 pm"}
+	db.Create(&event2)
 }
 
 func john_test_funcs() {

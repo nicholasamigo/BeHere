@@ -24,7 +24,7 @@ export class EventsMiddlemanService {
     return this.http.get<any[]>(url, { params })
     .pipe(
       map(response => response.map(event => new Event_t(event.ID, event.Name, event.HostId, 
-        event.Lat, event.Lng))),
+        event.Lat, event.Lng, event.Address, event.Date, event.Time))),
       catchError(error => {
         console.error('Error retrieving events:', error);
         return [];
@@ -43,7 +43,7 @@ export class EventsMiddlemanService {
     return this.http.get<any[]>(url, {params})
     .pipe(
       map(response => response.map(event => new Event_t(event.ID, event.Name, event.HostId, 
-        event.Lat, event.Lng))),
+        event.Lat, event.Lng, event.Address, event.Date, event.Time))),
       catchError(error => {
         console.error('Error Creating events:', error);
         return [];
@@ -55,7 +55,8 @@ export class Event_t {
   // TODO - update these structs
   // This needs to match the Event struct definition in main.go
   constructor(public id: number, public name: string, 
-    public hostid: number, public lat: number, public lng: number) {}
+    public hostid: number, public lat: number, public lng: number, 
+    public address: string, public date: string, public time: string) {}
 }
 
   /**
