@@ -1,9 +1,9 @@
 # Sprint 3 - Nicholas Amigo, Aidan (AJ) Persaud, and John Glass - CEN3031 - March 2023
 
 ## Demo Links:
--[Front End Demo (Nick and Aidan)](https://youtu.be/9fOnqLQ0wVg)
--[Back End Demo (John)](https://youtu.be/w-aUFNLU-OQ)
--[Cypress Testing Demo](https://youtu.be/RKU5-2AD0rU)
+- [Front End Demo (Nick and Aidan)](https://youtu.be/9fOnqLQ0wVg)
+- [Back End Demo (John)](https://youtu.be/w-aUFNLU-OQ)
+- [Cypress Testing Demo](https://youtu.be/RKU5-2AD0rU)
 
 # Sprint Accomplishments
 - Implemented a functional event-creation system on the page itself.
