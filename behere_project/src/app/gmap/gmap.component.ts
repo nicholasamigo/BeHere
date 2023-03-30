@@ -55,6 +55,7 @@ export class GmapComponent implements OnInit{
 
   // Stuff for the create event feature
   cE:string = "Create Event";
+  d: google.maps.LatLngLiteral = {lat: 0, lng: 0};
   lat:number = 0;
   lng:number = 0;
 
@@ -97,6 +98,8 @@ export class GmapComponent implements OnInit{
     });
   }
 
+  
+
   updateEventList() {
     let latlng : google.maps.LatLng = this.map.getCenter();
     let lat : number = latlng.lat();
@@ -117,6 +120,12 @@ export class GmapComponent implements OnInit{
   addMarker(event: google.maps.MapMouseEvent) {
     //this.markerPositions.pop();
     //this.markerPositions.push(event.latLng.toJSON());
+  }
+
+  updateSelectedLocation(event: google.maps.MapMouseEvent){
+    this.d = event.latLng.toJSON();
+    this.lat = this.d.lat;
+    this.lng = this.d.lng;
   }
 
   openInfoWindow(marker: MapMarker, currevent : Event_t) {
@@ -188,8 +197,8 @@ export class GmapComponent implements OnInit{
 
   createEvent(){
     this.ems.createEvent(this.nameInputReference.nativeElement.value,
-      this.latInputReference.nativeElement.value,
-      this.lngInputReference.nativeElement.value)
+      this.lat,
+      this.lng)
     .subscribe(data => this.throwaway = JSON.parse(JSON.stringify(data)));
     console.log("Throwaway list updated");
   }
