@@ -46,6 +46,7 @@ import { AppRoutingModule } from './app-routing.module';
     AppFirebaseModule,
     AppMaterialModule,
     AppRoutingModule,
+    
 
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAnalytics(() => getAnalytics()),

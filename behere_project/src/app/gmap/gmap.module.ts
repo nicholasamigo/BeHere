@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { GmapComponent } from './gmap.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { AppRoutingModule } from '../app-routing.module';
+import { AppMaterialModule } from '../app-material.module';
 
 @NgModule({
   declarations: [
@@ -11,7 +12,8 @@ import { AppRoutingModule } from '../app-routing.module';
   imports: [
     CommonModule,
     GoogleMapsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    AppMaterialModule
   ],
   exports: [
     GmapComponent
