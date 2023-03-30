@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
 import { EventsMiddlemanService, Event_t } from './events-middleman.service';
 import { DataServiceService } from '../data-service.service';
+import { AppMaterialModule } from '../app-material.module';
 /* 
 // From now on, use the offical Event_t class from events-middleman.service
 
@@ -59,6 +60,9 @@ export class GmapComponent implements OnInit{
   lat:number = 0;
   lng:number = 0;
 
+  // Event to be displayed for more info (Card Type B)
+  e = new Event_t(0,"",0,0,0,"","","");
+
   options: google.maps.MapOptions = {
     minZoom: 8
   };
@@ -102,7 +106,33 @@ export class GmapComponent implements OnInit{
     });
   }
 
-  
+    // Function to show Card B version of Event
+    showCardB(eID: number){
+      for(let i = 0; i < this.eventList.length; i++){
+        if(this.eventList[i].id == eID){
+          this.e = this.eventList[i];
+          var x = document.getElementById("cardB") as HTMLSelectElement;
+          if (x.style.display === "none") {
+            x.style.display = "flex";
+          } else {
+            x.style.display = "none";
+          }
+          document.getElementById("overlay").style.display = "block";
+        }
+      }
+    }
+
+      // Function to close Card B version of Event
+      closeCardB(){
+        var x = document.getElementById("cardB") as HTMLSelectElement;
+        if (x.style.display === "none") {
+          x.style.display = "flex";
+          document.getElementById("overlay").style.display = "none";
+        } else {
+          x.style.display = "none";
+          document.getElementById("overlay").style.display = "none";
+        }
+      }
 
   updateEventList() {
     let latlng : google.maps.LatLng = this.map.getCenter();
@@ -217,4 +247,5 @@ export class GmapComponent implements OnInit{
       this.cE = "Create Event";
     }
   }
+
 }
