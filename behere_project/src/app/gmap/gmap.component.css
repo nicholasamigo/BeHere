@@ -11,9 +11,10 @@ body {
 }
 
 /* include border and padding in element width and height */
-* {
+/* * {
+  padding-left: 5px;
   box-sizing: border-box;
-}
+} */
 
 /* full-sized  container that fills up the page */
 div {
@@ -27,12 +28,10 @@ div {
   display: flex;
 }
 
-.MAP {
-  flex: 1;
-}
-
-.MAP:gmap-popup {
-  margin-right: 20px;
+.gmap-popup {
+  /* flex: 1; */
+  text-align: left;
+  width: 175px;
 }
 
 
