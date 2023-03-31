@@ -3,10 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 	"utils"
 
 	"github.com/gorilla/mux"
@@ -15,13 +17,12 @@ import (
 	"gorm.io/gorm"
 )
 
-type Person struct {
+/*-------------STRUCT DEF BEGIN------------------*/
+
+type User struct {
 	gorm.Model
-	Name string
-	Age  uint
-	// loc  Location
-	// profile picture
-	// friends
+	Name  string
+	Email string `gorm:"unique;not null"`
 }
 
 // FUCK OFF GORM
@@ -29,26 +30,49 @@ type Person struct {
 // in the DB
 type Event struct {
 	gorm.Model
-	Name    string
-	HostId  uint
-	Lat     float64
-	Lng     float64
-	Address string
-	Date    string
-	Time    string
+	Name          string
+	Bio           string
+	HostId        uint `gorm:"not null"` // ensures there is always a host to every event
+	Lat           float64
+	Lng           float64
+	Address       string
+	Date          string
+	Time          string
+	DeletedFlag   bool
+	CompletedFlag bool
 
 	// Will be implemented later with specific classes because they are dynamic.
 	//FriendsInvolved AttendRelation
 	//Attendees uint
 	//EventTags VAR
 	//Distance float32
-
 }
 type AttendRelation struct {
-	gorm.Model
-	PID uint
-	EID uint
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+	PID       uint           `gorm:"primaryKey"`
+	EID       uint           `gorm:"primaryKey"`
 }
+
+/*-------------STRUCT DEF END------------------*/
+
+/*--Start Pseudo code for database access------*/
+/*
+
+Events
+- Get Events around a radius: reduces load on the browser, don't need to store EVERY event.
+	- Used on feed screen
+	- Should not pull archived (deleted/completed events)
+- Get all events hosting
+	- Used on both Feed and My Events screen
+- Get all events attending (splitting because easier to implement in Go)
+	- Used on both Feed and My Events screen
+	- Whether completed or archived is handled by front-end, don't worry about it
+- User exists?
+
+*/
+/*--End Pseudo code for database access--------*/
 
 // Global declaration of the database
 var db *gorm.DB
@@ -63,7 +87,7 @@ func main() {
 	}
 
 	// Migrate the schema
-	db.AutoMigrate(Person{}, Event{}, AttendRelation{})
+	db.AutoMigrate(User{}, Event{}, AttendRelation{})
 
 	// Testing here. Comment these out when running the server
 	//john_test_funcs()
@@ -75,14 +99,14 @@ func main() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/hello-world", helloWorld)
-	r.HandleFunc("/create-event", restCreateEvent)
+	r.HandleFunc("/create-event", restCreateEvent).Methods("POST")
 	r.HandleFunc("/getEventsAroundLocation", restGetEventsAroundLocation)
 	//r.HandleFunc("/create-account", createAccount)
 	//r.HandleFunc("/delete-account", deleteAccount)
 
 	// Solves Cross Origin Access Issue
 	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"*"},
+		AllowedOrigins: []string{"http://localhost:4200"},
 	})
 	handler := c.Handler(r)
 
@@ -119,19 +143,19 @@ func nick_test() {
 func john_test_funcs() {
 	// Create
 
-	var h1 Person
-	var a1 Person
-	var a2 Person
-	var a3 Person
+	var h1 User
+	var a1 User
+	var a2 User
+	var a3 User
 
 	h1.Name = "Host"
-	h1.Age = 21
+	h1.Email = "joe@butts.com"
 	a1.Name = "Attendee_1"
-	a1.Age = 22
+	a1.Email = "Nick@butts.com"
 	a2.Name = "Attendee_2"
-	a2.Age = 23
+	a2.Email = "AJ@butts.com"
 	a3.Name = "Attendee_3"
-	a3.Age = 31
+	a1.Email = "John@butts.com"
 
 	/*
 		var hostArray = []Person{h1}
@@ -153,7 +177,7 @@ func john_test_funcs() {
 	db.Create(&e1)
 	db.Create(&e2)
 
-	db.Create(&Person{Name: "Golang w GORM Sqlite", Age: 20})
+	db.Create(&User{Name: "Golang w GORM Sqlite", Email: "Test@yahoo.com"})
 	/*
 		db.Create(&Person{ID: 2, Name: "aj", Age: 20})
 		db.Create(&Person{ID: 3, Name: "john", Age: 19})
@@ -161,7 +185,7 @@ func john_test_funcs() {
 	*/
 
 	// Read
-	var p1 Person
+	var p1 User
 	db.First(&p1) // should find person with integer primary key, but just gets first record
 	fmt.Print(p1.Name)
 
@@ -194,7 +218,7 @@ func john_test_funcs() {
 // Reference Function for RestFULLY interacting with frontend from backend
 func helloWorld(w http.ResponseWriter, r *http.Request) {
 
-	var p2 Person
+	var p2 User
 	db.First(&p2)
 
 	var data = struct {
@@ -248,33 +272,39 @@ func restGetEventsAroundLocation(w http.ResponseWriter, r *http.Request) {
 }
 
 func restCreateEvent(w http.ResponseWriter, r *http.Request) {
-	fmt.Print("asd")
-	query := r.URL.Query()
-	name := query.Get("name")
-	lat := query.Get("lat")
-	lng := query.Get("lng")
+	fmt.Println("Creating event...")
+	/*
+		query := r.URL.Query()
+		name := query.Get("name")
+		lat := query.Get("lat")
+		lng := query.Get("lng")
+	*/
 
-	var e Event
-	e.Name = name
-	e.HostId = 0
-	lt, err := strconv.ParseFloat(lat, 64)
+	// Read the request body into a byte array
+	reqBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		fmt.Println(err)
+		http.Error(w, "Failed to read request body", http.StatusBadRequest)
+		return
 	}
-	lg, err := strconv.ParseFloat(lng, 64)
+
+	// Parse the request body into a JSON object
+	var newEvent Event
+	err = json.Unmarshal(reqBody, &newEvent)
 	if err != nil {
-		fmt.Println(err)
+		http.Error(w, "Failed to parse request body", http.StatusBadRequest)
+		return
 	}
-	e.Lat = lt
-	e.Lng = lg
 
-	createEvent(db, e)
-
-	// call DB func to get relevant events
-	eventlist := getEventsAroundLocation(db, 0, 0, 0)
+	err = createEvent(db, newEvent)
+	if err != nil {
+		http.Error(w, "Failed to create entry in database", http.StatusInternalServerError)
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(eventlist)
+	// Send something back as proof of life. THis value probably ignored by
+	// front end
+	json.NewEncoder(w).Encode(newEvent)
 }
 
 // Function that returns the Events within a specified square radius around a location
@@ -335,9 +365,10 @@ func getEventByID(db *gorm.DB, id uint) Event {
 }
 
 // Function that takes in a passed in event and creates it within the database
-func createEvent(edb *gorm.DB, event Event) bool {
-	edb.Create(&event)
-	return true
+// ret : error
+func createEvent(edb *gorm.DB, event Event) error {
+	result := edb.Create(&event)
+	return result.Error
 }
 
 // Function that edits an event
