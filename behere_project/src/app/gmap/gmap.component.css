@@ -37,9 +37,11 @@ div {
 .cardB {
   display: flex;
   position: fixed; /* or absolute */
-  top: 50%;
-  left: 40%;
+  top: 35%;
+  left: 25%;
   z-index: 10;
+  height: 50vh;
+  width: 50vw;
 }
 
 #overlay {
