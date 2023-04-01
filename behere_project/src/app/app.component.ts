@@ -1,10 +1,7 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import { Data } from '@angular/router';
-import {HelloWorldService} from './hello-world.service';
+import { HelloWorldService } from './hello-world.service';
 import { DataServiceService } from './data-service.service';
-import { GmapComponent } from './gmap/gmap.component';
-import { EventsMiddlemanService } from './gmap/events-middleman.service';
-
+import { EventsMiddlemanService } from './services/events-middleman.service';
 
 
 @Component({

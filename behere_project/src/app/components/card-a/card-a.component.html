@@ -1,0 +1,21 @@
+<div>
+  <mat-card class="cardA">
+      <mat-card-header>
+        <mat-card-title>{{ event.name }}</mat-card-title>
+      </mat-card-header>
+      <mat-divider style="margin-top: 5px;"></mat-divider>
+      <mat-card-content>
+        <p>Host: {{ event.hostid }}</p>
+        <p>Address: {{ event.lat }} | {{ event.lng }}</p>
+        <p>Date: {{ event.date }}</p>
+        <p>Time: {{ event.time }}</p>
+        <p>Attendees: A Billy</p>
+        <p>Bio: A Super Duper Cool Event</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button>ATTEND</button>
+        <button mat-button>SHARE</button>
+        <button mat-button (click) = "onClickShowB()" style="position: absolute; right: 10px;">INFO</button>
+      </mat-card-actions>
+  </mat-card>
+</div>

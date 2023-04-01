@@ -7,9 +7,7 @@ import { HelloWorldService } from './hello-world.service';
 
 import { AppComponent } from './app.component';
 
-import { GmapModule } from './gmap/gmap.module';
 import { DataServiceService } from './data-service.service';
-import { EventsMiddlemanService } from './gmap/events-middleman.service';
 
 import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
@@ -29,6 +27,11 @@ import { FeedComponent } from './components/feed/feed.component';
 import { ProfileCardComponent } from './components/profile-card/profile-card.component';
 import { HeaderComponent } from './components/header/header.component';
 import { AppRoutingModule } from './app-routing.module';
+import { CardAComponent } from './components/card-a/card-a.component';
+import { CardBComponent } from './components/card-b/card-b.component';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { EventsMiddlemanService } from './services/events-middleman.service';
+import { MapAndFeedComponent } from './map-and-feed/map-and-feed.component';
 
 @NgModule({
   declarations: [
@@ -37,15 +40,18 @@ import { AppRoutingModule } from './app-routing.module';
     FeedComponent,
     ProfileCardComponent,
     HeaderComponent,
+    CardAComponent,
+    CardBComponent,
+    MapAndFeedComponent
     
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    GmapModule,
     AppFirebaseModule,
     AppMaterialModule,
     AppRoutingModule,
+    GoogleMapsModule,
     
 
     provideFirebaseApp(() => initializeApp(environment.firebase)),

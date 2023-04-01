@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GmapComponent } from './gmap.component';
+import { CardBComponent } from './card-b.component';
 
-describe('GmapComponent', () => {
-  let component: GmapComponent;
-  let fixture: ComponentFixture<GmapComponent>;
+describe('CardBComponent', () => {
+  let component: CardBComponent;
+  let fixture: ComponentFixture<CardBComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GmapComponent ]
+      declarations: [ CardBComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(GmapComponent);
+    fixture = TestBed.createComponent(CardBComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
