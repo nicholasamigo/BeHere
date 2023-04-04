@@ -101,6 +101,8 @@ func main() {
 	r.HandleFunc("/hello-world", helloWorld)
 	r.HandleFunc("/create-event", restCreateEvent).Methods("POST")
 	r.HandleFunc("/getEventsAroundLocation", restGetEventsAroundLocation)
+	r.HandleFunc("/getUserID", restGetUserID)
+	r.HandleFunc("/putUser", restPutUser).Methods("PUT")
 	//r.HandleFunc("/create-account", createAccount)
 	//r.HandleFunc("/delete-account", deleteAccount)
 
@@ -237,6 +239,8 @@ func helloWorld(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+// ------------------ REST FUNCTIONS BEGIN ---------------------
+
 // Reference Function for RestFULLY interacting with frontend from backend
 func restGetEventsAroundLocation(w http.ResponseWriter, r *http.Request) {
 	// extract query params from URL
@@ -306,6 +310,62 @@ func restCreateEvent(w http.ResponseWriter, r *http.Request) {
 	// front end
 	json.NewEncoder(w).Encode(newEvent)
 }
+
+func restGetUserID(w http.ResponseWriter, r *http.Request) {
+	// Read the request body into a byte array
+	reqBody, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Failed to read request body", http.StatusBadRequest)
+		return
+	}
+
+	// Parse the request body into a JSON object
+	var usr User
+	err = json.Unmarshal(reqBody, &usr)
+	if err != nil {
+		http.Error(w, "Failed to parse request body", http.StatusBadRequest)
+		return
+	}
+
+	usr_id := getUserIDbyEmail(db, usr.Email)
+	if usr_id == -1 {
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(usr_id)
+}
+
+func restPutUser(w http.ResponseWriter, r *http.Request) {
+
+	// Read the request body into a byte array
+	reqBody, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Failed to read request body", http.StatusBadRequest)
+		return
+	}
+
+	// Parse the request body into a JSON object
+	var usr User
+	err = json.Unmarshal(reqBody, &usr)
+	if err != nil {
+		http.Error(w, "Failed to parse request body", http.StatusBadRequest)
+		return
+	}
+
+	// Check if exists
+	fmt.Println("Checking if user exists in db")
+	if !checkUser(db, usr.Email) {
+		// If not, create the User
+		createUser(db, usr)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(usr)
+}
+
+// ------------------ REST FUNCTIONS END -----------------------
+
+// ------------------ GORM DB FUNCTIONS BEGIN ------------------
 
 // Function that returns the Events within a specified square radius around a location
 // Returns a list of Events
@@ -382,3 +442,27 @@ func editEvent(edb *gorm.DB, id uint, event Event) bool {
 
 	return true
 }
+
+func createUser(udb *gorm.DB, user User) error {
+	result := udb.Create(&user)
+	return result.Error
+}
+
+func checkUser(udb *gorm.DB, email string) bool {
+	var usrs []User
+	udb.Where("email == ?", email).Find(&usrs)
+	return len(usrs) > 0
+}
+
+// Return -1 for record not found
+func getUserIDbyEmail(udb *gorm.DB, email string) int {
+	var usr User
+	err := udb.Where("email == ?", email).First(usr).Error
+	if err != nil {
+		return -1
+	} else {
+		return usr.Model.ID
+	}
+}
+
+// ------------------ GORM DB FUNCTIONS END --------------------
