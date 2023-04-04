@@ -23,7 +23,7 @@ export class EventsMiddlemanService {
     console.log("request to", url, params);
     return this.http.get<any[]>(url, { params })
     .pipe(
-      map(response => response.map(event => new Event_t(event.ID, event.Name, event.HostId, 
+      map(response => response.map(event => new Event_t(event.ID, event.Name,  event.Bio, event.HostId,
         event.Lat, event.Lng, event.Address, event.Date, event.Time))),
       catchError(error => {
         console.error('Error retrieving events:', error);
@@ -32,29 +32,17 @@ export class EventsMiddlemanService {
     );
   }
 
-  createEvent(name:string, lat:number, lng:number){
-    const params = new HttpParams()
-    .set('name', name)
-    .set('lat', lat)
-    .set('lng', lng)
-    // this.http.get(`${environment.serverUrl}/create-event`);
+  /* Example of an HTTP POST */
+  createEvent(event : Event_t) : Observable<any>{
     const url = `${environment.serverUrl}/create-event`;
-    console.log("ems request to", url, params);
-    return this.http.get<any[]>(url, {params})
-    .pipe(
-      map(response => response.map(event => new Event_t(event.ID, event.Name, event.HostId, 
-        event.Lat, event.Lng, event.Address, event.Date, event.Time))),
-      catchError(error => {
-        console.error('Error Creating events:', error);
-        return [];
-      })
-    );
+    console.log("ems post to", url);
+    return this.http.post(url, event);
   }
 }
 export class Event_t {
   // TODO - update these structs
   // This needs to match the Event struct definition in main.go
-  constructor(public id: number, public name: string, 
+  constructor(public id: number, public name: string, public bio: string,
     public hostid: number, public lat: number, public lng: number, 
     public address: string, public date: string, public time: string) {}
 }

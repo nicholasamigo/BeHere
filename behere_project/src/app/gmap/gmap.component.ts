@@ -229,12 +229,22 @@ export class GmapComponent implements OnInit{
   @ViewChild('lngInput')
   lngInputReference!: ElementRef;
 
+  // TODO - Rewrite the form, nameInputReference is DISGUSTING syntax
+  // John you absolute buffoon
   createEvent(){
-    this.ems.createEvent(this.nameInputReference.nativeElement.value,
-      this.lat,
-      this.lng)
-    .subscribe(data => this.throwaway = JSON.parse(JSON.stringify(data)));
-    console.log("Throwaway list updated");
+    let e = new Event_t(0, this.nameInputReference.nativeElement.value,
+      0,
+      this.lat, 
+      this.lng,
+      "Balls avenue",
+      "04/23/2022",
+      "4PM")
+    this.ems.createEvent(e)
+    .subscribe({
+      // Observable parameter
+      next: data => console.log('Event created successfully'),
+      error: error => console.error('Error updating event', error)
+    });
   }
 
   openCreateEvent(){
