@@ -1,40 +1,19 @@
 import { Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
-import { EventsMiddlemanService, Event_t } from './events-middleman.service';
+import { Event_t, EventsMiddlemanService } from '../services/events-middleman.service';
 import { DataServiceService } from '../data-service.service';
-import { AppMaterialModule } from '../app-material.module';
-/* 
-// From now on, use the offical Event_t class from events-middleman.service
-
-
-class DummyEvent { 
-id: number;
-title: string;
-loc: google.maps.LatLngLiteral;
-locationName: string;
-time: number;
-
-  constructor(id: number, title: string, loc: google.maps.LatLngLiteral, locationName: string, time: number) {
-    this.id = id;
-    this.title = title;
-    this.loc = loc;
-    this.locationName = locationName;
-    this.time = time;
-  }
-} */
-
 @Component({
-  selector: 'app-gmap',
-  templateUrl: './gmap.component.html',
-  styleUrls: ['./gmap.component.css']
+  selector: 'app-map-n-feed',
+  templateUrl: './map-and-feed.component.html',
+  styleUrls: ['./map-and-feed.component.css']
 })
-export class GmapComponent implements OnInit{
+export class MapAndFeedComponent implements OnInit{
 
   name = 'Angular';
   dataArr = [];
 
-  // Allow direct reading of the google map Angular component in "map"
-  @ViewChild(GoogleMap, { static: false }) map: GoogleMap
+  // Allow direct reading of the big google map Angular component in "map"
+  @ViewChild('primary_google_map', { static: false }) map: GoogleMap
 
   // Allow reading of the child object, InfoWindow
   @ViewChild(MapInfoWindow, { static: false }) infoWindow: MapInfoWindow;
@@ -42,6 +21,8 @@ export class GmapComponent implements OnInit{
 
   // Fix this eventually. Works but can lead to memory leaks. Need to figure out a way to create events on initialization.
   currevent = new Event_t(0, "", 0, 0, 0, "", "", "");
+
+  selectedEvent : Event_t = null
 
 
   // instantiate the GMap
@@ -68,6 +49,14 @@ export class GmapComponent implements OnInit{
   };
 
   markerOptions: google.maps.MarkerOptions = {
+    optimized: false
+  }
+
+  options2: google.maps.MapOptions = {
+    minZoom: 8
+  };
+
+  markerOptions2: google.maps.MarkerOptions = {
     optimized: false
   }
 
@@ -106,33 +95,43 @@ export class GmapComponent implements OnInit{
     });
   }
 
-    // Function to show Card B version of Event
-    showCardB(eID: number){
-      for(let i = 0; i < this.eventList.length; i++){
-        if(this.eventList[i].id == eID){
-          this.e = this.eventList[i];
-          var x = document.getElementById("cardB") as HTMLSelectElement;
-          if (x.style.display === "none") {
-            x.style.display = "flex";
-          } else {
-            x.style.display = "none";
-          }
-          document.getElementById("overlay").style.display = "block";
-        }
-      }
-    }
+  // Called when card A info is clicked.
+  // This sets "selectedEvent" so that the cardB will pop up (it is *ngif'ed in)
+  openCardB(eventdata : Event_t) {
+    this.selectedEvent = eventdata
+  }
+
+    // // Function to show Card B version of Event
+    // showCardB(eID: number){
+    //   for(let i = 0; i < this.eventList.length; i++){
+    //     if(this.eventList[i].id == eID){
+    //       this.e = this.eventList[i];
+    //       var x = document.getElementById("cardB") as HTMLSelectElement;
+    //       if (x.style.display === "none") {
+    //         x.style.display = "flex";
+    //       } else {
+    //         x.style.display = "none";
+    //       }
+    //       document.getElementById("overlay").style.display = "block";
+    //     }
+    //   }
+    // }
 
       // Function to close Card B version of Event
-      closeCardB(){
-        var x = document.getElementById("cardB") as HTMLSelectElement;
-        if (x.style.display === "none") {
-          x.style.display = "flex";
-          document.getElementById("overlay").style.display = "none";
-        } else {
-          x.style.display = "none";
-          document.getElementById("overlay").style.display = "none";
-        }
-      }
+      // closeCardB(){
+      //   var x = document.getElementById("cardB") as HTMLSelectElement;
+      //   if (x.style.display === "none") {
+      //     x.style.display = "flex";
+      //     document.getElementById("overlay").style.display = "none";
+      //   } else {
+      //     x.style.display = "none";
+      //     document.getElementById("overlay").style.display = "none";
+      //   }
+      // }
+  
+  closeCardB() {
+    this.selectedEvent = null
+  }
 
   updateEventList() {
     let latlng : google.maps.LatLng = this.map.getCenter();
