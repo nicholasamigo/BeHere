@@ -461,7 +461,7 @@ func getUserIDbyEmail(udb *gorm.DB, email string) int {
 	if err != nil {
 		return -1
 	} else {
-		return usr.Model.ID
+		return (int)(usr.Model.ID)
 	}
 }
 
