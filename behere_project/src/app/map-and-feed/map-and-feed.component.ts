@@ -3,6 +3,7 @@ import {GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
 import { Event_t, EventsMiddlemanService } from '../services/events-middleman.service';
 import { DataServiceService } from '../data-service.service';
 import { MatDialog } from '@angular/material/dialog';
+import { AuthService } from '../services/auth/auth.service';
 @Component({
   selector: 'app-map-n-feed',
   templateUrl: './map-and-feed.component.html',

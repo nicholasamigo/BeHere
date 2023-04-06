@@ -32,6 +32,8 @@ import { CardBComponent } from './components/card-b/card-b.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { EventsMiddlemanService } from './services/events-middleman.service';
 import { MapAndFeedComponent } from './map-and-feed/map-and-feed.component';
+import { CardCComponent } from './components/card-c/card-c.component';
+import {MatInputModule} from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -42,6 +44,7 @@ import { MapAndFeedComponent } from './map-and-feed/map-and-feed.component';
     HeaderComponent,
     CardAComponent,
     CardBComponent,
+    CardCComponent,
     MapAndFeedComponent
     
   ],
@@ -52,6 +55,7 @@ import { MapAndFeedComponent } from './map-and-feed/map-and-feed.component';
     AppMaterialModule,
     AppRoutingModule,
     GoogleMapsModule,
+    MatInputModule,
     
 
     provideFirebaseApp(() => initializeApp(environment.firebase)),
