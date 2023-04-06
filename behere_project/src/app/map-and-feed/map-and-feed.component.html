@@ -20,11 +20,11 @@
     </mat-card>
 </div> -->
 
-<div *ngIf="selectedEvent!=null">
+<!-- <div *ngIf="selectedEvent!=null">
     <app-card-b style="display: block;"
     [input_event]="selectedEvent"
     (closeCardBEvent)="closeCardB()"></app-card-b>
-</div>
+</div> -->
 
 <div class="flex-container">
 <div class="MAP" style="outline: #3e3e97 solid 5px;">
@@ -54,7 +54,6 @@
         [position]="{'lat': event_t.lat, 'lng': event_t.lng}"
         (mapClick)="openInfoWindow(marker, event_t)"></map-marker>
     <map-info-window></map-info-window>
-
 </google-map>
 </div>
 

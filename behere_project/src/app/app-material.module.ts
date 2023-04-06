@@ -11,6 +11,7 @@ import { MatTabsModule} from '@angular/material/tabs';
 import { MatSelectModule} from '@angular/material/select';
 import { MatCardModule} from '@angular/material/card';
 import { MatDialogModule} from '@angular/material/dialog';
+import { MatGridListModule } from '@angular/material/grid-list'
 
 @NgModule({
   exports: [
@@ -25,7 +26,8 @@ import { MatDialogModule} from '@angular/material/dialog';
     MatTabsModule,
     MatSelectModule,
     MatCardModule,
-    MatDialogModule
+    MatDialogModule,
+    MatGridListModule
   ],
 })
 export class AppMaterialModule {}

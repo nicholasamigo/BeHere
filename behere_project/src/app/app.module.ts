@@ -66,6 +66,10 @@ import { MapAndFeedComponent } from './map-and-feed/map-and-feed.component';
     provideStorage(() => getStorage()),
   ],
 
+  entryComponents: [
+    CardBComponent
+  ],
+
   providers: [
    ScreenTrackingService, 
    UserTrackingService,
