@@ -1,5 +1,6 @@
 <mat-toolbar color="primary">
     <mat-toolbar-row>
+      <button mat-button *ngIf="this.auth.user">{{auth.user.uid}}</button>
       <button 
         mat-button 
         routerLink="/feed"
