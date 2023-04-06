@@ -8,6 +8,8 @@ import {
   import { BASE, CREATE, FEED } from './consts/routes.const';
   import { CreateComponent } from './components/create/create.component';
   import { FeedComponent } from './components/feed/feed.component';
+import { MapAndFeedComponent } from './map-and-feed/map-and-feed.component';
+import { MyEventsComponent } from './components/my-events/my-events.component';
   
   const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo([FEED]);
   
@@ -19,11 +21,11 @@ import {
     },
     {
       path: FEED,
-      component: FeedComponent,
+      component: MapAndFeedComponent,
     },
     {
       path: CREATE,
-      component: CreateComponent,
+      component: MyEventsComponent,
       canActivate: [AngularFireAuthGuard],
       data: { authGuardPipe: redirectUnauthorizedToLogin },
     },
