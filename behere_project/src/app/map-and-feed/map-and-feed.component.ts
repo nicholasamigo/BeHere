@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
 import { Event_t, EventsMiddlemanService } from '../services/events-middleman.service';
 import { DataServiceService } from '../data-service.service';
+import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'app-map-n-feed',
   templateUrl: './map-and-feed.component.html',
@@ -20,7 +21,7 @@ export class MapAndFeedComponent implements OnInit{
   infoContent = '';
 
   // Fix this eventually. Works but can lead to memory leaks. Need to figure out a way to create events on initialization.
-  currevent = new Event_t(0, "", 0, 0, 0, "", "", "");
+  currevent = new Event_t(0, "", "", 0, 0, 0, "", "", "");
 
   selectedEvent : Event_t = null
 
@@ -42,7 +43,7 @@ export class MapAndFeedComponent implements OnInit{
   lng:number = 0;
 
   // Event to be displayed for more info (Card Type B)
-  e = new Event_t(0,"",0,0,0,"","","");
+  e = new Event_t(0,"","",0,0,0,"","","");
 
   options: google.maps.MapOptions = {
     minZoom: 8
@@ -222,16 +223,10 @@ export class MapAndFeedComponent implements OnInit{
   @ViewChild('nameInput')
   nameInputReference!: ElementRef;
 
-  @ViewChild('latInput')
-  latInputReference!: ElementRef;
-
-  @ViewChild('lngInput')
-  lngInputReference!: ElementRef;
-
   // TODO - Rewrite the form, nameInputReference is DISGUSTING syntax
   // John you absolute buffoon
   createEvent(){
-    let e = new Event_t(0, this.nameInputReference.nativeElement.value,
+    let e = new Event_t(0, this.nameInputReference.nativeElement.value, "Bio",
       0,
       this.lat, 
       this.lng,
@@ -256,5 +251,4 @@ export class MapAndFeedComponent implements OnInit{
       this.cE = "Create Event";
     }
   }
-
 }
