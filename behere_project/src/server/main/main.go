@@ -80,7 +80,7 @@ var db *gorm.DB
 func main() {
 	var err error
 	/* Database initialization */
-	db, err = gorm.Open(sqlite.Open("test2.db"), &gorm.Config{})
+	db, err = gorm.Open(sqlite.Open("../internal/test2.db"), &gorm.Config{})
 	if err != nil {
 		println(err)
 		panic("failed to connect database")
