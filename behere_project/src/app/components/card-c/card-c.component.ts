@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output, Inject, ViewChild, ElementRef} from '@angular/core';
-import { Event_t } from 'src/app/services/events-middleman.service';
+import { Event_t, EventsMiddlemanService } from 'src/app/services/events-middleman.service';
 import { MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 @Component({
@@ -35,7 +35,7 @@ export class CardCComponent {
 
   @Output() closeCardBEvent: EventEmitter<void> = new EventEmitter()
 
-  constructor(@Inject(MAT_DIALOG_DATA) public event: Event_t) {}
+  constructor(@Inject(MAT_DIALOG_DATA) public event: Event_t, private ems: EventsMiddlemanService) {}
 
   ngOnInit(): void {
     //this.event=this.input_event
@@ -60,8 +60,21 @@ export class CardCComponent {
   // onClickCloseB() {
   //   this.closeCardBEvent.emit();
   // }
+
   editEvent(){
-    console.log(this.nameInputReference.nativeElement.value + " " + this.dateInputReference.nativeElement.value + " " + this.timeInputReference.nativeElement.value + " " + this.bioInputReference.nativeElement.value)
+    let e = new Event_t(this.event.id, this.nameInputReference.nativeElement.value, this.bioInputReference.nativeElement.value,
+      0,
+      this.event.lat, 
+      this.event.lng,
+      "Balls avenue",
+      this.dateInputReference.nativeElement.value,
+      this.timeInputReference.nativeElement.value)
+    this.ems.editEvent(e)
+    .subscribe({
+      // Observable parameter
+      next: data => console.log('Event edited successfully'),
+      error: error => console.error('Error updating event', error)
+    });
   }
 }
 

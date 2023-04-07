@@ -38,7 +38,15 @@ export class EventsMiddlemanService {
     console.log("ems post to", url);
     return this.http.post(url, event);
   }
+
+
+editEvent(event : Event_t) : Observable<any>{
+  const url = `${environment.serverUrl}/edit-event`;
+  console.log("ems post to", url);
+  return this.http.post(url, event);
 }
+}
+
 export class Event_t {
   // TODO - update these structs
   // This needs to match the Event struct definition in main.go
