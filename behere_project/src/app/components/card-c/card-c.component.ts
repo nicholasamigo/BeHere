@@ -13,6 +13,12 @@ export class CardCComponent {
   markerOptions : google.maps.MarkerOptions
   markerCenterOptions : google.maps.MarkerOptions
 
+  //Declerations for inputs
+  public name: string;
+  public date: string;
+  public time: string;
+  public bio: string;
+
   //@Input() input_event : Event_t
 
   @Output() closeCardBEvent: EventEmitter<void> = new EventEmitter()
@@ -42,5 +48,8 @@ export class CardCComponent {
   // onClickCloseB() {
   //   this.closeCardBEvent.emit();
   // }
+  editEvent(){
+    console.log(this.name + " " + this.date + " " + this.time + " " + this.bio)
+  }
 }
 

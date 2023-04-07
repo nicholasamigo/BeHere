@@ -3,7 +3,10 @@
       <mat-card-header display="width: 100%">
 
         <mat-card-title>{{ event.name }} <span></span>
+          <!--
           <ng-container *ngIf="this.auth.user.uid == event.hostid;">
+          -->
+            <ng-container>
             <button 
             mat-button (click) = "onClickShowC()"
             display="  float:right;"

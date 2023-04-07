@@ -45,28 +45,30 @@
                 <table class="table" cellspacing="0"><tr>
                     <td><mat-form-field class="example-full-width">
                       <mat-label>Event Name</mat-label>
-                      <textarea matInput placeholder="Event Name">{{ event.name }}</textarea>
+                      <textarea matInput ng-model="name" placeholder="Event Name">{{ event.name }}</textarea>
                     </mat-form-field></td>
                 </tr></table>
                 <table class="table" cellspacing="0"><tr>
                     <td><mat-form-field class="example-full-width">
                       <mat-label>Date</mat-label>
-                      <textarea matInput placeholder="Date">{{event.date}}</textarea>
+                      <textarea matInput ng-model="date" placeholder="Date">{{event.date}}</textarea>
                     </mat-form-field></td>
                 </tr></table>
                 <table class="table" cellspacing="0"><tr>
                     <td><mat-form-field class="example-full-width">
                       <mat-label>Time</mat-label>
-                      <textarea matInput placeholder="Time">{{event.time}}</textarea>
+                      <textarea matInput ng-model="time" placeholder="Time">{{event.time}}</textarea>
                     </mat-form-field></td>
                 </tr></table>
                 <table class="table" cellspacing="0"><tr>
                     <td><mat-form-field class="example-full-width">
                       <mat-label>Bio</mat-label>
-                      <textarea matInput placeholder="Bio">{{event.bio}}</textarea>
+                      <textarea matInput ng-model="bio" placeholder="Bio">{{event.bio}}</textarea>
                     </mat-form-field></td>
                 </tr></table>
+                <button mat-button (click) = "editEvent()" style="position: absolute;">SAVE</button>
             </div>
+            
         </mat-grid-tile>
 
             <mat-grid-tile>
