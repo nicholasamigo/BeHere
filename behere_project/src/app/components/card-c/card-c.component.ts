@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output, Inject} from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, Inject, ViewChild, ElementRef} from '@angular/core';
 import { Event_t } from 'src/app/services/events-middleman.service';
 import { MAT_DIALOG_DATA} from '@angular/material/dialog';
 
@@ -18,6 +18,18 @@ export class CardCComponent {
   public date: string;
   public time: string;
   public bio: string;
+
+  @ViewChild('nameInput')
+  nameInputReference!: ElementRef;
+
+  @ViewChild('dateInput')
+  dateInputReference!: ElementRef;
+
+  @ViewChild('timeInput')
+  timeInputReference!: ElementRef;
+
+  @ViewChild('bioInput')
+  bioInputReference!: ElementRef;
 
   //@Input() input_event : Event_t
 
@@ -49,7 +61,7 @@ export class CardCComponent {
   //   this.closeCardBEvent.emit();
   // }
   editEvent(){
-    console.log(this.name + " " + this.date + " " + this.time + " " + this.bio)
+    console.log(this.nameInputReference.nativeElement.value + " " + this.dateInputReference.nativeElement.value + " " + this.timeInputReference.nativeElement.value + " " + this.bioInputReference.nativeElement.value)
   }
 }
 

@@ -33,7 +33,7 @@
     </mat-card-actions>
     </mat-card> -->
 
-    <h2 mat-dialog-title>Event Details</h2>
+    <h2 mat-dialog-title>Edit Event</h2>
     <mat-dialog-content class="mat-typography">
 
 
@@ -45,25 +45,25 @@
                 <table class="table" cellspacing="0"><tr>
                     <td><mat-form-field class="example-full-width">
                       <mat-label>Event Name</mat-label>
-                      <textarea matInput ng-model="name" placeholder="Event Name">{{ event.name }}</textarea>
+                      <textarea matInput #nameInput placeholder="Event Name">{{ event.name }}</textarea>
                     </mat-form-field></td>
                 </tr></table>
                 <table class="table" cellspacing="0"><tr>
                     <td><mat-form-field class="example-full-width">
                       <mat-label>Date</mat-label>
-                      <textarea matInput ng-model="date" placeholder="Date">{{event.date}}</textarea>
+                      <textarea matInput #dateInput ng-model="date" placeholder="Date">{{event.date}}</textarea>
                     </mat-form-field></td>
                 </tr></table>
                 <table class="table" cellspacing="0"><tr>
                     <td><mat-form-field class="example-full-width">
                       <mat-label>Time</mat-label>
-                      <textarea matInput ng-model="time" placeholder="Time">{{event.time}}</textarea>
+                      <textarea matInput #timeInput ng-model="time" placeholder="Time">{{event.time}}</textarea>
                     </mat-form-field></td>
                 </tr></table>
                 <table class="table" cellspacing="0"><tr>
                     <td><mat-form-field class="example-full-width">
                       <mat-label>Bio</mat-label>
-                      <textarea matInput ng-model="bio" placeholder="Bio">{{event.bio}}</textarea>
+                      <textarea matInput #bioInput ng-model="bio" placeholder="Bio">{{event.bio}}</textarea>
                     </mat-form-field></td>
                 </tr></table>
                 <button mat-button (click) = "editEvent()" style="position: absolute;">SAVE</button>
@@ -89,8 +89,6 @@
                 
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-        <button mat-button>ATTEND</button>
-        <button mat-button>SHARE</button>
         <button mat-button mat-dialog-close>CLOSE</button>
     </mat-dialog-actions>
 </div>
