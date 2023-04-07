@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 	"utils"
 
@@ -52,7 +53,6 @@ type AttendRelation struct {
 	EID       uint   `gorm:"primaryKey";autoIncrement:false"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
 /*-------------STRUCT DEF END------------------*/
@@ -104,6 +104,7 @@ func main() {
 	r.HandleFunc("/createAttend", restCreateAttend).Methods("POST")
 	r.HandleFunc("/deleteAttend", restDeleteAttend).Methods("POST")
 	r.HandleFunc("/countAttend", restCountAttend)
+	r.HandleFunc("/getAttendingEventIDs", restGetAttendingEventIDs)
 
 	//r.HandleFunc("/getUserID", restGetUserID)
 	//r.HandleFunc("/putUser", restPutUser).Methods("PUT")
@@ -394,6 +395,25 @@ func restCountAttend(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(count)
 }
 
+func restGetAttendingEventIDs(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Getting all EIDs you're attending...")
+
+	query := r.URL.Query()
+	uid := strings.TrimSpace(query.Get("uid"))
+
+	fmt.Println("Received uid:", uid)
+
+	// stringy already
+
+	//count := countAttend(db, uint(eidValue))
+	EIDS := getEIDsByUID(db, uid)
+
+	fmt.Println("Query res:", EIDS)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(EIDS)
+}
+
 // Useless now
 func restGetUserID(w http.ResponseWriter, r *http.Request) {
 	// Read the request body into a byte array
@@ -483,7 +503,7 @@ func deleteAttend(db *gorm.DB, ar AttendRelation) error {
 
 func countAttend(db *gorm.DB, eid uint) int64 {
 	var count int64
-	db.Model(&AttendRelation{}).Where("EID == ?", eid).Count(&count)
+	db.Model(&AttendRelation{}).Where("EID = ?", eid).Count(&count)
 	return count
 }
 
@@ -543,19 +563,25 @@ func createUser(udb *gorm.DB, user User) error {
 
 func checkUser(udb *gorm.DB, email string) bool {
 	var usrs []User
-	udb.Where("email == ?", email).Find(&usrs)
+	udb.Where("email = ?", email).Find(&usrs)
 	return len(usrs) > 0
 }
 
 // Return -1 for record not found
 func getUserIDbyEmail(udb *gorm.DB, email string) int {
 	var usr User
-	err := udb.Where("email == ?", email).First(usr).Error
+	err := udb.Where("email = ?", email).First(usr).Error
 	if err != nil {
 		return -1
 	} else {
 		return (int)(usr.Model.ID)
 	}
+}
+
+func getEIDsByUID(ardb *gorm.DB, uid string) []int {
+	var res []int
+	ardb.Model(&AttendRelation{}).Where("p_id = ?", uid).Pluck("e_id", &res)
+	return res
 }
 
 // ------------------ GORM DB FUNCTIONS END --------------------

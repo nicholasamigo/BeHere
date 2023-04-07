@@ -10,7 +10,15 @@ import { AuthService } from './auth/auth.service';
 })
 export class EventsMiddlemanService {
 
-  constructor(private http: HttpClient, private auth: AuthService) { }
+  public currentlyAttendingEventIDs : number[] = []
+
+  constructor(private http: HttpClient, private auth: AuthService) {
+    // subscribe to service
+      auth.loginStatusChanged$.subscribe(() => {
+      console.log('Login status changed')
+      this.refreshCurrentAttend()
+    });
+   }
 
   getEventsAroundLocation(lat: number, lng: number, radius: number) {
     const params = new HttpParams()
@@ -48,7 +56,8 @@ export class EventsMiddlemanService {
     const url = `${environment.serverUrl}/createAttend`;
     console.log("ems post attend to", url);
     this.http.post(url, ar).subscribe({
-      next: data => console.log("Sucess creating attend"),
+      next: data => {console.log("Sucess creating attend");
+      this.refreshCurrentAttend()},
       error: error => console.log("Error!", error)
     })
   }
@@ -60,7 +69,9 @@ export class EventsMiddlemanService {
     const url = `${environment.serverUrl}/deleteAttend`;
     console.log("ems post attend to", url);
     this.http.post(url, ar).subscribe({
-      next: data => console.log("Sucess deleting attend"),
+      next: data => {console.log("Sucess deleting attend");
+      this.refreshCurrentAttend()
+    },
       error: error => console.log("Error!", error)
     })
   }
@@ -79,6 +90,30 @@ export class EventsMiddlemanService {
       error: error => console.error('Error counting event', error)
     });
     return my_count
+  }
+
+  // Updates the list of EIDs of current user
+  // This should be called upon login as well.
+  refreshCurrentAttend() : void {
+    if (!this.auth.user) {
+      this.currentlyAttendingEventIDs = []
+      console.log("Cleared currently attending events")
+    }
+    else {
+      const params = new HttpParams()
+      .set('uid', this.auth.user.uid);
+  
+      console.log("New User id is ", this.auth.user.uid)
+      const url = `${environment.serverUrl}/getAttendingEventIDs`;
+      console.log("request to", url, params);
+      this.http.get<any[]>(url, { params }).subscribe({
+        next: (eids) => {
+          this.currentlyAttendingEventIDs = eids;
+          console.log("EventIDS ", this.currentlyAttendingEventIDs);
+        },
+        error: (error) => console.log("Error getting EIDS", error),
+      })
+    }
   }
 }
 export class Event_t {

@@ -19,7 +19,7 @@ export class CardAComponent implements OnInit{
 
   @Output() openCardBEvent: EventEmitter<Event_t> = new EventEmitter()
 
-  constructor(public dialog: MatDialog, public auth: AuthService, private ems: EventsMiddlemanService) {}
+  constructor(public dialog: MatDialog, public auth: AuthService, public ems: EventsMiddlemanService) {}
 
   ngOnInit(): void {
     this.event=this.input_event
@@ -41,5 +41,10 @@ export class CardAComponent implements OnInit{
   onAttend() {
     if (this.auth.user)
       this.ems.createAttend(this.event)
+  }
+
+  onUnattend() {
+    if (this.auth.user)
+      this.ems.deleteAttend(this.event)
   }
 }

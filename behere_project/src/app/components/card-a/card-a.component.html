@@ -15,7 +15,19 @@
       <mat-card-actions>
         <!-- TODO - add ngif conditional to show button "Unattend"
         Perhaps track attending eids in event middleman service -->
-        <button mat-button *ngIf="this.auth.user" (click)="onAttend()">ATTEND</button>
+        <div *ngIf="this.auth.user">
+          <ng-container
+            *ngIf="ems.currentlyAttendingEventIDs.includes(this.event.id); then alreadyAttending; else notAttending">
+          </ng-container>
+
+          <ng-template #alreadyAttending>
+            <button mat-button (click)="onUnattend()">UNATTEND</button>
+          </ng-template>
+          <ng-template #notAttending>
+            <button mat-button (click)="onAttend()">ATTEND</button>
+          </ng-template>
+          
+        </div>
         <button mat-button>SHARE</button>
         <button mat-button (click) = "onClickShowB()" style="position: absolute; right: 10px;">INFO</button>
       </mat-card-actions>
