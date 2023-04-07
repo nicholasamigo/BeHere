@@ -234,11 +234,6 @@ export class MapAndFeedComponent implements OnInit{
       "04/23/2022",
       "4PM")
     this.ems.createEvent(e)
-    .subscribe({
-      // Observable parameter
-      next: data => console.log('Event created successfully'),
-      error: error => console.error('Error updating event', error)
-    });
   }
 
   openCreateEvent(){

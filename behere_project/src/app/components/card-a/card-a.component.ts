@@ -2,6 +2,8 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Event_t } from 'src/app/services/events-middleman.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CardBComponent } from '../card-b/card-b.component';
+import { AuthService } from 'src/app/services/auth/auth.service';
+import { EventsMiddlemanService } from 'src/app/services/events-middleman.service';
 
 @Component({
   selector: 'app-card-a',
@@ -17,7 +19,7 @@ export class CardAComponent implements OnInit{
 
   @Output() openCardBEvent: EventEmitter<Event_t> = new EventEmitter()
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, public auth: AuthService, private ems: EventsMiddlemanService) {}
 
   ngOnInit(): void {
     this.event=this.input_event
@@ -34,5 +36,10 @@ export class CardAComponent implements OnInit{
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
     })
+  }
+
+  onAttend() {
+    if (this.auth.user)
+      this.ems.createAttend(this.event)
   }
 }
