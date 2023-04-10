@@ -9,8 +9,8 @@
         <p>Address: {{ event.lat }} | {{ event.lng }}</p>
         <p>Date: {{ event.date }}</p>
         <p>Time: {{ event.time }}</p>
-        <p>Attendees: A Billy</p>
-        <p>Bio: A Super Duper Cool Event</p>
+        <p>Bio: {{ event.bio }}</p>
+        <p>Number of Attendees: {{count}}</p>
       </mat-card-content>
       <mat-card-actions>
         <!-- TODO - add ngif conditional to show button "Unattend"

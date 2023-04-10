@@ -57,7 +57,9 @@ export class EventsMiddlemanService {
     console.log("ems post attend to", url);
     this.http.post(url, ar).subscribe({
       next: data => {console.log("Sucess creating attend");
-      this.refreshCurrentAttend()},
+      this.refreshCurrentAttend();
+      //this.countAttend(event);
+    },
       error: error => console.log("Error!", error)
     })
   }
@@ -70,26 +72,21 @@ export class EventsMiddlemanService {
     console.log("ems post attend to", url);
     this.http.post(url, ar).subscribe({
       next: data => {console.log("Sucess deleting attend");
-      this.refreshCurrentAttend()
+      this.refreshCurrentAttend();
+      //this.countAttend(event);
     },
       error: error => console.log("Error!", error)
     })
   }
 
-  countAttend(event : Event_t) : number {
+  countAttend(event : Event_t) : Observable<number> {
     const params = new HttpParams()
     .set('eid', event.id)
 
-    let my_count = 0
-
     const url = `${environment.serverUrl}/countAttend`;
     console.log("Count request to", url, params)
-    this.http.get<number>(url, {params}).subscribe({
-      // Observable parameter
-      next: data => my_count && console.log('Counted successfully'),
-      error: error => console.error('Error counting event', error)
-    });
-    return my_count
+
+    return this.http.get<number>(url, {params})
   }
 
   // Updates the list of EIDs of current user

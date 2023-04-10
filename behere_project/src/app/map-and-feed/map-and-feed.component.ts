@@ -24,6 +24,7 @@ export class MapAndFeedComponent implements OnInit{
   currevent = new Event_t(0, "", "", 0, 0, 0, "", "", "");
 
   selectedEvent : Event_t = null
+  alreadyInit : boolean
 
 
   // instantiate the GMap
@@ -71,6 +72,7 @@ export class MapAndFeedComponent implements OnInit{
     /* TODO - update this to interface with backend */
 
     this.eventList = [];
+    this.alreadyInit = false
 
     this.center = {lat: 24, lng: 12}
 
@@ -146,6 +148,13 @@ export class MapAndFeedComponent implements OnInit{
     this.ems.getEventsAroundLocation(lat, lng, radius)
     .subscribe(data => this.eventList = JSON.parse(JSON.stringify(data)));
     console.log("Event list updated");
+  }
+
+  initEventList() {
+    if (!this.alreadyInit) {
+      this.alreadyInit = true
+      this.updateEventList()
+    }
   }
 
   addMarker(event: google.maps.MapMouseEvent) {

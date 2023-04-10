@@ -503,7 +503,7 @@ func deleteAttend(db *gorm.DB, ar AttendRelation) error {
 
 func countAttend(db *gorm.DB, eid uint) int64 {
 	var count int64
-	db.Model(&AttendRelation{}).Where("EID = ?", eid).Count(&count)
+	db.Model(&AttendRelation{}).Where("E_ID = ?", eid).Count(&count)
 	return count
 }
 
