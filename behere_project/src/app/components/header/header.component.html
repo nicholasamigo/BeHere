@@ -6,7 +6,34 @@
         matTooltip="BeHere Home">
         BeHere
       </button>
+  
+      <ng-container *ngIf="this.auth.user; else lockIcon">
+        <button
+        mat-icon-button
+        routerLink="/create"
+        matTooltip="My Events" >
+        <mat-icon>
+          assignment
+        </mat-icon>
+      </button>
+      </ng-container>
+
+      <ng-template #lockIcon>
+        <button 
+          mat-icon-button
+          matTooltip="Login to Access Your Events"
+          >
+          <mat-icon
+            aria-hidden="false"
+            >
+            lock
+          </mat-icon>
+        </button>
+      </ng-template>
+      
+
       <span class="spacer"></span>
+      
       <ng-container *ngIf="this.auth.user; else loginIcon">
   
         <button 
