@@ -2,8 +2,7 @@
 
 <div class="flex-container">
 <div class="MAP" style="outline: #3e3e97 solid 5px;">
-
-
+<button mat-button (click)="updateEventList()">Reload Nearby Events</button>
 <google-map #primary_google_map
             height="70vh"
             width="50vw"
@@ -13,7 +12,7 @@
             [options]="options"
             (mapClick)="updateSelectedLocation($event)"
             (mapMousemove)="move($event)"
-            (boundsChanged)="updateEventList()">
+            (tilesloaded)="initEventList()">
 
     <style>
         #container {
@@ -48,11 +47,17 @@
             </mat-tab>
             
             <mat-tab label="Attending">
-                Attending
+                <ng-container *ngFor="let event of eventList">
+                    <app-card-a *ngIf="ems.currentlyAttendingEventIDs.includes(event.id)"
+                    [input_event]="event"
+                    (openCardBEvent)="openCardB($event)" 
+                    style="height: 350px; width: 400px; padding: 20px;"/>
+                </ng-container>
             </mat-tab>
 
             <mat-tab label="Hosting"> 
-                Hosting
+
+                
             </mat-tab>
 
           </mat-tab-group>

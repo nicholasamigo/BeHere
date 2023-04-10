@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { UserCredential } from 'firebase/auth';
 import { User } from 'firebase/auth';
-import { from, Observable } from 'rxjs';
+import { from, Observable, Subject} from 'rxjs';
 import { getAuth, GoogleAuthProvider, onAuthStateChanged } from 'firebase/auth';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { signInWithPopup, signOut } from '@angular/fire/auth';
@@ -25,8 +25,12 @@ export class AuthService {
         // User is signed out
         this.user = null;
       }
+      this.loginStatusChangedSubject.next();
     });
   }
+
+  private loginStatusChangedSubject = new Subject<void>();
+  loginStatusChanged$ = this.loginStatusChangedSubject.asObservable();
 
   loginViaGoogle(): Observable<UserCredential> {
     const auth = getAuth();
