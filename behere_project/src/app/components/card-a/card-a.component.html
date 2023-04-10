@@ -9,11 +9,25 @@
         <p>Address: {{ event.lat }} | {{ event.lng }}</p>
         <p>Date: {{ event.date }}</p>
         <p>Time: {{ event.time }}</p>
-        <p>Attendees: A Billy</p>
-        <p>Bio: A Super Duper Cool Event</p>
+        <p>Bio: {{ event.bio }}</p>
+        <p>Number of Attendees: {{count}}</p>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-button>ATTEND</button>
+        <!-- TODO - add ngif conditional to show button "Unattend"
+        Perhaps track attending eids in event middleman service -->
+        <div *ngIf="this.auth.user">
+          <ng-container
+            *ngIf="ems.currentlyAttendingEventIDs.includes(this.event.id); then alreadyAttending; else notAttending">
+          </ng-container>
+
+          <ng-template #alreadyAttending>
+            <button mat-button (click)="onUnattend()">UNATTEND</button>
+          </ng-template>
+          <ng-template #notAttending>
+            <button mat-button (click)="onAttend()">ATTEND</button>
+          </ng-template>
+          
+        </div>
         <button mat-button>SHARE</button>
         <button mat-button (click) = "onClickShowB()" style="position: absolute; right: 10px;">INFO</button>
       </mat-card-actions>

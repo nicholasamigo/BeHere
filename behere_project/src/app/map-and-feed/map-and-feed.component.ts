@@ -24,17 +24,17 @@ export class MapAndFeedComponent implements OnInit{
   currevent = new Event_t(0, "", "", 0, 0, 0, "", "", "");
 
   selectedEvent : Event_t = null
+  alreadyInit : boolean
 
 
   // instantiate the GMap
   display: google.maps.LatLngLiteral = {lat: 24, lng: 12};
-  center: google.maps.LatLngLiteral = {lat: 24, lng: 12};
+  center: google.maps.LatLngLiteral;
   zoom = 12;
   // markerPositions: google.maps.LatLngLiteral[] = [];
 
   // Define the list of events currently stored in the browser
   eventList: Event_t[]=[];
-  throwaway: Event_t[]=[];
 
   // Stuff for the create event feature
   cE:string = "Create Event";
@@ -63,7 +63,7 @@ export class MapAndFeedComponent implements OnInit{
 
   // This component has full access to the EMS services
   // Which handle all requests from the Event DB
-  constructor(private ems: EventsMiddlemanService, private dataService: DataServiceService) {}
+  constructor(public ems: EventsMiddlemanService, private dataService: DataServiceService) {}
 
 
 
@@ -72,20 +72,9 @@ export class MapAndFeedComponent implements OnInit{
     /* TODO - update this to interface with backend */
 
     this.eventList = [];
+    this.alreadyInit = false
 
-    // Test dummy events
-    //let dummy1 = new DummyEvent(1, "Party at AJs!", { lat: 29.644954782334302, lng: -82.35255807676796}, "AJ's House", 7);
-    //let dummy2 = new DummyEvent(2, "Dinner at Johns", { lat: 29.669247750220627, lng: -82.33697355656128}, "John's Apartment", 5);
-    //let dummy3 = new DummyEvent(3, "Pool Night at Nicks", {lat: 29.685355319870283, lng: -82.38572538761596}, "Nick's Condo", 8);
-
-    // let dummy1 = new Event_t(1, "Party at AJs!", 1, 29.644954782334302, -82.35255807676796);
-    // let dummy2 = new Event_t(2, "Dinner at Johns", 1, 29.669247750220627, -82.33697355656128);
-    // let dummy3 = new Event_t(3, "Pool Night at Nicks", 1, 29.685355319870283, -82.38572538761596);
-  
-
-    // this.eventList.push(dummy1);
-    // this.eventList.push(dummy2);
-    // this.eventList.push(dummy3);
+    this.center = {lat: 24, lng: 12}
 
     /* set position on user's location */
     navigator.geolocation.getCurrentPosition((position) => {
@@ -93,6 +82,17 @@ export class MapAndFeedComponent implements OnInit{
         lat: position.coords.latitude,
         lng: position.coords.longitude,
       };
+    });
+
+
+    //window.addEventListener('load', () => {this.initCenter(); console.log('Load event triggered')})
+  }
+
+  initCenter() {
+    // Wait for the 'tilesloaded' event to be fired before calling the getCenterOfMap() function
+    google.maps.event.addListenerOnce(this.map, 'center_changed', () => {
+      console.log('center_changed!')
+      this.updateEventList()
     });
   }
 
@@ -135,12 +135,11 @@ export class MapAndFeedComponent implements OnInit{
   }
 
   updateEventList() {
-    let latlng : google.maps.LatLng = this.map.getCenter();
-    let lat : number = latlng.lat();
-    let lng : number = latlng.lng();
+    let lat = this.center.lat;
+    let lng = this.center.lng;
 
     let bounds : google.maps.LatLngBounds = this.map.getBounds();
-    let radius : number = bounds.getNorthEast().lat() - lat;
+    let radius : number = bounds.getNorthEast().lat() - lat + 0.1;
 
     console.log("Got lat=", lat, " and lng=", lng, "and radius=", radius);
     
@@ -149,6 +148,13 @@ export class MapAndFeedComponent implements OnInit{
     this.ems.getEventsAroundLocation(lat, lng, radius)
     .subscribe(data => this.eventList = JSON.parse(JSON.stringify(data)));
     console.log("Event list updated");
+  }
+
+  initEventList() {
+    if (!this.alreadyInit) {
+      this.alreadyInit = true
+      this.updateEventList()
+    }
   }
 
   addMarker(event: google.maps.MapMouseEvent) {
@@ -234,11 +240,6 @@ export class MapAndFeedComponent implements OnInit{
       "04/23/2022",
       "4PM")
     this.ems.createEvent(e)
-    .subscribe({
-      // Observable parameter
-      next: data => console.log('Event created successfully'),
-      error: error => console.error('Error updating event', error)
-    });
   }
 
   openCreateEvent(){

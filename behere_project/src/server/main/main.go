@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 	"utils"
 
@@ -48,11 +49,10 @@ type Event struct {
 	//Distance float32
 }
 type AttendRelation struct {
+	PID       string `gorm:"primaryKey"`
+	EID       uint   `gorm:"primaryKey";autoIncrement:false"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
-	PID       uint           `gorm:"primaryKey"`
-	EID       uint           `gorm:"primaryKey"`
 }
 
 /*-------------STRUCT DEF END------------------*/
@@ -80,7 +80,7 @@ var db *gorm.DB
 func main() {
 	var err error
 	/* Database initialization */
-	db, err = gorm.Open(sqlite.Open("test2.db"), &gorm.Config{})
+	db, err = gorm.Open(sqlite.Open("../internal/test2.db"), &gorm.Config{})
 	if err != nil {
 		println(err)
 		panic("failed to connect database")
@@ -101,14 +101,20 @@ func main() {
 	r.HandleFunc("/hello-world", helloWorld)
 	r.HandleFunc("/create-event", restCreateEvent).Methods("POST")
 	r.HandleFunc("/getEventsAroundLocation", restGetEventsAroundLocation)
-	r.HandleFunc("/getUserID", restGetUserID)
-	r.HandleFunc("/putUser", restPutUser).Methods("PUT")
+	r.HandleFunc("/createAttend", restCreateAttend).Methods("POST")
+	r.HandleFunc("/deleteAttend", restDeleteAttend).Methods("POST")
+	r.HandleFunc("/countAttend", restCountAttend)
+	r.HandleFunc("/getAttendingEventIDs", restGetAttendingEventIDs)
+
+	//r.HandleFunc("/getUserID", restGetUserID)
+	//r.HandleFunc("/putUser", restPutUser).Methods("PUT")
 	//r.HandleFunc("/create-account", createAccount)
 	//r.HandleFunc("/delete-account", deleteAccount)
 
 	// Solves Cross Origin Access Issue
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"http://localhost:4200"},
+		AllowedMethods: []string{"GET", "POST", "PUT"},
 	})
 	handler := c.Handler(r)
 
@@ -311,6 +317,104 @@ func restCreateEvent(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(newEvent)
 }
 
+func restCreateAttend(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Creating attendrelation...")
+
+	// Read the request body into a byte array
+	reqBody, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Failed to read request body", http.StatusBadRequest)
+		return
+	}
+
+	// Parse the request body into a JSON object
+	var newAttend AttendRelation
+	err = json.Unmarshal(reqBody, &newAttend)
+	if err != nil {
+		http.Error(w, "Failed to parse request body", http.StatusBadRequest)
+		return
+	}
+
+	err = createAttend(db, newAttend)
+	if err != nil {
+		http.Error(w, "Most likely, entry already existed", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	// Send something back as proof of life. THis value probably ignored by
+	// front end
+	json.NewEncoder(w).Encode(newAttend)
+}
+
+func restDeleteAttend(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Deleting attendrelation...")
+
+	// Read the request body into a byte array
+	reqBody, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Failed to read request body", http.StatusBadRequest)
+		return
+	}
+
+	// Parse the request body into a JSON object
+	var newAttend AttendRelation
+	err = json.Unmarshal(reqBody, &newAttend)
+	if err != nil {
+		http.Error(w, "Failed to parse request body", http.StatusBadRequest)
+		return
+	}
+
+	err = deleteAttend(db, newAttend)
+	if err != nil {
+		http.Error(w, "Failed to delete entry from database", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(newAttend)
+}
+
+// Receives an EID as param
+func restCountAttend(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Counting attendrelation...")
+
+	query := r.URL.Query()
+	eid := query.Get("eid")
+
+	// Convert parameter values to appropriate types
+	eidValue, err := strconv.ParseUint(eid, 10, 64)
+	if err != nil {
+		http.Error(w, "Invalid 'eid' parameter", http.StatusBadRequest)
+		return
+	}
+
+	count := countAttend(db, uint(eidValue))
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(count)
+}
+
+func restGetAttendingEventIDs(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Getting all EIDs you're attending...")
+
+	query := r.URL.Query()
+	uid := strings.TrimSpace(query.Get("uid"))
+
+	fmt.Println("Received uid:", uid)
+
+	// stringy already
+
+	//count := countAttend(db, uint(eidValue))
+	EIDS := getEIDsByUID(db, uid)
+
+	fmt.Println("Query res:", EIDS)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(EIDS)
+}
+
+// Useless now
 func restGetUserID(w http.ResponseWriter, r *http.Request) {
 	// Read the request body into a byte array
 	reqBody, err := io.ReadAll(r.Body)
@@ -336,6 +440,7 @@ func restGetUserID(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(usr_id)
 }
 
+// Useless now
 func restPutUser(w http.ResponseWriter, r *http.Request) {
 
 	// Read the request body into a byte array
@@ -381,20 +486,28 @@ func getEventsAroundLocation(db *gorm.DB, Lat float64, Lng float64, radius float
 	southBar := Lng - radius
 
 	db.Where("lat >= ? AND lat <= ? AND lng >= ? AND lng <= ?", westBar, eastBar, southBar, northBar).Find(&result)
-	/*
-		for i := 0; i < len(result); i++ {
-			fmt.Print(result[i].Lat)
-			fmt.Print("   ")
-			fmt.Print(result[i].Lng)
-			fmt.Print("|")
-			fmt.Print(result[i].Model.ID)
-			fmt.Print("|")
-			fmt.Println("--------------------")
-		}
-	*/
 
 	return result
 }
+
+// ------------ BEGIN ATTENDEE FUNCS ---------------
+func createAttend(db *gorm.DB, ar AttendRelation) error {
+	result := db.Create(&ar)
+	return result.Error
+}
+
+func deleteAttend(db *gorm.DB, ar AttendRelation) error {
+	result := db.Delete(&ar)
+	return result.Error
+}
+
+func countAttend(db *gorm.DB, eid uint) int64 {
+	var count int64
+	db.Model(&AttendRelation{}).Where("E_ID = ?", eid).Count(&count)
+	return count
+}
+
+// -------------END ATTENDEE FUNCS -----------------
 
 // Function that returns the Events within a specified square radius around a location
 // Returns a list of Events
@@ -450,19 +563,25 @@ func createUser(udb *gorm.DB, user User) error {
 
 func checkUser(udb *gorm.DB, email string) bool {
 	var usrs []User
-	udb.Where("email == ?", email).Find(&usrs)
+	udb.Where("email = ?", email).Find(&usrs)
 	return len(usrs) > 0
 }
 
 // Return -1 for record not found
 func getUserIDbyEmail(udb *gorm.DB, email string) int {
 	var usr User
-	err := udb.Where("email == ?", email).First(usr).Error
+	err := udb.Where("email = ?", email).First(usr).Error
 	if err != nil {
 		return -1
 	} else {
 		return (int)(usr.Model.ID)
 	}
+}
+
+func getEIDsByUID(ardb *gorm.DB, uid string) []int {
+	var res []int
+	ardb.Model(&AttendRelation{}).Where("p_id = ?", uid).Pluck("e_id", &res)
+	return res
 }
 
 // ------------------ GORM DB FUNCTIONS END --------------------
