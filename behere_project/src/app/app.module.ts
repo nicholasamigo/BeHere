@@ -34,6 +34,8 @@ import { EventsMiddlemanService } from './services/events-middleman.service';
 import { MapAndFeedComponent } from './map-and-feed/map-and-feed.component';
 import { CardCComponent } from './components/card-c/card-c.component';
 import {MatInputModule} from '@angular/material/input';
+import { CardDComponent } from './card-d/card-d.component';
+import { MyEventsComponent } from './components/my-events/my-events.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,9 @@ import {MatInputModule} from '@angular/material/input';
     CardAComponent,
     CardBComponent,
     CardCComponent,
-    MapAndFeedComponent
+    MapAndFeedComponent,
+    CardDComponent,
+    MyEventsComponent
     
   ],
   imports: [
