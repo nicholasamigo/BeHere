@@ -36,6 +36,7 @@ import { CardCComponent } from './components/card-c/card-c.component';
 import {MatInputModule} from '@angular/material/input';
 import { CardDComponent } from './card-d/card-d.component';
 import { MyEventsComponent } from './components/my-events/my-events.component';
+import { CreateEventComponent } from './create-event/create-event.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { MyEventsComponent } from './components/my-events/my-events.component';
     CardCComponent,
     MapAndFeedComponent,
     CardDComponent,
+    CreateEventComponent,
     MyEventsComponent
     
   ],

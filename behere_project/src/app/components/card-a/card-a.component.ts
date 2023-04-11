@@ -5,6 +5,7 @@ import { CardBComponent } from '../card-b/card-b.component';
 import { CardCComponent } from '../card-c/card-c.component';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { EventsMiddlemanService } from 'src/app/services/events-middleman.service';
+import { CardDComponent } from 'src/app/card-d/card-d.component';
 
 @Component({
   selector: 'app-card-a',
@@ -43,6 +44,14 @@ export class CardAComponent implements OnInit{
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
     })
+  }
+
+  onClickShowD(){
+
+    const dialogRef = this.dialog.open(CardDComponent, {
+      width: '70%',
+      data : this.event
+    });
   }
 
   onAttend() {

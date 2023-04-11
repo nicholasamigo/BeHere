@@ -8,11 +8,15 @@ import { MAT_DIALOG_DATA} from '@angular/material/dialog';
   styleUrls: ['./card-d.component.css']
 })
 export class CardDComponent {
-  //event : Event_t
   gmap_options : google.maps.MapOptions
   markerOptions : google.maps.MarkerOptions
-  markerCenterOptions : google.maps.MarkerOptions
 
+  center: google.maps.LatLngLiteral;
+
+  d: google.maps.LatLngLiteral = {lat: 0, lng: 0};
+
+  lat:number = 0;
+  lng:number = 0;
   //Declerations for inputs
   public name: string;
   public date: string;
@@ -33,27 +37,29 @@ export class CardDComponent {
 
   //@Input() input_event : Event_t
 
-  @Output() closeCardBEvent: EventEmitter<void> = new EventEmitter()
 
-  constructor(@Inject(MAT_DIALOG_DATA) public event: Event_t, private ems: EventsMiddlemanService) {}
+
+  constructor(private ems: EventsMiddlemanService) {}
 
   ngOnInit(): void {
-    //this.event=this.input_event
-
     this.gmap_options = {
-      center: {lat: this.event.lat, lng: this.event.lng},
+      center: {lat: 0, lng: 0},
       minZoom: 12,
       zoom: 16
     };
 
-    this.markerOptions = {
-      optimized: false,
-      position: {lat: this.event.lat, lng: this.event.lng}
-    }
-    this.markerCenterOptions = {
-      optimized: false,
-      position: {lat: this.event.lat, lng: this.event.lng}
-    }
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.center = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
+    });
+  }
+
+  updateSelectedLocation(event: google.maps.MapMouseEvent){
+    this.d = event.latLng.toJSON();
+    this.lat = this.d.lat;
+    this.lng = this.d.lng;
   }
 
   // Emits closeCardBEvent to map-and-feed.html
@@ -61,20 +67,15 @@ export class CardDComponent {
   //   this.closeCardBEvent.emit();
   // }
 
-  editEvent(){
-    let e = new Event_t(this.event.id, this.nameInputReference.nativeElement.value, this.bioInputReference.nativeElement.value,
+  createEvent(){
+    let e = new Event_t(0, this.nameInputReference.nativeElement.value, this.bioInputReference.nativeElement.value,
       "",
-      this.event.lat, 
-      this.event.lng,
+      this.lat, 
+      this.lng,
       "Balls avenue",
       this.dateInputReference.nativeElement.value,
       this.timeInputReference.nativeElement.value)
-    this.ems.editEvent(e)
-    .subscribe({
-      // Observable parameter
-      next: data => console.log('Event edited successfully'),
-      error: error => console.error('Error updating event', error)
-    });
+    this.ems.createEvent(e)
   }
 }
 

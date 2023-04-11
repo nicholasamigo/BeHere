@@ -6,6 +6,8 @@ import { CardBComponent } from '../card-b/card-b.component';
 import { MatDialog } from '@angular/material/dialog';
 import {MatTabsModule} from '@angular/material/tabs';
 import {GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
+import { CardDComponent } from 'src/app/card-d/card-d.component';
+import { CreateEventComponent } from 'src/app/create-event/create-event.component';
 
 
 
@@ -34,6 +36,7 @@ export class MyEventsComponent implements OnInit{
 
   // Event to be displayed for more info (Card Type B)
   e = new Event_t(0,"","","",0,0,"","","");
+  event: any;
 
 
   // This component has full access to the EMS services
@@ -54,13 +57,6 @@ export class MyEventsComponent implements OnInit{
   
   // Called when card A info is clicked.
   // This sets "selectedEvent" so that the cardB will pop up (it is *ngif'ed in)
-  openCardB(eventdata : Event_t) {
-    this.selectedEvent = eventdata
-  }
-  
-  closeCardB() {
-    this.selectedEvent = null
-  }
 
 
   @ViewChild('nameInput')
@@ -89,4 +85,5 @@ export class MyEventsComponent implements OnInit{
       this.cE = "Create Event";
     }
   }
+
 }
