@@ -22,7 +22,7 @@ export class MapAndFeedComponent implements OnInit{
   infoContent = '';
 
   // Fix this eventually. Works but can lead to memory leaks. Need to figure out a way to create events on initialization.
-  currevent = new Event_t(0, "", "", 0, 0, 0, "", "", "");
+  currevent = new Event_t(0, "", "", "", 0, 0, "", "", "");
 
   selectedEvent : Event_t = null
   alreadyInit : boolean
@@ -44,7 +44,7 @@ export class MapAndFeedComponent implements OnInit{
   lng:number = 0;
 
   // Event to be displayed for more info (Card Type B)
-  e = new Event_t(0,"","",0,0,0,"","","");
+  e = new Event_t(0,"","","",0,0,"","","");
 
   options: google.maps.MapOptions = {
     minZoom: 8
@@ -234,7 +234,7 @@ export class MapAndFeedComponent implements OnInit{
   // John you absolute buffoon
   createEvent(){
     let e = new Event_t(0, this.nameInputReference.nativeElement.value, "Bio",
-      0,
+      "Placeholder",
       this.lat, 
       this.lng,
       "Balls avenue",

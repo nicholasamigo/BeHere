@@ -41,12 +41,15 @@ export class EventsMiddlemanService {
 
   /* Example of an HTTP POST */
   createEvent(event : Event_t) {
-    const url = `${environment.serverUrl}/create-event`;
-    console.log("ems post to", url);
-    this.http.post(url, event).subscribe({
-      next: data => console.log("Sucess creating Event"),
-      error: error => console.log("Error!", error)
-    });
+    if (this.auth.user) {
+      event.hostid = this.auth.user.uid
+      const url = `${environment.serverUrl}/create-event`;
+      console.log("ems post to", url);
+      this.http.post(url, event).subscribe({
+        next: data => console.log("Sucess creating Event"),
+        error: error => console.log("Error!", error)
+      });
+    }
   }
 
   createAttend(event : Event_t) {
@@ -115,9 +118,18 @@ export class EventsMiddlemanService {
 
 
 editEvent(event : Event_t) : Observable<any>{
-  const url = `${environment.serverUrl}/edit-event`;
-  console.log("ems post to", url);
-  return this.http.post(url, event);
+  if (this.auth.user) {
+    const url = `${environment.serverUrl}/edit-event`;
+    console.log("ems post to", url);
+
+    // Maintain correct ID
+    event.hostid = this.auth.user.uid
+    return this.http.post(url, event);
+  }
+  else
+  {
+    return new Observable<any>();
+  }
 }
 }
 
@@ -125,7 +137,7 @@ export class Event_t {
   // TODO - update these structs
   // This needs to match the Event struct definition in main.go
   constructor(public id: number, public name: string, public bio: string,
-    public hostid: number, public lat: number, public lng: number, 
+    public hostid: string, public lat: number, public lng: number, 
     public address: string, public date: string, public time: string) {}
 }
 
