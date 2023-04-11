@@ -63,7 +63,7 @@ export class CardCComponent {
 
   editEvent(){
     let e = new Event_t(this.event.id, this.nameInputReference.nativeElement.value, this.bioInputReference.nativeElement.value,
-      0,
+      "",
       this.event.lat, 
       this.event.lng,
       "Balls avenue",
