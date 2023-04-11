@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Event_t } from 'src/app/services/events-middleman.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CardBComponent } from '../card-b/card-b.component';
+import { CardCComponent } from '../card-c/card-c.component';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { EventsMiddlemanService } from 'src/app/services/events-middleman.service';
 
@@ -67,5 +68,17 @@ export class CardAComponent implements OnInit{
       //   error: error => console.log("Error fetching attendee count")
       // })
     }
+  }
+
+  onClickShowC(){
+
+    const dialogRef = this.dialog.open(CardCComponent, {
+      width: '70%',
+      data : this.event
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    })
   }
 }

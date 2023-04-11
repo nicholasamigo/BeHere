@@ -100,6 +100,7 @@ func main() {
 
 	r.HandleFunc("/hello-world", helloWorld)
 	r.HandleFunc("/create-event", restCreateEvent).Methods("POST")
+	r.HandleFunc("/edit-event", restEditEvent).Methods("POST")
 	r.HandleFunc("/getEventsAroundLocation", restGetEventsAroundLocation)
 	r.HandleFunc("/createAttend", restCreateAttend).Methods("POST")
 	r.HandleFunc("/deleteAttend", restDeleteAttend).Methods("POST")
@@ -315,6 +316,31 @@ func restCreateEvent(w http.ResponseWriter, r *http.Request) {
 	// Send something back as proof of life. THis value probably ignored by
 	// front end
 	json.NewEncoder(w).Encode(newEvent)
+}
+
+func restEditEvent(w http.ResponseWriter, r *http.Request) {
+
+	reqBody, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Failed to read request body", http.StatusBadRequest)
+		return
+	}
+
+	// Parse the request body into a JSON object
+	var newEvent Event
+	err = json.Unmarshal(reqBody, &newEvent)
+	if err != nil {
+		http.Error(w, "Failed to parse request body", http.StatusBadRequest)
+		return
+	}
+
+	editEvent(db, newEvent.Model.ID, newEvent)
+
+	w.Header().Set("Content-Type", "application/json")
+	// Send something back as proof of life. THis value probably ignored by
+	// front end
+	json.NewEncoder(w).Encode(newEvent)
+
 }
 
 func restCreateAttend(w http.ResponseWriter, r *http.Request) {
@@ -552,7 +578,11 @@ func editEvent(edb *gorm.DB, id uint, event Event) bool {
 	db.Model(&Event{}).Where("id = ?", id).Update("host_id", event.HostId)
 	db.Model(&Event{}).Where("id = ?", id).Update("Lat", event.Lat)
 	db.Model(&Event{}).Where("id = ?", id).Update("Lng", event.Lng)
+	db.Model(&Event{}).Where("id = ?", id).Update("Date", event.Date)
+	db.Model(&Event{}).Where("id = ?", id).Update("Time", event.Time)
+	db.Model(&Event{}).Where("id = ?", id).Update("Bio", event.Bio)
 
+	fmt.Print(id)
 	return true
 }
 

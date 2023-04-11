@@ -1,7 +1,27 @@
 <div>
   <mat-card class="cardA">
-      <mat-card-header>
-        <mat-card-title>{{ event.name }}</mat-card-title>
+      <mat-card-header display="width: 100%">
+
+        <mat-card-title>{{ event.name }} <span></span>
+          <!--
+          <ng-container *ngIf="this.auth.user.uid == event.hostid;">
+          -->
+            <ng-container>
+            <button 
+            mat-button (click) = "onClickShowC()"
+            display="  float:right;"
+            matTooltip="Edit event"
+            id="editEvent"
+            >
+            <mat-icon
+              aria-hidden="false"
+              aria-label="Edit event"
+              >
+              cloud_upload
+            </mat-icon>
+          </button>
+          </ng-container>
+        </mat-card-title>
       </mat-card-header>
       <mat-divider style="margin-top: 5px;"></mat-divider>
       <mat-card-content>
