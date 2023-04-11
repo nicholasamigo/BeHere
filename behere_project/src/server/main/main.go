@@ -574,13 +574,14 @@ func createEvent(edb *gorm.DB, event Event) error {
 // Takes in an event id and replaces it with all the member attributes of a given event
 func editEvent(edb *gorm.DB, id uint, event Event) bool {
 	// Get all records
-	db.Model(&Event{}).Where("id = ?", id).Update("Name", event.Name)
-	db.Model(&Event{}).Where("id = ?", id).Update("host_id", event.HostId)
-	db.Model(&Event{}).Where("id = ?", id).Update("Lat", event.Lat)
-	db.Model(&Event{}).Where("id = ?", id).Update("Lng", event.Lng)
-	db.Model(&Event{}).Where("id = ?", id).Update("Date", event.Date)
-	db.Model(&Event{}).Where("id = ?", id).Update("Time", event.Time)
-	db.Model(&Event{}).Where("id = ?", id).Update("Bio", event.Bio)
+	// db.Model(&Event{}).Where("id = ?", id).Update("Name", event.Name)
+	// db.Model(&Event{}).Where("id = ?", id).Update("host_id", event.HostId)
+	// db.Model(&Event{}).Where("id = ?", id).Update("Lat", event.Lat)
+	// db.Model(&Event{}).Where("id = ?", id).Update("Lng", event.Lng)
+	// db.Model(&Event{}).Where("id = ?", id).Update("Date", event.Date)
+	// db.Model(&Event{}).Where("id = ?", id).Update("Time", event.Time)
+	// db.Model(&Event{}).Where("id = ?", id).Update("Bio", event.Bio)
+	edb.Save(&event)
 
 	fmt.Print(id)
 	return true

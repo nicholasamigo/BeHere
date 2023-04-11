@@ -66,15 +66,10 @@ export class CardCComponent {
       "",
       this.event.lat, 
       this.event.lng,
-      "Balls avenue",
+      "Default",
       this.dateInputReference.nativeElement.value,
       this.timeInputReference.nativeElement.value)
     this.ems.editEvent(e)
-    .subscribe({
-      // Observable parameter
-      next: data => console.log('Event edited successfully'),
-      error: error => console.error('Error updating event', error)
-    });
   }
 }
 
