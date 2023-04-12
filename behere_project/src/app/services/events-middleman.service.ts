@@ -11,13 +11,17 @@ import { AuthService } from './auth/auth.service';
 export class EventsMiddlemanService {
 
   public currentlyAttendingEventIDs : number[] = []
+  geocoder : google.maps.Geocoder
 
   constructor(private http: HttpClient, private auth: AuthService) {
     // subscribe to service
       auth.loginStatusChanged$.subscribe(() => {
       console.log('Login status changed')
       this.refreshCurrentAttend()
+
     });
+
+    this.geocoder = new google.maps.Geocoder();
    }
 
   getEventsAroundLocation(lat: number, lng: number, radius: number) {
@@ -40,13 +44,18 @@ export class EventsMiddlemanService {
   }
 
   /* Example of an HTTP POST */
-  createEvent(event : Event_t) {
-    const url = `${environment.serverUrl}/create-event`;
-    console.log("ems post to", url);
-    this.http.post(url, event).subscribe({
-      next: data => console.log("Sucess creating Event"),
-      error: error => console.log("Error!", error)
-    });
+  async createEvent(event : Event_t) {
+    if (this.auth.user) {
+      event.hostid = this.auth.user.uid
+      let address = await this.getAddress(event)
+      event.address = address
+      const url = `${environment.serverUrl}/create-event`;
+      console.log("ems post to", url);
+      this.http.post(url, event).subscribe({
+        next: data => console.log("Sucess creating Event"),
+        error: error => console.log("Error!", error)
+      });
+    }
   }
 
   createAttend(event : Event_t) {
@@ -112,12 +121,48 @@ export class EventsMiddlemanService {
       })
     }
   }
+
+
+ async editEvent(event : Event_t)  {
+    if (this.auth.user) {
+      const url = `${environment.serverUrl}/edit-event`;
+      console.log("ems post to", url);
+
+      // Maintain correct ID
+      event.hostid = this.auth.user.uid
+      let address = await this.getAddress(event)
+      event.address = address
+      
+      this.http.post(url, event).subscribe({
+        // Observable parameter
+        next: data => console.log('Event edited successfully'),
+        error: error => console.error('Error updating event', error)
+      });
+    }
 }
+
+ async getAddress(event : Event_t) : Promise<string> {
+  var address : string = "not updated"
+  await this.geocoder.geocode({location: {lat : event.lat, lng : event.lng}}, 
+    function(results, status) {
+      if (status == 'OK') { // properly encoded
+        address =  results[0].formatted_address
+        console.log("Received address: ", address)
+      } else {
+        alert('Geocode was not successful for the following reason: ' + status);
+      }
+    }
+    )
+    return address
+ }
+
+}
+
 export class Event_t {
   // TODO - update these structs
   // This needs to match the Event struct definition in main.go
   constructor(public id: number, public name: string, public bio: string,
-    public hostid: number, public lat: number, public lng: number, 
+    public hostid: string, public lat: number, public lng: number, 
     public address: string, public date: string, public time: string) {}
 }
 

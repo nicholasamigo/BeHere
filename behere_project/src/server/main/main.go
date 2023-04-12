@@ -33,7 +33,7 @@ type Event struct {
 	gorm.Model
 	Name          string
 	Bio           string
-	HostId        uint `gorm:"not null"` // ensures there is always a host to every event
+	HostId        string `gorm:"not null"` // ensures there is always a host to every event
 	Lat           float64
 	Lng           float64
 	Address       string
@@ -100,6 +100,7 @@ func main() {
 
 	r.HandleFunc("/hello-world", helloWorld)
 	r.HandleFunc("/create-event", restCreateEvent).Methods("POST")
+	r.HandleFunc("/edit-event", restEditEvent).Methods("POST")
 	r.HandleFunc("/getEventsAroundLocation", restGetEventsAroundLocation)
 	r.HandleFunc("/createAttend", restCreateAttend).Methods("POST")
 	r.HandleFunc("/deleteAttend", restDeleteAttend).Methods("POST")
@@ -130,20 +131,20 @@ func aj_populate() {
 	// let dummy1 = new Event_t(1, "Party at AJs!", 1, 29.644954782334302, -82.35255807676796);
 	// let dummy2 = new Event_t(2, "Dinner at Johns", 1, 29.669247750220627, -82.33697355656128);
 	// let dummy3 = new Event_t(3, "Pool Night at Nicks", 1, 29.685355319870283, -82.38572538761596);
-	e1 := Event{Name: "Party at AJs!", HostId: 1, Lat: 29.644954782334302, Lng: -82.35255807676796}
-	e2 := Event{Name: "Dinner at Johns", HostId: 1, Lat: 29.669247750220627, Lng: -82.33697355656128}
-	e3 := Event{Name: "Pool Night at Nicks", HostId: 1, Lat: 29.685355319870283, Lng: -82.38572538761596}
+	e1 := Event{Name: "Party at AJs!", HostId: "1", Lat: 29.644954782334302, Lng: -82.35255807676796}
+	e2 := Event{Name: "Dinner at Johns", HostId: "1", Lat: 29.669247750220627, Lng: -82.33697355656128}
+	e3 := Event{Name: "Pool Night at Nicks", HostId: "1", Lat: 29.685355319870283, Lng: -82.38572538761596}
 	db.Create(&e1)
 	db.Create(&e2)
 	db.Create(&e3)
 }
 
 func nick_test() {
-	event1 := Event{Name: "Basketball at Nick's", HostId: 25, Lat: 29.744954782334302, Lng: -82.45255807676796,
+	event1 := Event{Name: "Basketball at Nick's", HostId: "25", Lat: 29.744954782334302, Lng: -82.45255807676796,
 		Address: "9524 sw 101st Terr", Date: "2/4/2023", Time: "3:00 pm"}
 	db.Create(&event1)
 
-	event2 := Event{Name: "Ice Cream Time", HostId: 12, Lat: 29.544954782334302, Lng: -81.45255807676796,
+	event2 := Event{Name: "Ice Cream Time", HostId: "12", Lat: 29.544954782334302, Lng: -81.45255807676796,
 		Address: "1232 sw 3rd Ave", Date: "3/21/2023", Time: "5:00 pm"}
 	db.Create(&event2)
 }
@@ -174,14 +175,14 @@ func john_test_funcs() {
 	var e1 Event
 	e1.Name = "metro ping"
 	e1.Lat, e1.Lng = 29.633665697496742, -82.37285317141043
-	e1.HostId = 1
+	e1.HostId = "1"
 
 	var e2 Event
 	e2.Lat, e2.Lng = 29.63681751889846, -82.37009641100245
 	e2.Name = "idek"
-	e2.HostId = 2
+	e2.HostId = "2"
 
-	db.Create(&Event{Name: "wtf", Lat: 29.633665697496742, Lng: -82.37285317141043, HostId: 4})
+	db.Create(&Event{Name: "wtf", Lat: 29.633665697496742, Lng: -82.37285317141043, HostId: "4"})
 	db.Create(&e1)
 	db.Create(&e2)
 
@@ -203,14 +204,14 @@ func john_test_funcs() {
 	var e3 Event
 	e3.Lat, e3.Lng = 1600, -800
 	e3.Name = "CreateEvent"
-	e3.HostId = 2
+	e3.HostId = "2"
 	createEvent(db, e3)
 	getEventsAroundLocation(db, e3.Lat, e3.Lng, 50)
 	fmt.Println("--------------------")
 	ed_ID := getEventID(db, e3)
 	e3.Lat, e3.Lng = 9000, 9000
 	e3.Name = "EDITED_EVENT"
-	e3.HostId = 3
+	e3.HostId = "3"
 	editEvent(db, ed_ID, e3)
 	fmt.Println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
 	getEventsAroundLocation(db, e3.Lat, e3.Lng, 50)
@@ -315,6 +316,31 @@ func restCreateEvent(w http.ResponseWriter, r *http.Request) {
 	// Send something back as proof of life. THis value probably ignored by
 	// front end
 	json.NewEncoder(w).Encode(newEvent)
+}
+
+func restEditEvent(w http.ResponseWriter, r *http.Request) {
+
+	reqBody, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Failed to read request body", http.StatusBadRequest)
+		return
+	}
+
+	// Parse the request body into a JSON object
+	var newEvent Event
+	err = json.Unmarshal(reqBody, &newEvent)
+	if err != nil {
+		http.Error(w, "Failed to parse request body", http.StatusBadRequest)
+		return
+	}
+
+	editEvent(db, newEvent.Model.ID, newEvent)
+
+	w.Header().Set("Content-Type", "application/json")
+	// Send something back as proof of life. THis value probably ignored by
+	// front end
+	json.NewEncoder(w).Encode(newEvent)
+
 }
 
 func restCreateAttend(w http.ResponseWriter, r *http.Request) {
@@ -548,11 +574,16 @@ func createEvent(edb *gorm.DB, event Event) error {
 // Takes in an event id and replaces it with all the member attributes of a given event
 func editEvent(edb *gorm.DB, id uint, event Event) bool {
 	// Get all records
-	db.Model(&Event{}).Where("id = ?", id).Update("Name", event.Name)
-	db.Model(&Event{}).Where("id = ?", id).Update("host_id", event.HostId)
-	db.Model(&Event{}).Where("id = ?", id).Update("Lat", event.Lat)
-	db.Model(&Event{}).Where("id = ?", id).Update("Lng", event.Lng)
+	// db.Model(&Event{}).Where("id = ?", id).Update("Name", event.Name)
+	// db.Model(&Event{}).Where("id = ?", id).Update("host_id", event.HostId)
+	// db.Model(&Event{}).Where("id = ?", id).Update("Lat", event.Lat)
+	// db.Model(&Event{}).Where("id = ?", id).Update("Lng", event.Lng)
+	// db.Model(&Event{}).Where("id = ?", id).Update("Date", event.Date)
+	// db.Model(&Event{}).Where("id = ?", id).Update("Time", event.Time)
+	// db.Model(&Event{}).Where("id = ?", id).Update("Bio", event.Bio)
+	edb.Save(&event)
 
+	fmt.Print(id)
 	return true
 }
 
