@@ -37,7 +37,10 @@
 
           <!-- If the host, show the edit button instead -->
           <!-- To Do - add an indicator icon (with hover hint) that you are hosting this event -->
-          <ng-template #isHost>
+          <ng-template #isHost style="display: flex; align-items: center;">
+            <button mat-icon-button matTooltip="You're the host of this event!">
+              <mat-icon aria-hidden="false">front_hand</mat-icon>
+            </button>
             <button mat-stroked-button (click) = "onClickShowC()" matTooltip="Edit event">EDIT</button>
           </ng-template>
         </div>
