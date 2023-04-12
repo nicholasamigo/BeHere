@@ -106,6 +106,9 @@ func main() {
 	r.HandleFunc("/deleteAttend", restDeleteAttend).Methods("POST")
 	r.HandleFunc("/countAttend", restCountAttend)
 	r.HandleFunc("/getAttendingEventIDs", restGetAttendingEventIDs)
+	r.HandleFunc("/getDeletedAttendedEvents", restGetDeletedAttendedEvents)
+	r.HandleFunc("/deleteEvent", restDeleteEvent).Methods("POST")
+	r.HandleFunc("/completeEvent", restCompleteEvent).Methods("POST")
 
 	//r.HandleFunc("/getUserID", restGetUserID)
 	//r.HandleFunc("/putUser", restPutUser).Methods("PUT")
@@ -316,6 +319,68 @@ func restCreateEvent(w http.ResponseWriter, r *http.Request) {
 	// Send something back as proof of life. THis value probably ignored by
 	// front end
 	json.NewEncoder(w).Encode(newEvent)
+}
+
+func restDeleteEvent(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Deleting event...")
+	reqBody, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Failed to read request body", http.StatusBadRequest)
+		return
+	}
+	var deletingEvent Event
+	err = json.Unmarshal(reqBody, &deletingEvent)
+	if err != nil {
+		http.Error(w, "Failed to parse request body", http.StatusBadRequest)
+		return
+	}
+
+	err = deleteEvent(db, deletingEvent)
+	if err != nil {
+		http.Error(w, "Failed to delete entry from database", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(deletingEvent)
+}
+
+func restCompleteEvent(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Completing event...")
+	reqBody, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Failed to read request body", http.StatusBadRequest)
+		return
+	}
+	var completingEvent Event
+	err = json.Unmarshal(reqBody, &completingEvent)
+	if err != nil {
+		http.Error(w, "Failed to parse request body", http.StatusBadRequest)
+		return
+	}
+
+	err = completeEvent(db, completingEvent)
+	if err != nil {
+		http.Error(w, "Failed to complete/delete entry from database", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(completingEvent)
+}
+
+func restGetDeletedAttendedEvents(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Getting all previous events attended...")
+
+	query := r.URL.Query()
+	uid := strings.TrimSpace(query.Get("uid"))
+	fmt.Println("Received uid:", uid)
+	previousevents := getDeletedAttendedEvents(db, db, uid)
+
+	fmt.Println("Query res:", previousevents)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(previousevents)
 }
 
 func restEditEvent(w http.ResponseWriter, r *http.Request) {
@@ -568,6 +633,28 @@ func getEventByID(db *gorm.DB, id uint) Event {
 func createEvent(edb *gorm.DB, event Event) error {
 	result := edb.Create(&event)
 	return result.Error
+}
+
+// ret : error
+func deleteEvent(edb *gorm.DB, event Event) error {
+	result := edb.Delete(&event)
+	return result.Error
+}
+
+// Marks an event as completed, then deletes it
+func completeEvent(edb *gorm.DB, event Event) error {
+	edb.Model(&event).Update("CompletedFlag", true)
+	result := edb.Delete(&event)
+	return result.Error
+}
+
+// Front end can sort out whether completed or deleted.
+func getDeletedAttendedEvents(edb *gorm.DB, ardb *gorm.DB, uid string) []Event {
+	EIDS := getEIDsByUID(ardb, uid)
+
+	var deletedevents []Event
+	edb.Unscoped().Find(&deletedevents, EIDS)
+	return deletedevents
 }
 
 // Function that edits an event
