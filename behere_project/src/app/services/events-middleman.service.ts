@@ -10,7 +10,16 @@ import { AuthService } from './auth/auth.service';
 })
 export class EventsMiddlemanService {
 
+  // Used for page 1
   public currentlyAttendingEventIDs : number[] = []
+
+  // Used for page 2
+  public hostingEvents : Event_t[] = []
+  public attendingEvents : Event_t[] = []
+  
+  // front end can sort out which are completed/cancelled
+  public previousEvents : Event_t[] = []
+
   geocoder : google.maps.Geocoder
 
   constructor(private http: HttpClient, private auth: AuthService) {
