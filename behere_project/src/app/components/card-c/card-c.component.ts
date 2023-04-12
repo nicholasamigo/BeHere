@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, EventEmitter, Output, Inject, ViewChild, ElementRef} from '@angular/core';
 import { Event_t, EventsMiddlemanService } from 'src/app/services/events-middleman.service';
-import { MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-card-c',
@@ -35,7 +37,11 @@ export class CardCComponent {
 
   @Output() closeCardBEvent: EventEmitter<void> = new EventEmitter()
 
-  constructor(@Inject(MAT_DIALOG_DATA) public event: Event_t, private ems: EventsMiddlemanService) {}
+  constructor(@Inject(MAT_DIALOG_DATA) public event: Event_t, 
+      private ems: EventsMiddlemanService, 
+      public dialogRef : MatDialogRef<CardCComponent>,
+      private readonly snackBar: MatSnackBar,
+      ) {}
 
   ngOnInit(): void {
     //this.event=this.input_event
@@ -56,6 +62,38 @@ export class CardCComponent {
     }
   }
 
+  confirmDelete() : void {
+    if(confirm("Are you sure you want to delete this event?\n\nThis action cannot be undone."))
+    {
+      this.ems.deleteEvent(this.event)
+      console.log("Deleted")
+      this.closeDialog()
+      this.snackBar.open(
+        `${this.event.name} was deleted.`,
+        'Close',
+        {
+          duration: 4000,
+        },
+      )
+    }
+  }
+
+  confirmComplete() : void {
+    if(confirm("Are you sure you want to mark this event completed?\n\nThis action cannot be undone."))
+    {
+      this.ems.completeEvent(this.event)
+      console.log("Completed")
+      this.closeDialog()
+      this.snackBar.open(
+        `${this.event.name} was marked completed.`,
+        'Close',
+        {
+          duration: 4000,
+        },
+      )
+    }
+  }
+
   // Emits closeCardBEvent to map-and-feed.html
   // onClickCloseB() {
   //   this.closeCardBEvent.emit();
@@ -70,6 +108,16 @@ export class CardCComponent {
       this.dateInputReference.nativeElement.value,
       this.timeInputReference.nativeElement.value)
     this.ems.editEvent(e)
+    this.snackBar.open(
+      `Your event, ${e.name}, was successfully edited.`,
+      'Close',
+      {
+        duration: 4000,
+      },
+    )
+  }
+
+  closeDialog() {
+    this.dialogRef.close();
   }
 }
-

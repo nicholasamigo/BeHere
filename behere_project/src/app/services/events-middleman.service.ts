@@ -22,7 +22,7 @@ export class EventsMiddlemanService {
 
   geocoder : google.maps.Geocoder
 
-  constructor(private http: HttpClient, private auth: AuthService) {
+  constructor(private http: HttpClient, public auth: AuthService) {
     // subscribe to service
       auth.loginStatusChanged$.subscribe(() => {
       console.log('Login status changed')
@@ -192,8 +192,8 @@ export class EventsMiddlemanService {
       const url = `${environment.serverUrl}/edit-event`;
       console.log("ems post to", url);
 
-      // Maintain correct ID
-      event.hostid = this.auth.user.uid
+      // Maintain previous ID
+      event.hostid = null
       let address = await this.getAddress(event)
       event.address = address
       

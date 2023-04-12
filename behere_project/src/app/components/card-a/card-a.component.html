@@ -3,24 +3,6 @@
       <mat-card-header display="width: 100%">
 
         <mat-card-title>{{ event.name }} <span></span>
-          <!--
-          <ng-container *ngIf="this.auth.user.uid == event.hostid;">
-          -->
-            <ng-container>
-            <button 
-            mat-button (click) = "onClickShowC()"
-            display="  float:right;"
-            matTooltip="Edit event"
-            id="editEvent"
-            >
-            <mat-icon
-              aria-hidden="false"
-              aria-label="Edit event"
-              >
-              cloud_upload
-            </mat-icon>
-          </button>
-          </ng-container>
         </mat-card-title>
       </mat-card-header>
       <mat-divider style="margin-top: 5px;"></mat-divider>
@@ -47,9 +29,12 @@
           <ng-template #notAttending>
             <button mat-button (click)="onAttend()">ATTEND</button>
           </ng-template>
-          
+
+          <ng-container *ngIf="this.auth.user && this.auth.user.uid == event.hostid;">
+            <button mat-button (click) = "onClickShowC()" matTooltip="Edit event">EDIT</button>
+          </ng-container>
         </div>
-        <button mat-button>SHARE</button>
+        <!-- <button mat-button>SHARE</button> -->
         <button mat-button (click) = "onClickShowB()" style="position: absolute; right: 10px;">INFO</button>
       </mat-card-actions>
   </mat-card>

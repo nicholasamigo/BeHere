@@ -5,7 +5,10 @@ import { CardBComponent } from '../card-b/card-b.component';
 import { CardCComponent } from '../card-c/card-c.component';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { EventsMiddlemanService } from 'src/app/services/events-middleman.service';
-import { CardDComponent } from 'src/app/card-d/card-d.component';
+// import { CardDComponent } from 'src/app/card-d/card-d.component';
+
+// use these to trigger an event in the map-n-feed component
+// when a card C (edit) dialog gets closed. 
 
 @Component({
   selector: 'app-card-a',
@@ -22,6 +25,9 @@ export class CardAComponent implements OnInit{
 
   @Output() openCardBEvent: EventEmitter<Event_t> = new EventEmitter()
 
+  @Output() closedCardCEvent: EventEmitter<Event_t> = new EventEmitter()
+
+
   constructor(public dialog: MatDialog, public auth: AuthService, public ems: EventsMiddlemanService) {
   }
 
@@ -37,7 +43,8 @@ export class CardAComponent implements OnInit{
   onClickShowB(){
 
     const dialogRef = this.dialog.open(CardBComponent, {
-      width: '70%',
+      width: '80%',
+      minHeight: '80%',
       data : this.event
     });
 
@@ -46,13 +53,13 @@ export class CardAComponent implements OnInit{
     })
   }
 
-  onClickShowD(){
+  // onClickShowD(){
 
-    const dialogRef = this.dialog.open(CardDComponent, {
-      width: '70%',
-      data : this.event
-    });
-  }
+  //   const dialogRef = this.dialog.open(CardDComponent, {
+  //     width: '70%',
+  //     data : this.event
+  //   });
+  // }
 
   onAttend() {
     if (this.auth.user) {
@@ -82,12 +89,15 @@ export class CardAComponent implements OnInit{
   onClickShowC(){
 
     const dialogRef = this.dialog.open(CardCComponent, {
-      width: '70%',
+      width: '80%',
+      minHeight: '80%',
       data : this.event
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
+      // Trigger a geo refresh.
+      this.closedCardCEvent.emit()
     })
   }
 }

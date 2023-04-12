@@ -34,7 +34,6 @@
                 </tr></table>
                 Selected Lat: {{ lat }}
                 Selected Longitude: {{ lng }}
-                <button mat-button (click) = "createEvent()" style="position: absolute;">SAVE</button>
             </div>
             
         </mat-grid-tile>
@@ -48,7 +47,9 @@
         </mat-grid-list>
                 
     </mat-dialog-content>
-    <mat-dialog-actions align="end">
-        <button mat-button mat-dialog-close>CLOSE</button>
+    <mat-dialog-actions>
+        <button mat-raised-button mat-dialog-close (click) = "createEvent()">SUBMIT</button>
+        <span></span>
+        <button mat-raised-button mat-dialog-close style="position: absolute; right: 10px;">CLOSE</button>
     </mat-dialog-actions>
 </div>

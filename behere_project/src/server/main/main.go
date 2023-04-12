@@ -668,7 +668,8 @@ func editEvent(edb *gorm.DB, id uint, event Event) bool {
 	// db.Model(&Event{}).Where("id = ?", id).Update("Date", event.Date)
 	// db.Model(&Event{}).Where("id = ?", id).Update("Time", event.Time)
 	// db.Model(&Event{}).Where("id = ?", id).Update("Bio", event.Bio)
-	edb.Save(&event)
+	//edb.Save(&event)
+	edb.Model(&event).Omit("host_id").Updates(event)
 
 	fmt.Print(id)
 	return true

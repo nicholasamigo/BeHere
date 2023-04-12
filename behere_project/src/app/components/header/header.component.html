@@ -38,7 +38,7 @@
       <ng-container *ngIf="this.auth.user; else loginIcon">
   
         <button 
-          mat-icon-button
+          mat-button
           routerLink="/create"
           matTooltip="Create an event"
           id="createAnEvent"
@@ -59,10 +59,11 @@
       </ng-container>
       <ng-template #loginIcon>
         <button 
-          mat-icon-button
+          mat-raised-button
           (click)="login()"
           matTooltip="Login"
           >
+          Log In
           <mat-icon
             aria-hidden="false"
             aria-label="Login"

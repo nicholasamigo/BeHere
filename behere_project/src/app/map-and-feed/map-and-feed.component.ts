@@ -84,18 +84,9 @@ export class MapAndFeedComponent implements OnInit{
         lng: position.coords.longitude,
       };
     });
-
-
-    //window.addEventListener('load', () => {this.initCenter(); console.log('Load event triggered')})
   }
 
-  initCenter() {
-    // Wait for the 'tilesloaded' event to be fired before calling the getCenterOfMap() function
-    google.maps.event.addListenerOnce(this.map, 'center_changed', () => {
-      console.log('center_changed!')
-      this.updateEventList()
-    });
-  }
+
 
   // Called when card A info is clicked.
   // This sets "selectedEvent" so that the cardB will pop up (it is *ngif'ed in)
@@ -252,5 +243,9 @@ export class MapAndFeedComponent implements OnInit{
       x.style.display = "none";
       this.cE = "Create Event";
     }
+  }
+
+  testLog() {
+    console.log("Map-n-feed Received the Event that dialog C closed")
   }
 }
