@@ -22,8 +22,6 @@ import { provideRemoteConfig,getRemoteConfig } from '@angular/fire/remote-config
 import { provideStorage,getStorage } from '@angular/fire/storage';
 import { AppFirebaseModule } from './app-firebase.module';
 import { AppMaterialModule } from './app-material.module';
-import { CreateComponent } from './components/create/create.component';
-import { FeedComponent } from './components/feed/feed.component';
 import { ProfileCardComponent } from './components/profile-card/profile-card.component';
 import { HeaderComponent } from './components/header/header.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -32,17 +30,17 @@ import { CardBComponent } from './components/card-b/card-b.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { EventsMiddlemanService } from './services/events-middleman.service';
 import { MapAndFeedComponent } from './map-and-feed/map-and-feed.component';
+import { MyEventsComponent } from './components/my-events/my-events.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CreateComponent,
-    FeedComponent,
     ProfileCardComponent,
     HeaderComponent,
     CardAComponent,
     CardBComponent,
-    MapAndFeedComponent
+    MapAndFeedComponent,
+    MyEventsComponent
     
   ],
   imports: [
