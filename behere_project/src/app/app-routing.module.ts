@@ -3,11 +3,8 @@ import {
     redirectUnauthorizedTo,
   } from '@angular/fire/compat/auth-guard';
   import { NgModule } from '@angular/core';
-  import { Routes, RouterModule } from '@angular/router';
-  
-  import { BASE, CREATE, FEED } from './consts/routes.const';
-  import { CreateComponent } from './components/create/create.component';
-  import { FeedComponent } from './components/feed/feed.component';
+  import { Routes, RouterModule } from '@angular/router'; 
+import { BASE, CREATE, FEED } from './consts/routes.const';
 import { MapAndFeedComponent } from './map-and-feed/map-and-feed.component';
 import { MyEventsComponent } from './components/my-events/my-events.component';
   

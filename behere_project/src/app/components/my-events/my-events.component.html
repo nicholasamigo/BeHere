@@ -1,28 +1,34 @@
 
-<div class="events-tab" style="margin-left: 5px; display: flex; max-width: 600px; height:  70vh; outline: #3e3e97 solid 5px; width: 500px;">
-    <mat-tab-group>
-        <mat-tab label="All"> 
-            <app-card-a *ngFor="let event of eventList" 
-                [input_event]="event"
-                style="height: 350px; width: 400px; padding: 20px;"/>
-        </mat-tab>
-        
-        <mat-tab label="Attending">
-            <ng-container *ngFor="let event of eventList">
-                <app-card-a *ngIf="ems.currentlyAttendingEventIDs.includes(event.id)"
-                [input_event]="event"
-                style="height: 350px; width: 400px; padding: 20px;"/>
-            </ng-container>
-        </mat-tab>
+<div>
+    
+    <h2 class="welcome-message">
+        Welcome to the My Events Page!
+    </h2>  
 
-        <mat-tab label="Hosting"> 
+    <div class="detailed-event-tabs" style=" max-width: 1700px; width: 1500px; height: 1000px;">
+        <mat-tab-group>
+            <mat-tab label="All Events">
 
-            
-        </mat-tab>
+            </mat-tab>
 
-      </mat-tab-group>
+            <mat-tab label="Hosting">
+
+            </mat-tab>
+
+            <mat-tab label="Attending">
+
+            </mat-tab>
+
+            <mat-tab label="Completed">
 
 
+            </mat-tab>
+
+            <mat-tab label="Cancelled">
+
+            </mat-tab>
+        </mat-tab-group>
+    </div>
 </div>
 
 <app-create-event/>

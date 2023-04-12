@@ -1,9 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef} from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input} from '@angular/core';
 import {GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
 import { Event_t, EventsMiddlemanService } from '../services/events-middleman.service';
 import { DataServiceService } from '../data-service.service';
 import { MatDialog } from '@angular/material/dialog';
+import { HelloWorldService } from '../hello-world.service';
 import { AuthService } from '../services/auth/auth.service';
+
 @Component({
   selector: 'app-map-n-feed',
   templateUrl: './map-and-feed.component.html',
@@ -13,6 +15,11 @@ export class MapAndFeedComponent implements OnInit{
 
   name = 'Angular';
   dataArr = [];
+
+  title:string = "";
+
+  @Input() allData: [];
+  latData: any;
 
   // Allow direct reading of the big google map Angular component in "map"
   @ViewChild('primary_google_map', { static: false }) map: GoogleMap
@@ -64,13 +71,22 @@ export class MapAndFeedComponent implements OnInit{
 
   // This component has full access to the EMS services
   // Which handle all requests from the Event DB
-  constructor(public ems: EventsMiddlemanService, private dataService: DataServiceService) {}
+  constructor(private hw: HelloWorldService, public ems: EventsMiddlemanService, private dataService: DataServiceService) {}
 
 
 
   ngOnInit() {
     /* load in events */
     /* TODO - update this to interface with backend */
+
+    // Read from getTitle which is on backend API. Convert back from JSON into a struct
+    this.hw.getTitle()
+      .subscribe(data => this.title = JSON.parse(JSON.stringify(data)).title);
+    console.log(this.title);
+
+    this.dataService.dataUpdated.subscribe((data) => {
+      this.latData = data;
+    });
 
     this.eventList = [];
     this.alreadyInit = false
@@ -87,6 +103,12 @@ export class MapAndFeedComponent implements OnInit{
 
 
     //window.addEventListener('load', () => {this.initCenter(); console.log('Load event triggered')})
+  }
+
+  updateData(){
+    this.dataService.dataUpdated.subscribe((data) => {
+      this.latData = data;
+    });
   }
 
   initCenter() {
