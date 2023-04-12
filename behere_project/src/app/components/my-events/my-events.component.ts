@@ -8,15 +8,15 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
 import { CardDComponent } from 'src/app/card-d/card-d.component';
 import { CreateEventComponent } from 'src/app/create-event/create-event.component';
-
-
-
+import { NgModule } from '@angular/core'
 
 @Component({
   selector: 'app-my-events',
   templateUrl: './my-events.component.html',
   styleUrls: ['./my-events.component.css']
+
 })
+
 export class MyEventsComponent implements OnInit{
 
   // Fix this eventually. Works but can lead to memory leaks. Need to figure out a way to create events on initialization.
