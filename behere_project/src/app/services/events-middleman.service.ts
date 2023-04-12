@@ -60,8 +60,12 @@ export class EventsMiddlemanService {
       event.address = address
       const url = `${environment.serverUrl}/create-event`;
       console.log("ems post to", url);
-      this.http.post(url, event).subscribe({
-        next: data => console.log("Sucess creating Event"),
+      this.http.post<number>(url, event).subscribe({
+        next: data => {
+          event.id = data
+          console.log("Sucess creating Event");
+          this.createAttend(event)
+        },
         error: error => console.log("Error!", error)
       });
     }
