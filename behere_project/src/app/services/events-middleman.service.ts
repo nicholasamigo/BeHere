@@ -10,10 +10,19 @@ import { AuthService } from './auth/auth.service';
 })
 export class EventsMiddlemanService {
 
+  // Used for page 1
   public currentlyAttendingEventIDs : number[] = []
+
+  // Used for page 2
+  public hostingEvents : Event_t[] = []
+  public attendingEvents : Event_t[] = []
+  
+  // front end can sort out which are completed/cancelled
+  public previousEvents : Event_t[] = []
+
   geocoder : google.maps.Geocoder
 
-  constructor(private http: HttpClient, private auth: AuthService) {
+  constructor(private http: HttpClient, public auth: AuthService) {
     // subscribe to service
       auth.loginStatusChanged$.subscribe(() => {
       console.log('Login status changed')
@@ -51,8 +60,12 @@ export class EventsMiddlemanService {
       event.address = address
       const url = `${environment.serverUrl}/create-event`;
       console.log("ems post to", url);
-      this.http.post(url, event).subscribe({
-        next: data => console.log("Sucess creating Event"),
+      this.http.post<number>(url, event).subscribe({
+        next: data => {
+          event.id = data
+          console.log("Sucess creating Event");
+          this.createAttend(event)
+        },
         error: error => console.log("Error!", error)
       });
     }
@@ -122,14 +135,69 @@ export class EventsMiddlemanService {
     }
   }
 
+  // called to cancel the event
+  deleteEvent(event : Event_t) : void {
+    if (this.auth.user)
+    {
+        const url = `${environment.serverUrl}/deleteEvent`;
+        console.log("ems post delete event to", url);
+        this.http.post(url, event).subscribe({
+          next: data => {console.log("Sucess deleting event");
+        },
+          error: error => console.log("Error!", error)
+        })
+    }
+    else 
+    {
+      console.log("Can't delete, no one logged in")
+    }
+  }
+
+  // called to complete the event
+  completeEvent(event : Event_t) : void {
+    if (this.auth.user)
+    {
+        const url = `${environment.serverUrl}/completeEvent`;
+        console.log("ems post complete event to", url);
+        this.http.post(url, event).subscribe({
+          next: data => {console.log("Sucess completing event");
+        },
+          error: error => console.log("Error!", error)
+        })
+    }
+    else 
+    {
+      console.log("Can't complete, no one logged in")
+    }
+  }
+
+  //called to get all deleted previous
+  //caller must subscribe to this event.
+  getDeletedAttendedEvents() {
+    if (!this.auth.user) {console.log("No one logged in"); return []}
+      
+    const params = new HttpParams()
+    .set('uid', this.auth.user.uid);
+
+    const url = `${environment.serverUrl}/getDeletedAttendedEvents`;
+    console.log("request to", url, params);
+    return this.http.get<any[]>(url, { params }).pipe(
+      map(response => response.map(event => new Event_t(event.ID, event.Name,  event.Bio, event.HostId,
+        event.Lat, event.Lng, event.Address, event.Date, event.Time))),
+      catchError(error => {
+        console.error('Error retrieving events:', error);
+        return [];
+      })
+    );
+  }
 
  async editEvent(event : Event_t)  {
     if (this.auth.user) {
       const url = `${environment.serverUrl}/edit-event`;
       console.log("ems post to", url);
 
-      // Maintain correct ID
-      event.hostid = this.auth.user.uid
+      // Maintain previous ID
+      event.hostid = null
       let address = await this.getAddress(event)
       event.address = address
       

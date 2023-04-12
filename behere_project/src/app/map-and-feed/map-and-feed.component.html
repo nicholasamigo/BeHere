@@ -60,25 +60,29 @@
 
     <div class="events-tab" style="margin-left: 5px; display: flex; max-width: 600px; height:  70vh; outline: #3e3e97 solid 5px; width: 500px;">
         <mat-tab-group>
-            <mat-tab label="All"> 
+            <mat-tab label="Nearby Events"> 
                 <app-card-a *ngFor="let event of eventList" 
                     [input_event]="event"
-                    (openCardBEvent)="openCardB($event)" 
+                    (closedCardCEvent)="updateEventList()" 
                     style="height: 350px; width: 400px; padding: 20px;"/>
             </mat-tab>
             
-            <mat-tab label="Attending">
+            <mat-tab label="Attending" *ngIf="ems.auth.user">
                 <ng-container *ngFor="let event of eventList">
                     <app-card-a *ngIf="ems.currentlyAttendingEventIDs.includes(event.id)"
                     [input_event]="event"
-                    (openCardBEvent)="openCardB($event)" 
+                    (closedCardCEvent)="updateEventList()"
                     style="height: 350px; width: 400px; padding: 20px;"/>
                 </ng-container>
             </mat-tab>
 
-            <mat-tab label="Hosting"> 
-
-                
+            <mat-tab label="Hosting" *ngIf="ems.auth.user"> 
+                <ng-container *ngFor="let event of eventList">
+                    <app-card-a *ngIf="event.hostid == ems.auth.user.uid"
+                    [input_event]="event"
+                    (closedCardCEvent)="updateEventList()" 
+                    style="height: 350px; width: 400px; padding: 20px;"/>
+                </ng-container>
             </mat-tab>
 
           </mat-tab-group>

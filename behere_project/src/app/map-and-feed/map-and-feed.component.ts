@@ -100,11 +100,9 @@ export class MapAndFeedComponent implements OnInit{
         lng: position.coords.longitude,
       };
     });
-
-
-    //window.addEventListener('load', () => {this.initCenter(); console.log('Load event triggered')})
   }
 
+/* commenting out for safety
   updateData(){
     this.dataService.dataUpdated.subscribe((data) => {
       this.latData = data;
@@ -118,6 +116,7 @@ export class MapAndFeedComponent implements OnInit{
       this.updateEventList()
     });
   }
+*/
 
   // Called when card A info is clicked.
   // This sets "selectedEvent" so that the cardB will pop up (it is *ngif'ed in)
@@ -274,5 +273,9 @@ export class MapAndFeedComponent implements OnInit{
       x.style.display = "none";
       this.cE = "Create Event";
     }
+  }
+
+  testLog() {
+    console.log("Map-n-feed Received the Event that dialog C closed")
   }
 }
