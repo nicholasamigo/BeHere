@@ -108,6 +108,8 @@ func main() {
 	r.HandleFunc("/countAttend", restCountAttend)
 	r.HandleFunc("/getAttendingEventIDs", restGetAttendingEventIDs)
 	r.HandleFunc("/getDeletedAttendedEvents", restGetDeletedAttendedEvents)
+	r.HandleFunc("/getAttendingEvents", restGetAttendingEvents)
+	r.HandleFunc("/getHostingEvents", restGetHostingEvents)
 	r.HandleFunc("/deleteEvent", restDeleteEvent).Methods("POST")
 	r.HandleFunc("/completeEvent", restCompleteEvent).Methods("POST")
 
@@ -384,6 +386,34 @@ func restGetDeletedAttendedEvents(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(previousevents)
 }
 
+func restGetAttendingEvents(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Getting all events attending...")
+
+	query := r.URL.Query()
+	uid := strings.TrimSpace(query.Get("uid"))
+	fmt.Println("Received uid:", uid)
+	attendingEvents := getAttendingEvents(db, db, uid)
+
+	fmt.Println("Query res:", attendingEvents)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(attendingEvents)
+}
+
+func restGetHostingEvents(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Getting all events hosting...")
+
+	query := r.URL.Query()
+	uid := strings.TrimSpace(query.Get("uid"))
+	fmt.Println("Received uid:", uid)
+	hostingEvents := getHostingEvents(db, uid)
+
+	fmt.Println("Query res:", hostingEvents)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(hostingEvents)
+}
+
 func restEditEvent(w http.ResponseWriter, r *http.Request) {
 
 	reqBody, err := io.ReadAll(r.Body)
@@ -656,6 +686,20 @@ func getDeletedAttendedEvents(edb *gorm.DB, ardb *gorm.DB, uid string) []Event {
 	var deletedevents []Event
 	edb.Unscoped().Find(&deletedevents, EIDS)
 	return deletedevents
+}
+
+func getAttendingEvents(edb *gorm.DB, ardb *gorm.DB, uid string) []Event {
+	EIDS := getEIDsByUID(ardb, uid)
+
+	var attendingevents []Event
+	edb.Find(&attendingevents, EIDS)
+	return attendingevents
+}
+
+func getHostingEvents(edb *gorm.DB, uid string) []Event {
+	var hostingEvents []Event
+	edb.Where("host_id = ?", uid).Find(&hostingEvents)
+	return hostingEvents
 }
 
 // Function that edits an event

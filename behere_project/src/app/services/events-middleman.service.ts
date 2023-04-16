@@ -173,13 +173,53 @@ export class EventsMiddlemanService {
 
   //called to get all deleted previous
   //caller must subscribe to this event.
-  getDeletedAttendedEvents() {
-    if (!this.auth.user) {console.log("No one logged in"); return []}
+  getDeletedAttendedEvents() : Observable<Event_t[]> {
+    if (!this.auth.user) {console.log("No one logged in"); return null}
       
     const params = new HttpParams()
     .set('uid', this.auth.user.uid);
 
     const url = `${environment.serverUrl}/getDeletedAttendedEvents`;
+    console.log("request to", url, params);
+    return this.http.get<any[]>(url, { params }).pipe(
+      map(response => response.map(event => new Event_t(event.ID, event.Name,  event.Bio, event.HostId,
+        event.Lat, event.Lng, event.Address, event.Date, event.Time))),
+      catchError(error => {
+        console.error('Error retrieving events:', error);
+        return [];
+      })
+    );
+  }
+
+  //called to get all deleted previous
+  //caller must subscribe to this event.
+  getAttendingEvents() : Observable<Event_t[]> {
+    if (!this.auth.user) {console.log("No one logged in"); return null}
+      
+    const params = new HttpParams()
+    .set('uid', this.auth.user.uid);
+
+    const url = `${environment.serverUrl}/getAttendingEvents`;
+    console.log("request to", url, params);
+    return this.http.get<any[]>(url, { params }).pipe(
+      map(response => response.map(event => new Event_t(event.ID, event.Name,  event.Bio, event.HostId,
+        event.Lat, event.Lng, event.Address, event.Date, event.Time))),
+      catchError(error => {
+        console.error('Error retrieving events:', error);
+        return [];
+      })
+    );
+  }
+
+  //called to get all deleted previous
+  //caller must subscribe to this event.
+  getHostingEvents() : Observable<Event_t[]> {
+    if (!this.auth.user) {console.log("No one logged in"); return null}
+      
+    const params = new HttpParams()
+    .set('uid', this.auth.user.uid);
+
+    const url = `${environment.serverUrl}/getHostingEvents`;
     console.log("request to", url, params);
     return this.http.get<any[]>(url, { params }).pipe(
       map(response => response.map(event => new Event_t(event.ID, event.Name,  event.Bio, event.HostId,
@@ -207,7 +247,7 @@ export class EventsMiddlemanService {
         error: error => console.error('Error updating event', error)
       });
     }
-}
+  }
 
  async getAddress(event : Event_t) : Promise<string> {
   var address : string = "not updated"
@@ -222,6 +262,30 @@ export class EventsMiddlemanService {
     }
     )
     return address
+ }
+
+ // Called for page 2 updates
+ pullEMSEvents() : void {
+  this.getAttendingEvents().subscribe({
+    next : data => {
+      this.attendingEvents = data
+    },
+    error : err => console.log("Error getting attending events")
+  })
+
+  this.getHostingEvents().subscribe({
+    next : data => {
+      this.hostingEvents = data
+    },
+    error : err => console.log("Error getting hosting events")
+  })
+
+  this.getDeletedAttendedEvents().subscribe({
+    next : data => {
+      this.previousEvents = data
+    },
+    error : err => console.log("Error getting previous events")
+  })  
  }
 
 }
