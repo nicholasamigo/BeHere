@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, EventEmitter, Output, Inject, ViewChild, ElementRef} from '@angular/core';
 import { Event_t, EventsMiddlemanService } from 'src/app/services/events-middleman.service';
 import { MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-card-d',
@@ -39,13 +41,15 @@ export class CardDComponent {
 
 
 
-  constructor(private ems: EventsMiddlemanService) {}
+  constructor(private ems: EventsMiddlemanService, 
+    private readonly snackBar : MatSnackBar,
+    public dialogRef : MatDialogRef<CardDComponent>) {}
 
   ngOnInit(): void {
     this.gmap_options = {
       center: {lat: 0, lng: 0},
-      minZoom: 12,
-      zoom: 16
+      minZoom: 10,
+      zoom: 11
     };
 
     navigator.geolocation.getCurrentPosition((position) => {
@@ -68,6 +72,17 @@ export class CardDComponent {
   // }
 
   createEvent(){
+    if (this.lat == 0) {
+      this.snackBar.open(
+        'Please click the map to select a location for your event.',
+        'Close',
+        {
+          duration: 4000,
+        },
+      )
+      return
+    }
+    else{
     let e = new Event_t(0, this.nameInputReference.nativeElement.value, this.bioInputReference.nativeElement.value,
       "",
       this.lat, 
@@ -77,6 +92,15 @@ export class CardDComponent {
       this.timeInputReference.nativeElement.value,
       false)
     this.ems.createEvent(e)
+    this.snackBar.open(
+      `Your event, ${e.name}, was successfully created.`,
+      'Close',
+      {
+        duration: 4000,
+      },
+    )
+    this.dialogRef.close()
+    }
   }
 }
 
