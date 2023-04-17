@@ -67,7 +67,9 @@ export class MapAndFeedComponent implements OnInit{
   };
 
   markerOptions2: google.maps.MarkerOptions = {
-    optimized: false
+    optimized: false,
+    animation: google.maps.Animation.DROP,
+    //icon:  {url: "../../assets/bluepin.png", size: new google.maps.Size(50, 50)}
   }
 
   // This component has full access to the EMS services
