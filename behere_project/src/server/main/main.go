@@ -684,7 +684,7 @@ func getDeletedAttendedEvents(edb *gorm.DB, ardb *gorm.DB, uid string) []Event {
 	EIDS := getEIDsByUID(ardb, uid)
 
 	var deletedevents []Event
-	edb.Unscoped().Find(&deletedevents, EIDS)
+	edb.Unscoped().Where("deleted_at != ?", 0).Find(&deletedevents, EIDS)
 	return deletedevents
 }
 

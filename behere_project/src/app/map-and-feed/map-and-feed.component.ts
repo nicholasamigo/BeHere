@@ -29,7 +29,7 @@ export class MapAndFeedComponent implements OnInit{
   infoContent = '';
 
   // Fix this eventually. Works but can lead to memory leaks. Need to figure out a way to create events on initialization.
-  currevent = new Event_t(0, "", "", "", 0, 0, "", "", "");
+  //currevent = new Event_t(0, "", "", "", 0, 0, "", "", "");
 
   selectedEvent : Event_t = null
   alreadyInit : boolean
@@ -51,7 +51,7 @@ export class MapAndFeedComponent implements OnInit{
   lng:number = 0;
 
   // Event to be displayed for more info (Card Type B)
-  e = new Event_t(0,"","","",0,0,"","","");
+  //e = new Event_t(0,"","","",0,0,"","","");
 
   options: google.maps.MapOptions = {
     minZoom: 8
@@ -193,7 +193,9 @@ export class MapAndFeedComponent implements OnInit{
   openInfoWindow(marker: MapMarker, currevent : Event_t) {
     // this.infoContent = currevent;
     // this.infoWindow.open(marker);
-    this.currevent = currevent;
+    //this.currevent = currevent;
+    
+    // does nothing lmao
     
     // TODO NEXT - Use getEventsAroundLocation
     // to refresh the map using dummy data
@@ -253,27 +255,27 @@ export class MapAndFeedComponent implements OnInit{
 
   // TODO - Rewrite the form, nameInputReference is DISGUSTING syntax
   // John you absolute buffoon
-  createEvent(){
-    let e = new Event_t(0, this.nameInputReference.nativeElement.value, "Bio",
-      "Placeholder",
-      this.lat, 
-      this.lng,
-      "Balls avenue",
-      "04/23/2022",
-      "4PM")
-    this.ems.createEvent(e)
-  }
+  // createEvent(){
+  //   let e = new Event_t(0, this.nameInputReference.nativeElement.value, "Bio",
+  //     "Placeholder",
+  //     this.lat, 
+  //     this.lng,
+  //     "Balls avenue",
+  //     "04/23/2022",
+  //     "4PM")
+  //   this.ems.createEvent(e)
+  // }
 
-  openCreateEvent(){
-    var x = document.getElementById("cE") as HTMLSelectElement;
-    if (x.style.display === "none") {
-      x.style.display = "block";
-      this.cE = "Close";
-    } else {
-      x.style.display = "none";
-      this.cE = "Create Event";
-    }
-  }
+  // openCreateEvent(){
+  //   var x = document.getElementById("cE") as HTMLSelectElement;
+  //   if (x.style.display === "none") {
+  //     x.style.display = "block";
+  //     this.cE = "Close";
+  //   } else {
+  //     x.style.display = "none";
+  //     this.cE = "Create Event";
+  //   }
+  // }
 
   testLog() {
     console.log("Map-n-feed Received the Event that dialog C closed")

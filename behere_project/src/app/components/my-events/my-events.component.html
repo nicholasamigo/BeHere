@@ -1,34 +1,47 @@
 
 <div>
-    
     <h2 class="welcome-message">
         Welcome to the My Events Page!
     </h2>  
 
-    <div class="detailed-event-tabs" style=" max-width: 1700px; width: 1500px; height: 1000px;">
-        <mat-tab-group>
-            <mat-tab label="All Events">
-
-            </mat-tab>
-
-            <mat-tab label="Hosting">
-
-            </mat-tab>
-
+    <div class="detailed-event-tabs" style=" width: 100%;">
+        <mat-tab-group style="width: 1400px;">
             <mat-tab label="Attending">
-
+                <div class="card-container">
+                <app-card-a class="card"
+                *ngFor="let event of ems.attendingEvents" 
+                (closedCardCEvent)="refreshEventLists()"  
+                [input_event]="event"/>
+                </div>
+            </mat-tab>
+            <mat-tab label="Hosting">
+                <div class="card-container">
+                <app-card-a class="card"
+                *ngFor="let event of ems.hostingEvents"
+                (closedCardCEvent)="refreshEventLists()"  
+                [input_event]="event"/>
+                </div>
             </mat-tab>
 
             <mat-tab label="Completed">
-
-
+                <div class="card-container">
+                <ng-container *ngFor="let event of ems.previousEvents">
+                    <app-card-a-noedit class="card"
+                    *ngIf="event.completed" 
+                    [input_event]="event"/>
+                </ng-container>
+                </div>
             </mat-tab>
 
             <mat-tab label="Cancelled">
-
+                <div class="card-container">
+                <ng-container *ngFor="let event of ems.previousEvents">
+                    <app-card-a-noedit class="card"
+                    *ngIf="!event.completed" 
+                    [input_event]="event"/>
+                </ng-container>
+                </div>
             </mat-tab>
         </mat-tab-group>
     </div>
 </div>
-
-<app-create-event/>

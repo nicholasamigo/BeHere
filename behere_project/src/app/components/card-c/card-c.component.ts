@@ -100,13 +100,16 @@ export class CardCComponent {
   // }
 
   editEvent(){
-    let e = new Event_t(this.event.id, this.nameInputReference.nativeElement.value, this.bioInputReference.nativeElement.value,
+    let e = new Event_t(this.event.id,              //id
+      this.nameInputReference.nativeElement.value,  //name
+      this.bioInputReference.nativeElement.value,   //bio
       "",
       this.event.lat, 
       this.event.lng,
       "Default",
       this.dateInputReference.nativeElement.value,
-      this.timeInputReference.nativeElement.value)
+      this.timeInputReference.nativeElement.value,
+      false)
     this.ems.editEvent(e)
     this.snackBar.open(
       `Your event, ${e.name}, was successfully edited.`,

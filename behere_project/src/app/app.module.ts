@@ -35,6 +35,7 @@ import {MatInputModule} from '@angular/material/input';
 import { CardDComponent } from './card-d/card-d.component';
 import { MyEventsComponent } from './components/my-events/my-events.component';
 import { CreateEventComponent } from './create-event/create-event.component';
+import { CardAComponentNoEdit } from './components/card-a-noedit/card-a-noedit.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { CreateEventComponent } from './create-event/create-event.component';
     MapAndFeedComponent,
     CardDComponent,
     CreateEventComponent,
-    MyEventsComponent
+    MyEventsComponent,
+    CardAComponentNoEdit
     
   ],
   imports: [

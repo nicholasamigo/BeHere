@@ -74,7 +74,8 @@ export class CardDComponent {
       this.lng,
       "Balls avenue",
       this.dateInputReference.nativeElement.value,
-      this.timeInputReference.nativeElement.value)
+      this.timeInputReference.nativeElement.value,
+      false)
     this.ems.createEvent(e)
   }
 }

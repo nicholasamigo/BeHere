@@ -37,7 +37,7 @@
       
       <ng-container *ngIf="this.auth.user; else loginIcon">
   
-        <button 
+        <!-- <button 
           mat-button
           routerLink="/create"
           matTooltip="Create an event"
@@ -49,7 +49,11 @@
             >
             cloud_upload
           </mat-icon>
-        </button>
+        </button> -->
+
+        <app-create-event></app-create-event>
+
+        <span class="spacer2"></span>
   
         <app-profile-card 
           [user]="this.auth.user"

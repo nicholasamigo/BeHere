@@ -27,7 +27,7 @@ export class EventsMiddlemanService {
       auth.loginStatusChanged$.subscribe(() => {
       console.log('Login status changed')
       this.refreshCurrentAttend()
-
+      this.pullEMSEvents()
     });
 
     this.geocoder = new google.maps.Geocoder();
@@ -44,7 +44,7 @@ export class EventsMiddlemanService {
     return this.http.get<any[]>(url, { params })
     .pipe(
       map(response => response.map(event => new Event_t(event.ID, event.Name,  event.Bio, event.HostId,
-        event.Lat, event.Lng, event.Address, event.Date, event.Time))),
+        event.Lat, event.Lng, event.Address, event.Date, event.Time, event.CompletedFlag))),
       catchError(error => {
         console.error('Error retrieving events:', error);
         return [];
@@ -183,7 +183,7 @@ export class EventsMiddlemanService {
     console.log("request to", url, params);
     return this.http.get<any[]>(url, { params }).pipe(
       map(response => response.map(event => new Event_t(event.ID, event.Name,  event.Bio, event.HostId,
-        event.Lat, event.Lng, event.Address, event.Date, event.Time))),
+        event.Lat, event.Lng, event.Address, event.Date, event.Time, event.CompletedFlag))),
       catchError(error => {
         console.error('Error retrieving events:', error);
         return [];
@@ -203,7 +203,7 @@ export class EventsMiddlemanService {
     console.log("request to", url, params);
     return this.http.get<any[]>(url, { params }).pipe(
       map(response => response.map(event => new Event_t(event.ID, event.Name,  event.Bio, event.HostId,
-        event.Lat, event.Lng, event.Address, event.Date, event.Time))),
+        event.Lat, event.Lng, event.Address, event.Date, event.Time, event.CompletedFlag))),
       catchError(error => {
         console.error('Error retrieving events:', error);
         return [];
@@ -223,7 +223,7 @@ export class EventsMiddlemanService {
     console.log("request to", url, params);
     return this.http.get<any[]>(url, { params }).pipe(
       map(response => response.map(event => new Event_t(event.ID, event.Name,  event.Bio, event.HostId,
-        event.Lat, event.Lng, event.Address, event.Date, event.Time))),
+        event.Lat, event.Lng, event.Address, event.Date, event.Time, event.CompletedFlag))),
       catchError(error => {
         console.error('Error retrieving events:', error);
         return [];
@@ -295,7 +295,7 @@ export class Event_t {
   // This needs to match the Event struct definition in main.go
   constructor(public id: number, public name: string, public bio: string,
     public hostid: string, public lat: number, public lng: number, 
-    public address: string, public date: string, public time: string) {}
+    public address: string, public date: string, public time: string, public completed: boolean) {}
 }
 
 /**
