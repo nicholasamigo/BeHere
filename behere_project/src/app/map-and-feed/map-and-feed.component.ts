@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { HelloWorldService } from '../hello-world.service';
 import { AuthService } from '../services/auth/auth.service';
 import { MatPseudoCheckbox } from '@angular/material/core';
+import { MatTabGroup } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-map-n-feed',
@@ -27,6 +28,8 @@ export class MapAndFeedComponent implements OnInit{
 
   //@ViewChild('bluemarker', { static: false }) bluemarker: MapMarker;
   bluemarker: google.maps.Marker
+
+  @ViewChild('tabGroup', { static: false }) tabGroup: MatTabGroup;
 
 
   // Fix this eventually. Works but can lead to memory leaks. Need to figure out a way to create events on initialization.
@@ -288,9 +291,14 @@ export class MapAndFeedComponent implements OnInit{
     console.log("Map-n-feed Received the Event that dialog C closed")
   }
 
-  scrollToCard(event_t : Event_t) {
-    this.selectedEvent = event_t
-    const card = document.getElementById(event_t.id.toString());
+  // wrapper for scrollToCard
+  onCardClick(event : Event_t){
+    this.selectedEvent = event
+    this.scrollToCard()
+  }
+
+  scrollToCard() {
+    const card = document.getElementById(this.selectedEvent.id.toString());
     //this.bluemarker = new google.maps.Marker(this.markerOptions2)
     this.bluemarker.setAnimation(google.maps.Animation.BOUNCE)
     this.bluemarker.setPosition({lat: this.selectedEvent.lat, lng: this.selectedEvent.lng})
@@ -306,6 +314,25 @@ export class MapAndFeedComponent implements OnInit{
     //   card.classList.add('selected')
     //   this.highlightedCard = card
     // }
-    card.scrollIntoView({ behavior: 'smooth' })
+    if (card)
+      card.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  onMarkerClick(event: Event_t) {
+    this.selectedEvent = event
+    const card = document.getElementById(event.id.toString());
+    if (!card) // card not found, go to Nearby Events tab
+    {
+      this.tabGroup.selectedIndex = 0
+      console.log("Tried to switch tabs")
+    }
+    else{
+      this.scrollToCard()
+    }
+  }
+
+  // when tabs change at all -> try to scroll to the cardon
+  onTabChange() {
+    this.scrollToCard()
   }
 }
