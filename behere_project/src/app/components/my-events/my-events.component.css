@@ -1,14 +1,14 @@
-html,
+/* html,
 body {
   margin: 0;
   padding: 0;
-}
+} */
 
 /* use viewport-relative units to cover page fully */
-body {
+/* body {
   height: 50%;
   width: 50%;
-}
+}  */
 
 /* include border and padding in element width and height */
 /* * {
@@ -17,24 +17,30 @@ body {
 } */
 
 /* full-sized  container that fills up the page */
-div {
+/* div {
   height: 100%;
   width: 100%;
 
-}
+} */
 
 
 .flex-container {
   display: flex;
 }
 
-.gmap-popup {
-  /* flex: 1; */
-  text-align: left;
-  width: 175px;
-}
-
 .welcome-message {
   text-align: center;
 }
 
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.card {
+  margin: 10px;
+}
+
+mat-tab-group {
+  width: 100%;
+}

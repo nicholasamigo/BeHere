@@ -22,11 +22,11 @@
 <h1>Where To?</h1>
 
 <div class="flex-container">
-<div class="MAP" style="outline: #3e3e97 solid 5px;">
+<div style="outline: #3e3e97 solid 5px;">
 <button mat-button (click)="updateEventList()">Reload Nearby Events</button>
 <google-map #primary_google_map
-            height="70vh"
-            width="50vw"
+            height="600px"
+            width="800px"
             float="left"
             [center]="center"
             [zoom]="zoom"
@@ -47,8 +47,16 @@
         *ngFor="let event_t of eventList"
         [options]="markerOptions"
         [position]="{'lat': event_t.lat, 'lng': event_t.lng}"
-        (mapClick)="openInfoWindow(marker, event_t)"></map-marker>
+        (mapClick)="scrollToCard(event_t)"></map-marker>
     <map-info-window></map-info-window>
+    <!-- <map-marker class="selected"
+    #bluemarker
+    [options]="markerOptions2"
+    *ngIf="selectedEvent"
+    [position]="{'lat': selectedEvent.lat, 'lng': selectedEvent.lng}"
+    >
+
+    </map-marker> -->
 </google-map>
 </div>
 
@@ -58,19 +66,24 @@
     public address: string, public date: string, public time: string) {}
 -->
 
-    <div class="events-tab" style="margin-left: 5px; display: flex; max-width: 600px; height:  70vh; outline: #3e3e97 solid 5px; width: 500px;">
+    <div class="events-tab" style="margin-left: 5px; display: flex; max-width: 600px; height:  636px; outline: #3e3e97 solid 5px; width: 500px;">
         <mat-tab-group>
             <mat-tab label="Nearby Events"> 
                 <app-card-a *ngFor="let event of eventList" 
+                    [id] ="event.id.toString()"
+                    [ngClass]="{'selected': selectedEvent === event}"
                     [input_event]="event"
-                    (closedCardCEvent)="updateEventList()" 
+                    (closedCardCEvent)="updateEventList()"
+                    (click)="scrollToCard(event)" 
                     style="height: 350px; width: 400px; padding: 20px;"/>
             </mat-tab>
             
             <mat-tab label="Attending" *ngIf="ems.auth.user">
                 <ng-container *ngFor="let event of eventList">
                     <app-card-a *ngIf="ems.currentlyAttendingEventIDs.includes(event.id)"
+                    [id] ="event.id.toString()"
                     [input_event]="event"
+                    [ngClass]="{'selected': selectedEvent === event}"
                     (closedCardCEvent)="updateEventList()"
                     style="height: 350px; width: 400px; padding: 20px;"/>
                 </ng-container>
@@ -79,6 +92,8 @@
             <mat-tab label="Hosting" *ngIf="ems.auth.user"> 
                 <ng-container *ngFor="let event of eventList">
                     <app-card-a *ngIf="event.hostid == ems.auth.user.uid"
+                    [id] ="event.id.toString()"
+                    [ngClass]="{'selected': selectedEvent == event}"
                     [input_event]="event"
                     (closedCardCEvent)="updateEventList()" 
                     style="height: 350px; width: 400px; padding: 20px;"/>

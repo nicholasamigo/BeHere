@@ -1,4 +1,5 @@
-<mat-card class="cardA">
+<div>
+  <mat-card class="cardAnoedit">
       <mat-card-header display="width: 100%">
 
         <mat-card-title>{{ event.name }} <span></span>
@@ -23,7 +24,7 @@
 
           <!-- If not host, show the attend/unattend buttons -->
           <ng-template #notHost>
-            <ng-container
+            <!-- <ng-container
               *ngIf="ems.currentlyAttendingEventIDs.includes(this.event.id); then alreadyAttending; else notAttending">
             </ng-container>
             <ng-template #alreadyAttending>
@@ -31,16 +32,16 @@
             </ng-template>
             <ng-template #notAttending>
               <button mat-stroked-button (click)="onAttend()">ATTEND</button>
-            </ng-template>
+            </ng-template>-->
           </ng-template>
 
           <!-- If the host, show the edit button instead -->
           <!-- To Do - add an indicator icon (with hover hint) that you are hosting this event -->
           <ng-template #isHost style="display: flex; align-items: center;">
-            <button mat-icon-button matTooltip="You're the host of this event!">
+            <button mat-icon-button matTooltip="You were the host of this event!">
               <mat-icon aria-hidden="false">front_hand</mat-icon>
             </button>
-            <button mat-stroked-button (click) = "onClickShowC()" matTooltip="Edit event">EDIT</button>
+            <!-- <button mat-stroked-button (click) = "onClickShowC()" matTooltip="Edit event">EDIT</button> -->
           </ng-template>
         </div>
         
@@ -48,3 +49,4 @@
         <button mat-stroked-button (click) = "onClickShowB()" style="position: absolute; right: 10px;">INFO</button>
       </mat-card-actions>
   </mat-card>
+</div>

@@ -5,6 +5,7 @@ import { DataServiceService } from '../data-service.service';
 import { MatDialog } from '@angular/material/dialog';
 import { HelloWorldService } from '../hello-world.service';
 import { AuthService } from '../services/auth/auth.service';
+import { MatPseudoCheckbox } from '@angular/material/core';
 
 @Component({
   selector: 'app-map-n-feed',
@@ -24,16 +25,17 @@ export class MapAndFeedComponent implements OnInit{
   // Allow direct reading of the big google map Angular component in "map"
   @ViewChild('primary_google_map', { static: false }) map: GoogleMap
 
-  // Allow reading of the child object, InfoWindow
-  @ViewChild(MapInfoWindow, { static: false }) infoWindow: MapInfoWindow;
-  infoContent = '';
+  //@ViewChild('bluemarker', { static: false }) bluemarker: MapMarker;
+  bluemarker: google.maps.Marker
+
 
   // Fix this eventually. Works but can lead to memory leaks. Need to figure out a way to create events on initialization.
-  currevent = new Event_t(0, "", "", "", 0, 0, "", "", "");
+  //currevent = new Event_t(0, "", "", "", 0, 0, "", "", "");
 
   selectedEvent : Event_t = null
   alreadyInit : boolean
 
+  highlightedCard : HTMLElement
 
   // instantiate the GMap
   display: google.maps.LatLngLiteral = {lat: 24, lng: 12};
@@ -51,7 +53,7 @@ export class MapAndFeedComponent implements OnInit{
   lng:number = 0;
 
   // Event to be displayed for more info (Card Type B)
-  e = new Event_t(0,"","","",0,0,"","","");
+  //e = new Event_t(0,"","","",0,0,"","","");
 
   options: google.maps.MapOptions = {
     minZoom: 8
@@ -66,7 +68,10 @@ export class MapAndFeedComponent implements OnInit{
   };
 
   markerOptions2: google.maps.MarkerOptions = {
-    optimized: false
+    optimized: false,
+    animation: google.maps.Animation.BOUNCE,
+    icon:  {url: "../../assets/bluepin.png", scaledSize: new google.maps.Size(30, 45)},
+    zIndex: 1000
   }
 
   // This component has full access to the EMS services
@@ -100,6 +105,8 @@ export class MapAndFeedComponent implements OnInit{
         lng: position.coords.longitude,
       };
     });
+
+    this.bluemarker = new google.maps.Marker(this.markerOptions2)
   }
 
 /* commenting out for safety
@@ -120,9 +127,9 @@ export class MapAndFeedComponent implements OnInit{
 
   // Called when card A info is clicked.
   // This sets "selectedEvent" so that the cardB will pop up (it is *ngif'ed in)
-  openCardB(eventdata : Event_t) {
-    this.selectedEvent = eventdata
-  }
+  // openCardB(eventdata : Event_t) {
+  //   this.selectedEvent = eventdata
+  // }
 
     // // Function to show Card B version of Event
     // showCardB(eID: number){
@@ -152,9 +159,9 @@ export class MapAndFeedComponent implements OnInit{
       //   }
       // }
   
-  closeCardB() {
-    this.selectedEvent = null
-  }
+  // closeCardB() {
+  //   //this.selectedEvent = null
+  // }
 
   updateEventList() {
     let lat = this.center.lat;
@@ -193,7 +200,9 @@ export class MapAndFeedComponent implements OnInit{
   openInfoWindow(marker: MapMarker, currevent : Event_t) {
     // this.infoContent = currevent;
     // this.infoWindow.open(marker);
-    this.currevent = currevent;
+    //this.currevent = currevent;
+    
+    // does nothing lmao
     
     // TODO NEXT - Use getEventsAroundLocation
     // to refresh the map using dummy data
@@ -253,29 +262,50 @@ export class MapAndFeedComponent implements OnInit{
 
   // TODO - Rewrite the form, nameInputReference is DISGUSTING syntax
   // John you absolute buffoon
-  createEvent(){
-    let e = new Event_t(0, this.nameInputReference.nativeElement.value, "Bio",
-      "Placeholder",
-      this.lat, 
-      this.lng,
-      "Balls avenue",
-      "04/23/2022",
-      "4PM")
-    this.ems.createEvent(e)
-  }
+  // createEvent(){
+  //   let e = new Event_t(0, this.nameInputReference.nativeElement.value, "Bio",
+  //     "Placeholder",
+  //     this.lat, 
+  //     this.lng,
+  //     "Balls avenue",
+  //     "04/23/2022",
+  //     "4PM")
+  //   this.ems.createEvent(e)
+  // }
 
-  openCreateEvent(){
-    var x = document.getElementById("cE") as HTMLSelectElement;
-    if (x.style.display === "none") {
-      x.style.display = "block";
-      this.cE = "Close";
-    } else {
-      x.style.display = "none";
-      this.cE = "Create Event";
-    }
-  }
+  // openCreateEvent(){
+  //   var x = document.getElementById("cE") as HTMLSelectElement;
+  //   if (x.style.display === "none") {
+  //     x.style.display = "block";
+  //     this.cE = "Close";
+  //   } else {
+  //     x.style.display = "none";
+  //     this.cE = "Create Event";
+  //   }
+  // }
 
   testLog() {
     console.log("Map-n-feed Received the Event that dialog C closed")
+  }
+
+  scrollToCard(event_t : Event_t) {
+    this.selectedEvent = event_t
+    const card = document.getElementById(event_t.id.toString());
+    //this.bluemarker = new google.maps.Marker(this.markerOptions2)
+    this.bluemarker.setAnimation(google.maps.Animation.BOUNCE)
+    this.bluemarker.setPosition({lat: this.selectedEvent.lat, lng: this.selectedEvent.lng})
+    this.bluemarker.setMap(this.map.googleMap)
+    // redraw
+
+    // Remove highlight on previous card
+    // if (this.highlightedCard) {
+    //   this.highlightedCard.classList.remove('selected');
+    // }
+
+    // if (card) {
+    //   card.classList.add('selected')
+    //   this.highlightedCard = card
+    // }
+    card.scrollIntoView({ behavior: 'smooth' })
   }
 }

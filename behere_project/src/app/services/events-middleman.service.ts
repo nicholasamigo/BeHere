@@ -27,7 +27,7 @@ export class EventsMiddlemanService {
       auth.loginStatusChanged$.subscribe(() => {
       console.log('Login status changed')
       this.refreshCurrentAttend()
-
+      this.pullEMSEvents()
     });
 
     this.geocoder = new google.maps.Geocoder();
@@ -44,7 +44,7 @@ export class EventsMiddlemanService {
     return this.http.get<any[]>(url, { params })
     .pipe(
       map(response => response.map(event => new Event_t(event.ID, event.Name,  event.Bio, event.HostId,
-        event.Lat, event.Lng, event.Address, event.Date, event.Time))),
+        event.Lat, event.Lng, event.Address, event.Date, event.Time, event.CompletedFlag))),
       catchError(error => {
         console.error('Error retrieving events:', error);
         return [];
@@ -129,6 +129,7 @@ export class EventsMiddlemanService {
         next: (eids) => {
           this.currentlyAttendingEventIDs = eids;
           console.log("EventIDS ", this.currentlyAttendingEventIDs);
+          this.pullEMSEvents()
         },
         error: (error) => console.log("Error getting EIDS", error),
       })
@@ -173,8 +174,8 @@ export class EventsMiddlemanService {
 
   //called to get all deleted previous
   //caller must subscribe to this event.
-  getDeletedAttendedEvents() {
-    if (!this.auth.user) {console.log("No one logged in"); return []}
+  getDeletedAttendedEvents() : Observable<Event_t[]> {
+    if (!this.auth.user) {console.log("No one logged in"); return null}
       
     const params = new HttpParams()
     .set('uid', this.auth.user.uid);
@@ -183,7 +184,47 @@ export class EventsMiddlemanService {
     console.log("request to", url, params);
     return this.http.get<any[]>(url, { params }).pipe(
       map(response => response.map(event => new Event_t(event.ID, event.Name,  event.Bio, event.HostId,
-        event.Lat, event.Lng, event.Address, event.Date, event.Time))),
+        event.Lat, event.Lng, event.Address, event.Date, event.Time, event.CompletedFlag))),
+      catchError(error => {
+        console.error('Error retrieving events:', error);
+        return [];
+      })
+    );
+  }
+
+  //called to get all deleted previous
+  //caller must subscribe to this event.
+  getAttendingEvents() : Observable<Event_t[]> {
+    if (!this.auth.user) {console.log("No one logged in"); return null}
+      
+    const params = new HttpParams()
+    .set('uid', this.auth.user.uid);
+
+    const url = `${environment.serverUrl}/getAttendingEvents`;
+    console.log("request to", url, params);
+    return this.http.get<any[]>(url, { params }).pipe(
+      map(response => response.map(event => new Event_t(event.ID, event.Name,  event.Bio, event.HostId,
+        event.Lat, event.Lng, event.Address, event.Date, event.Time, event.CompletedFlag))),
+      catchError(error => {
+        console.error('Error retrieving events:', error);
+        return [];
+      })
+    );
+  }
+
+  //called to get all deleted previous
+  //caller must subscribe to this event.
+  getHostingEvents() : Observable<Event_t[]> {
+    if (!this.auth.user) {console.log("No one logged in"); return null}
+      
+    const params = new HttpParams()
+    .set('uid', this.auth.user.uid);
+
+    const url = `${environment.serverUrl}/getHostingEvents`;
+    console.log("request to", url, params);
+    return this.http.get<any[]>(url, { params }).pipe(
+      map(response => response.map(event => new Event_t(event.ID, event.Name,  event.Bio, event.HostId,
+        event.Lat, event.Lng, event.Address, event.Date, event.Time, event.CompletedFlag))),
       catchError(error => {
         console.error('Error retrieving events:', error);
         return [];
@@ -203,11 +244,13 @@ export class EventsMiddlemanService {
       
       this.http.post(url, event).subscribe({
         // Observable parameter
-        next: data => console.log('Event edited successfully'),
+        next: data => {console.log('Event edited successfully')
+        this.pullEMSEvents()
+      },
         error: error => console.error('Error updating event', error)
       });
     }
-}
+  }
 
  async getAddress(event : Event_t) : Promise<string> {
   var address : string = "not updated"
@@ -224,6 +267,30 @@ export class EventsMiddlemanService {
     return address
  }
 
+ // Called for page 2 updates
+ pullEMSEvents() : void {
+  this.getAttendingEvents().subscribe({
+    next : data => {
+      this.attendingEvents = data
+    },
+    error : err => console.log("Error getting attending events")
+  })
+
+  this.getHostingEvents().subscribe({
+    next : data => {
+      this.hostingEvents = data
+    },
+    error : err => console.log("Error getting hosting events")
+  })
+
+  this.getDeletedAttendedEvents().subscribe({
+    next : data => {
+      this.previousEvents = data
+    },
+    error : err => console.log("Error getting previous events")
+  })  
+ }
+
 }
 
 export class Event_t {
@@ -231,7 +298,7 @@ export class Event_t {
   // This needs to match the Event struct definition in main.go
   constructor(public id: number, public name: string, public bio: string,
     public hostid: string, public lat: number, public lng: number, 
-    public address: string, public date: string, public time: string) {}
+    public address: string, public date: string, public time: string, public completed: boolean) {}
 }
 
 /**
