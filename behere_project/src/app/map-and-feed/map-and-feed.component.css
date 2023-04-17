@@ -113,3 +113,6 @@ svg#rocket-smoke {
   z-index: -10;
 }
 
+::ng-deep .selected > mat-card {
+  background-color: #f8e08e !important;
+}

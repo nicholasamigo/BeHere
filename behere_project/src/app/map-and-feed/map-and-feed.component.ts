@@ -34,6 +34,7 @@ export class MapAndFeedComponent implements OnInit{
   selectedEvent : Event_t = null
   alreadyInit : boolean
 
+  highlightedCard : HTMLElement
 
   // instantiate the GMap
   display: google.maps.LatLngLiteral = {lat: 24, lng: 12};
@@ -120,9 +121,9 @@ export class MapAndFeedComponent implements OnInit{
 
   // Called when card A info is clicked.
   // This sets "selectedEvent" so that the cardB will pop up (it is *ngif'ed in)
-  openCardB(eventdata : Event_t) {
-    this.selectedEvent = eventdata
-  }
+  // openCardB(eventdata : Event_t) {
+  //   this.selectedEvent = eventdata
+  // }
 
     // // Function to show Card B version of Event
     // showCardB(eID: number){
@@ -152,9 +153,9 @@ export class MapAndFeedComponent implements OnInit{
       //   }
       // }
   
-  closeCardB() {
-    this.selectedEvent = null
-  }
+  // closeCardB() {
+  //   //this.selectedEvent = null
+  // }
 
   updateEventList() {
     let lat = this.center.lat;
@@ -279,5 +280,21 @@ export class MapAndFeedComponent implements OnInit{
 
   testLog() {
     console.log("Map-n-feed Received the Event that dialog C closed")
+  }
+
+  scrollToCard(event_t : Event_t) {
+    this.selectedEvent = event_t
+    const card = document.getElementById(event_t.id.toString());
+
+    // Remove highlight on previous card
+    // if (this.highlightedCard) {
+    //   this.highlightedCard.classList.remove('selected');
+    // }
+
+    // if (card) {
+    //   card.classList.add('selected')
+    //   this.highlightedCard = card
+    // }
+    card.scrollIntoView()
   }
 }

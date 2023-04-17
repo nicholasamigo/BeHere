@@ -47,7 +47,7 @@
         *ngFor="let event_t of eventList"
         [options]="markerOptions"
         [position]="{'lat': event_t.lat, 'lng': event_t.lng}"
-        (mapClick)="openInfoWindow(marker, event_t)"></map-marker>
+        (mapClick)="scrollToCard(event_t)"></map-marker>
     <map-info-window></map-info-window>
 </google-map>
 </div>
@@ -62,15 +62,20 @@
         <mat-tab-group>
             <mat-tab label="Nearby Events"> 
                 <app-card-a *ngFor="let event of eventList" 
+                    [id] ="event.id.toString()"
+                    [ngClass]="{'selected': selectedEvent === event}"
                     [input_event]="event"
-                    (closedCardCEvent)="updateEventList()" 
+                    (closedCardCEvent)="updateEventList()"
+                    (click)="scrollToCard(event)" 
                     style="height: 350px; width: 400px; padding: 20px;"/>
             </mat-tab>
             
             <mat-tab label="Attending" *ngIf="ems.auth.user">
                 <ng-container *ngFor="let event of eventList">
                     <app-card-a *ngIf="ems.currentlyAttendingEventIDs.includes(event.id)"
+                    [id] ="event.id.toString()"
                     [input_event]="event"
+                    [ngClass]="{'selected': selectedEvent === event}"
                     (closedCardCEvent)="updateEventList()"
                     style="height: 350px; width: 400px; padding: 20px;"/>
                 </ng-container>
@@ -79,6 +84,8 @@
             <mat-tab label="Hosting" *ngIf="ems.auth.user"> 
                 <ng-container *ngFor="let event of eventList">
                     <app-card-a *ngIf="event.hostid == ems.auth.user.uid"
+                    [id] ="event.id.toString()"
+                    [ngClass]="{'selected': selectedEvent == event}"
                     [input_event]="event"
                     (closedCardCEvent)="updateEventList()" 
                     style="height: 350px; width: 400px; padding: 20px;"/>
