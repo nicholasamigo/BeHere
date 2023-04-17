@@ -49,13 +49,14 @@
         [position]="{'lat': event_t.lat, 'lng': event_t.lng}"
         (mapClick)="scrollToCard(event_t)"></map-marker>
     <map-info-window></map-info-window>
-    <map-marker class="selected"
+    <!-- <map-marker class="selected"
+    #bluemarker
     [options]="markerOptions2"
     *ngIf="selectedEvent"
     [position]="{'lat': selectedEvent.lat, 'lng': selectedEvent.lng}"
     >
 
-    </map-marker>
+    </map-marker> -->
 </google-map>
 </div>
 

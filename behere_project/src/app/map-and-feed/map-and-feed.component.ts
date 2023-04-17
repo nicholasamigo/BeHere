@@ -5,6 +5,7 @@ import { DataServiceService } from '../data-service.service';
 import { MatDialog } from '@angular/material/dialog';
 import { HelloWorldService } from '../hello-world.service';
 import { AuthService } from '../services/auth/auth.service';
+import { MatPseudoCheckbox } from '@angular/material/core';
 
 @Component({
   selector: 'app-map-n-feed',
@@ -24,9 +25,9 @@ export class MapAndFeedComponent implements OnInit{
   // Allow direct reading of the big google map Angular component in "map"
   @ViewChild('primary_google_map', { static: false }) map: GoogleMap
 
-  // Allow reading of the child object, InfoWindow
-  @ViewChild(MapInfoWindow, { static: false }) infoWindow: MapInfoWindow;
-  infoContent = '';
+  //@ViewChild('bluemarker', { static: false }) bluemarker: MapMarker;
+  bluemarker: google.maps.Marker
+
 
   // Fix this eventually. Works but can lead to memory leaks. Need to figure out a way to create events on initialization.
   //currevent = new Event_t(0, "", "", "", 0, 0, "", "", "");
@@ -68,8 +69,9 @@ export class MapAndFeedComponent implements OnInit{
 
   markerOptions2: google.maps.MarkerOptions = {
     optimized: false,
-    animation: google.maps.Animation.DROP,
-    //icon:  {url: "../../assets/bluepin.png", size: new google.maps.Size(50, 50)}
+    animation: google.maps.Animation.BOUNCE,
+    icon:  {url: "../../assets/bluepin.png", scaledSize: new google.maps.Size(30, 45)},
+    zIndex: 1000
   }
 
   // This component has full access to the EMS services
@@ -103,6 +105,8 @@ export class MapAndFeedComponent implements OnInit{
         lng: position.coords.longitude,
       };
     });
+
+    this.bluemarker = new google.maps.Marker(this.markerOptions2)
   }
 
 /* commenting out for safety
@@ -287,6 +291,11 @@ export class MapAndFeedComponent implements OnInit{
   scrollToCard(event_t : Event_t) {
     this.selectedEvent = event_t
     const card = document.getElementById(event_t.id.toString());
+    //this.bluemarker = new google.maps.Marker(this.markerOptions2)
+    this.bluemarker.setAnimation(google.maps.Animation.BOUNCE)
+    this.bluemarker.setPosition({lat: this.selectedEvent.lat, lng: this.selectedEvent.lng})
+    this.bluemarker.setMap(this.map.googleMap)
+    // redraw
 
     // Remove highlight on previous card
     // if (this.highlightedCard) {
@@ -297,6 +306,6 @@ export class MapAndFeedComponent implements OnInit{
     //   card.classList.add('selected')
     //   this.highlightedCard = card
     // }
-    card.scrollIntoView()
+    card.scrollIntoView({ behavior: 'smooth' })
   }
 }
