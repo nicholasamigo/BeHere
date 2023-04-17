@@ -22,7 +22,7 @@ export class CreateEventComponent {
 
   // This component has full access to the EMS services
   // Which handle all requests from the Event DB
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private ems : EventsMiddlemanService) {}
 
 
 

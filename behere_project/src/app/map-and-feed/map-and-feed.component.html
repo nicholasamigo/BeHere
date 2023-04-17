@@ -22,7 +22,7 @@
 <h1>Where To?</h1>
 
 <div class="flex-container">
-<div class="MAP" style="outline: #3e3e97 solid 5px;">
+<div style="outline: #3e3e97 solid 5px;">
 <button mat-button (click)="updateEventList()">Reload Nearby Events</button>
 <google-map #primary_google_map
             height="600px"
@@ -58,7 +58,7 @@
     public address: string, public date: string, public time: string) {}
 -->
 
-    <div class="events-tab" style="margin-left: 5px; display: flex; max-width: 600px; height:  70vh; outline: #3e3e97 solid 5px; width: 500px;">
+    <div class="events-tab" style="margin-left: 5px; display: flex; max-width: 600px; height:  636px; outline: #3e3e97 solid 5px; width: 500px;">
         <mat-tab-group>
             <mat-tab label="Nearby Events"> 
                 <app-card-a *ngFor="let event of eventList" 

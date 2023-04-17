@@ -129,6 +129,7 @@ export class EventsMiddlemanService {
         next: (eids) => {
           this.currentlyAttendingEventIDs = eids;
           console.log("EventIDS ", this.currentlyAttendingEventIDs);
+          this.pullEMSEvents()
         },
         error: (error) => console.log("Error getting EIDS", error),
       })
@@ -243,7 +244,9 @@ export class EventsMiddlemanService {
       
       this.http.post(url, event).subscribe({
         // Observable parameter
-        next: data => console.log('Event edited successfully'),
+        next: data => {console.log('Event edited successfully')
+        this.pullEMSEvents()
+      },
         error: error => console.error('Error updating event', error)
       });
     }
