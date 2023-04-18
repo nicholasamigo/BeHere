@@ -3,6 +3,7 @@ import { Event_t, EventsMiddlemanService } from 'src/app/services/events-middlem
 import { MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialogRef } from '@angular/material/dialog';
+import { GoogleMap, MapMarker } from '@angular/google-maps';
 
 @Component({
   selector: 'app-card-d',
@@ -38,6 +39,8 @@ export class CardDComponent {
   bioInputReference!: ElementRef;
 
   //@Input() input_event : Event_t
+  @ViewChild('cardd_google_map') map : GoogleMap;
+  marker : google.maps.Marker
 
 
 
@@ -50,7 +53,14 @@ export class CardDComponent {
       center: {lat: 0, lng: 0},
       minZoom: 10,
       zoom: 11
+      
     };
+
+    this.markerOptions = {
+      optimized: false,
+    }
+
+    this.marker = new google.maps.Marker(this.markerOptions)
 
     navigator.geolocation.getCurrentPosition((position) => {
       this.center = {
@@ -64,6 +74,8 @@ export class CardDComponent {
     this.d = event.latLng.toJSON();
     this.lat = this.d.lat;
     this.lng = this.d.lng;
+    this.marker.setPosition({lat: this.lat, lng: this.lng})
+    this.marker.setMap(this.map.googleMap)
   }
 
   // Emits closeCardBEvent to map-and-feed.html

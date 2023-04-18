@@ -40,7 +40,7 @@ export class CreateEventComponent {
     console.log("asd")
 
     const dialogRef = this.dialog.open(CardDComponent, {
-      width: '70%'
+      width: '80%'
     });
   }
 }
