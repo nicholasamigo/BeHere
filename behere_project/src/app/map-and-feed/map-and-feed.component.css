@@ -43,7 +43,7 @@ body {
 div > div.maps-container {
   height: 100%;
   width: 600px;
-  outline: #3e3e97 solid 5px;
+  /* outline: #3e3e97 solid 5px; */
 }
 
 
@@ -74,7 +74,7 @@ svg#rocket {
 }
 
 ::ng-deep .selected > mat-card {
-  background-color: #f8e08e !important;
+  background-color: #aae8fd !important;
 }
 
 .flex-container {
@@ -92,6 +92,7 @@ img.banner {
   opacity: 0.8;
   padding-bottom: 20px;
   width: 100%;
+  justify-self: center;
 }
 
 .parent-flex-container {

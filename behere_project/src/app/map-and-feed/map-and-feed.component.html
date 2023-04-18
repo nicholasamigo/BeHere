@@ -1,14 +1,16 @@
 <div class = "parent-flex-container">
-<div class="pageheader">
-<h1>Where To?</h1>
+<div class="pageheader" style="display:grid;">
+<h1 style="justify-self: center; font-size: 3rem; padding-top: 10px;">BeHere!</h1>
+<p style="justify-self: center; font-size: 1.5rem; padding-bottom: 15px;">The platform that brings together your interests and your people, wherever you are.</p>
 <img src="../../assets/citybanner.png" class="banner">
+<h1 style="justify-self: center; font-size: 2rem;">Where to?</h1>
 </div>
 
 <div class="flex-container">
 <div class="maps-container" style="flex: 2;">
-<button mat-button (click)="updateEventList()">Reload Nearby Events</button>
+<button mat-stroked-button (click)="updateEventList()">Reload Nearby Events</button>
 <google-map #primary_google_map
-            height="500px"
+            height="600px"
             width="100%"
             float="left"
             [center]="center"
@@ -49,8 +51,8 @@
     public address: string, public date: string, public time: string) {}
 -->
 
-<div class="events-tab" style="margin-left: 5px;  outline: #3e3e97 solid 5px; flex: 1;">
-    <mat-tab-group #tabGroup style = "height:  536px;"
+<div class="events-tab" style="margin-left: 5px; flex: 1;">
+    <mat-tab-group #tabGroup style = "height:  636px;"
     (selectedTabChange)="onTabChange()">
         <mat-tab label="Nearby Events"> 
             <app-card-a *ngFor="let event of eventList" 
