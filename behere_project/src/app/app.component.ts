@@ -10,14 +10,13 @@ import { EventsMiddlemanService } from './services/events-middleman.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+  title : string
 
-  lat:number = 0;
-  lng:number = 0;
-
-
-  constructor(private ems: EventsMiddlemanService, private dataService: DataServiceService) {}
-
+  constructor(private hw : HelloWorldService) {}
+  
   ngOnInit() {
-    
+    this.hw.getTitle().subscribe({
+      next: data => this.title = JSON.parse(JSON.stringify(data)).title
+    })
   }
 }

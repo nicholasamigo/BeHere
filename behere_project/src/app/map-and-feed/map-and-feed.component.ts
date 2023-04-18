@@ -92,10 +92,6 @@ export class MapAndFeedComponent implements OnInit{
       .subscribe(data => this.title = JSON.parse(JSON.stringify(data)).title);
     console.log(this.title);
 
-    this.dataService.dataUpdated.subscribe((data) => {
-      this.latData = data;
-    });
-
     this.eventList = [];
     this.alreadyInit = false
 

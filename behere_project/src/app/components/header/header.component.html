@@ -1,18 +1,20 @@
 <mat-toolbar color="primary">
     <mat-toolbar-row>
-      <button mat-button *ngIf="this.auth.user">{{auth.user.uid}}</button>
+      <!-- <button mat-button *ngIf="this.auth.user">{{auth.user.uid}}</button> -->
       <button 
         mat-button 
         routerLink="/feed"
         matTooltip="BeHere Home">
-        BeHere
+        <h1>BeHere</h1>
       </button>
+      <div style="width: 20px;"></div>
   
       <ng-container *ngIf="this.auth.user; else lockIcon">
         <button
-        mat-icon-button
+        mat-raised-button
         routerLink="/create"
         matTooltip="My Events" >
+        My Events
         <mat-icon>
           assignment
         </mat-icon>

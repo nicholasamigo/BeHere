@@ -36,9 +36,44 @@
     <h2 mat-dialog-title>Edit Event</h2>
     <mat-dialog-content class="mat-typography">
 
+        <div class="flex-container">
+            <!-- <mat-grid-list cols="2" rowHeight="1:1"> -->
+                <!-- <mat-grid-tile> -->
+                <div class="input-container">
+                    <mat-form-field class="example-full-width" style="width: 90%;">
+                        <mat-label>Event Name</mat-label>
+                        <input matInput #nameInput placeholder="Event Name" value="{{ event.name }}">
+                    </mat-form-field>
+                    <mat-form-field class="example-full-width" style="width: 90%;">
+                        <mat-label>Date</mat-label>
+                        <input matInput #dateInput ng-model="date" placeholder="Date" value="{{event.date}}">
+                    </mat-form-field>
+                    <mat-form-field class="example-full-width" style="width: 90%;">
+                        <mat-label>Time</mat-label>
+                        <input matInput #timeInput ng-model="time" placeholder="Time" value="{{event.time}}">
+                    </mat-form-field>
+                    <mat-form-field class="example-full-width" style="width: 90%;">
+                        <mat-label>Bio</mat-label>
+                        <textarea matInput #bioInput ng-model="bio" placeholder="Bio" value="{{event.bio}}"></textarea>
+                      </mat-form-field>
+                </div>
+                <!-- <google-map #cardb_google_map
+                (mapClick)="updateSelectedLocation($event)"
+                [center]="center"
+                [options]="gmap_options">                    
+                </google-map>    -->
+                <google-map #cardb_google_map
+                [options]="gmap_options">                    
+                <map-marker class="marker-class" #marker="mapMarker"
+                    [options]="markerOptions"></map-marker>
+
+                <map-marker class="marker-class" #marker="mapMarker"
+                    [options]="markerCenterOptions"></map-marker>
+                </google-map>    
+        </div>
 
 
-
+<!-- 
         <mat-grid-list cols="2" rowHeight="1:1">
             <mat-grid-tile>
             <div>
@@ -84,7 +119,7 @@
 
                 
             </mat-grid-tile>
-        </mat-grid-list>
+        </mat-grid-list> -->
                 
     </mat-dialog-content>
     <mat-dialog-actions>

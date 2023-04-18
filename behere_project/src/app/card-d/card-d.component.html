@@ -2,13 +2,36 @@
     <h2 mat-dialog-title>Create Event</h2>
     <mat-dialog-content class="mat-typography">
 
+        <!-- <mat-form-field class="example-full-width">
+                        <mat-label>Event Name</mat-label>
+                        <textarea matInput  placeholder="Event Name"></textarea>
+                      </mat-form-field> -->
 
 
-
-        <mat-grid-list cols="2" rowHeight="1:1">
-            <mat-grid-tile>
-            <div>
-                <table class="table" cellspacing="0"><tr>
+        <div class="flex-container">
+        <!-- <mat-grid-list cols="2" rowHeight="1:1"> -->
+            <!-- <mat-grid-tile> -->
+            <div class="input-container">
+                <mat-form-field class="example-full-width" style="width: 90%;">
+                    <mat-label>Event Name</mat-label>
+                    <input matInput #nameInput placeholder="Event Name">
+                </mat-form-field>
+                <mat-form-field class="example-full-width" style="width: 90%;">
+                    <mat-label>Date</mat-label>
+                    <input matInput #dateInput ng-model="date" placeholder="Date">
+                </mat-form-field>
+                <mat-form-field class="example-full-width" style="width: 90%;">
+                    <mat-label>Time</mat-label>
+                    <input matInput #timeInput ng-model="time" placeholder="Time">
+                </mat-form-field>
+                <mat-form-field class="example-full-width" style="width: 90%;">
+                    <mat-label>Bio</mat-label>
+                    <textarea matInput #bioInput ng-model="bio" placeholder="Bio"></textarea>
+                  </mat-form-field>
+                <p>Selected Lat: {{ lat }}</p>
+                <p>Selected Longitude: {{ lng }}</p>
+            </div>
+                <!-- <table class="table" cellspacing="0"><tr>
                     <td><mat-form-field class="example-full-width">
                       <mat-label>Event Name</mat-label>
                       <textarea matInput #nameInput placeholder="Event Name"></textarea>
@@ -31,20 +54,20 @@
                       <mat-label>Bio</mat-label>
                       <textarea matInput #bioInput ng-model="bio" placeholder="Bio"></textarea>
                     </mat-form-field></td>
-                </tr></table>
-                Selected Lat: {{ lat }}
-                Selected Longitude: {{ lng }}
-            </div>
+                </tr></table> -->
             
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <google-map #cardb_google_map
+        <!-- </mat-grid-tile> -->
+        <!-- <mat-grid-tile> -->
+            <google-map #cardd_google_map
             (mapClick)="updateSelectedLocation($event)"
             [center]="center"
-            [options]="gmap_options">                    
+            [options]="gmap_options"> 
+            <map-marker class="marker-class" #marker
+                    [options]="markerOptions"></map-marker>                   
             </google-map>            
-        </mat-grid-tile>
-        </mat-grid-list>
+        <!-- </mat-grid-tile> -->
+        <!-- </mat-grid-list> -->
+    </div>
                 
     </mat-dialog-content>
     <mat-dialog-actions>
