@@ -14,19 +14,19 @@
             <div class="input-container">
                 <mat-form-field class="example-full-width" style="width: 90%;">
                     <mat-label>Event Name</mat-label>
-                    <input matInput #nameInput placeholder="Event Name">
+                    <input id="eName" matInput #nameInput placeholder="Event Name">
                 </mat-form-field>
                 <mat-form-field class="example-full-width" style="width: 90%;">
                     <mat-label>Date</mat-label>
-                    <input matInput #dateInput ng-model="date" placeholder="Date">
+                    <input id="eDate" matInput #dateInput ng-model="date" placeholder="Date">
                 </mat-form-field>
                 <mat-form-field class="example-full-width" style="width: 90%;">
                     <mat-label>Time</mat-label>
-                    <input matInput #timeInput ng-model="time" placeholder="Time">
+                    <input id="eTime" matInput #timeInput ng-model="time" placeholder="Time">
                 </mat-form-field>
                 <mat-form-field class="example-full-width" style="width: 90%;">
                     <mat-label>Bio</mat-label>
-                    <textarea matInput #bioInput ng-model="bio" placeholder="Bio"></textarea>
+                    <textarea id="eBio" matInput #bioInput ng-model="bio" placeholder="Bio"></textarea>
                   </mat-form-field>
                 <p>Selected Lat: {{ lat }}</p>
                 <p>Selected Longitude: {{ lng }}</p>
@@ -59,6 +59,7 @@
         <!-- </mat-grid-tile> -->
         <!-- <mat-grid-tile> -->
             <google-map #cardd_google_map
+            id="createGoogleMap"
             (mapClick)="updateSelectedLocation($event)"
             [center]="center"
             [options]="gmap_options"> 
@@ -71,7 +72,7 @@
                 
     </mat-dialog-content>
     <mat-dialog-actions>
-        <button mat-raised-button (click) = "createEvent()">SUBMIT</button>
+        <button id="finalizeCreate" mat-raised-button (click) = "createEvent()">SUBMIT</button>
         <span></span>
         <button mat-raised-button mat-dialog-close style="position: absolute; right: 10px;">CLOSE</button>
     </mat-dialog-actions>

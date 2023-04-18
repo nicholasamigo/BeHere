@@ -10,6 +10,7 @@
 <div class="maps-container" style="flex: 2;">
 <button mat-stroked-button (click)="updateEventList()">Reload Nearby Events</button>
 <google-map #primary_google_map
+            id="mainGmap"
             height="600px"
             width="100%"
             float="left"
@@ -28,7 +29,7 @@
         }
     </style> -->
     
-    <map-marker class="marker-class" #marker="mapMarker"
+    <map-marker class="marker-class" id="marker-class" #marker="mapMarker"
         *ngFor="let event_t of eventList"
         [options]="markerOptions"
         [position]="{'lat': event_t.lat, 'lng': event_t.lng}"

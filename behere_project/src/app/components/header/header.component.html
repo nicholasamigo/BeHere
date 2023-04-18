@@ -54,7 +54,7 @@
           </mat-icon>
         </button> -->
 
-        <app-create-event></app-create-event>
+        <app-create-event id="createEventButton"></app-create-event>
 
         <span class="spacer2"></span>
   
@@ -66,6 +66,7 @@
       </ng-container>
       <ng-template #loginIcon>
         <button 
+          id="loginButton"
           mat-raised-button
           (click)="login()"
           matTooltip="Login"
