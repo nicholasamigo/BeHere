@@ -43,19 +43,12 @@ describe('template spec', () => {
     //password0905
   })
 
-  it('clickMarker', () => {
-    cy.visit('http://localhost:4200/feed')
-    cy.viewport(1600, 1200) 
-
-    cy.get('#gmimap5').click({ force: true })
-
-    //beherelogin@gmail.com
-    //password0905
-  })
 
   it('clickMarker', () => {
     cy.visit('http://localhost:4200/feed')
     cy.viewport(1600, 1200) 
+
+    cy.wait(7500)
 
     cy.get('#gmimap5').click({ force: true })
 
