@@ -31,10 +31,6 @@ export class MapAndFeedComponent implements OnInit{
 
   @ViewChild('tabGroup', { static: false }) tabGroup: MatTabGroup;
 
-
-  // Fix this eventually. Works but can lead to memory leaks. Need to figure out a way to create events on initialization.
-  //currevent = new Event_t(0, "", "", "", 0, 0, "", "", "");
-
   selectedEvent : Event_t = null
   alreadyInit : boolean
 
@@ -44,7 +40,7 @@ export class MapAndFeedComponent implements OnInit{
   display: google.maps.LatLngLiteral = {lat: 24, lng: 12};
   center: google.maps.LatLngLiteral;
   zoom = 12;
-  // markerPositions: google.maps.LatLngLiteral[] = [];
+
 
   // Define the list of events currently stored in the browser
   eventList: Event_t[]=[];
@@ -54,9 +50,6 @@ export class MapAndFeedComponent implements OnInit{
   d: google.maps.LatLngLiteral = {lat: 0, lng: 0};
   lat:number = 0;
   lng:number = 0;
-
-  // Event to be displayed for more info (Card Type B)
-  //e = new Event_t(0,"","","",0,0,"","","");
 
   options: google.maps.MapOptions = {
     minZoom: 8
@@ -107,60 +100,6 @@ export class MapAndFeedComponent implements OnInit{
 
     this.bluemarker = new google.maps.Marker(this.markerOptions2)
   }
-
-/* commenting out for safety
-  updateData(){
-    this.dataService.dataUpdated.subscribe((data) => {
-      this.latData = data;
-    });
-  }
-
-  initCenter() {
-    // Wait for the 'tilesloaded' event to be fired before calling the getCenterOfMap() function
-    google.maps.event.addListenerOnce(this.map, 'center_changed', () => {
-      console.log('center_changed!')
-      this.updateEventList()
-    });
-  }
-*/
-
-  // Called when card A info is clicked.
-  // This sets "selectedEvent" so that the cardB will pop up (it is *ngif'ed in)
-  // openCardB(eventdata : Event_t) {
-  //   this.selectedEvent = eventdata
-  // }
-
-    // // Function to show Card B version of Event
-    // showCardB(eID: number){
-    //   for(let i = 0; i < this.eventList.length; i++){
-    //     if(this.eventList[i].id == eID){
-    //       this.e = this.eventList[i];
-    //       var x = document.getElementById("cardB") as HTMLSelectElement;
-    //       if (x.style.display === "none") {
-    //         x.style.display = "flex";
-    //       } else {
-    //         x.style.display = "none";
-    //       }
-    //       document.getElementById("overlay").style.display = "block";
-    //     }
-    //   }
-    // }
-
-      // Function to close Card B version of Event
-      // closeCardB(){
-      //   var x = document.getElementById("cardB") as HTMLSelectElement;
-      //   if (x.style.display === "none") {
-      //     x.style.display = "flex";
-      //     document.getElementById("overlay").style.display = "none";
-      //   } else {
-      //     x.style.display = "none";
-      //     document.getElementById("overlay").style.display = "none";
-      //   }
-      // }
-  
-  // closeCardB() {
-  //   //this.selectedEvent = null
-  // }
 
   updateEventList() {
     let lat = this.center.lat;
@@ -218,26 +157,6 @@ export class MapAndFeedComponent implements OnInit{
   currentLat: any;
   currentLong: any;
 
-//  showTrackingPosition(position) {
-//     console.log(`tracking postion:  ${position.coords.latitude} - ${position.coords.longitude}`);
-//     this.currentLat = position.coords.latitude;
-//     this.currentLong = position.coords.longitude;
-
-//     let location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-//     this.panTo(location);
-
-//     if (!this.marker) {
-//       this.marker = new google.maps.Marker({
-//         position: location,
-//         map: this.map,
-//         title: 'Got you!'
-//       });
-//     }
-//     else {
-//       this.marker.setPosition(location);
-//     }
-//   }
-
   /* Handle user GPS tracking */
 
   trackUser() {
@@ -258,30 +177,6 @@ export class MapAndFeedComponent implements OnInit{
 
   @ViewChild('nameInput')
   nameInputReference!: ElementRef;
-
-  // TODO - Rewrite the form, nameInputReference is DISGUSTING syntax
-  // John you absolute buffoon
-  // createEvent(){
-  //   let e = new Event_t(0, this.nameInputReference.nativeElement.value, "Bio",
-  //     "Placeholder",
-  //     this.lat, 
-  //     this.lng,
-  //     "Balls avenue",
-  //     "04/23/2022",
-  //     "4PM")
-  //   this.ems.createEvent(e)
-  // }
-
-  // openCreateEvent(){
-  //   var x = document.getElementById("cE") as HTMLSelectElement;
-  //   if (x.style.display === "none") {
-  //     x.style.display = "block";
-  //     this.cE = "Close";
-  //   } else {
-  //     x.style.display = "none";
-  //     this.cE = "Create Event";
-  //   }
-  // }
 
   testLog() {
     console.log("Map-n-feed Received the Event that dialog C closed")
@@ -330,5 +225,15 @@ export class MapAndFeedComponent implements OnInit{
   // when tabs change at all -> try to scroll to the cardon
   onTabChange() {
     this.scrollToCard()
+  }
+
+  recenterMapView() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.center = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
+      this.zoom = 12;
+    });
   }
 }
