@@ -28,11 +28,17 @@
         }
     </style> -->
     
-    <map-marker class="marker-class" #marker="mapMarker"
-        *ngFor="let event_t of eventList"
+    <div *ngFor="let event_t of eventList">
+
+        <map-marker class="marker-class" #marker="mapMarker"
+        *ngIf="event_t != selectedEvent"
         [options]="markerOptions"
         [position]="{'lat': event_t.lat, 'lng': event_t.lng}"
         (mapClick)="onMarkerClick(event_t)"></map-marker>
+
+    </div>
+
+    
     <map-info-window></map-info-window>
     <!-- <map-marker class="selected"
     #bluemarker
