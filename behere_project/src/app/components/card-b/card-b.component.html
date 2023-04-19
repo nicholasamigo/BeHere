@@ -33,17 +33,18 @@
     </mat-card-actions>
     </mat-card> -->
 
-    <h2 mat-dialog-title>Event Details</h2>
+    <h1 mat-dialog-title> <u>Event Details</u> </h1>
     <mat-dialog-content class="mat-typography">
         <mat-grid-list cols="2" rowHeight="1:1">
             <mat-grid-tile>
-                <div>
-                <p>Host: {{ event.hostid }}</p>
-                <p>Address: {{ event.address }}</p>
-                <p>Coordinates: {{ event.lat }} | {{ event.lng }}</p>
-                <p>Date: {{ event.date }}</p>
-                <p>Time: {{ event.time }}</p>
-                <p>Bio: {{ event.bio }}</p>
+                <div mat-dialog-content>  
+                <h1 class="event-name"> <b> {{ event.name }} </b> </h1>
+                <p> <b>Host (ID): </b> {{ event.hostid }}</p>
+                <p> <b>Address: </b> {{ event.address }}</p>
+                <p> <b>Coordinates: </b> {{ event.lat }} | {{ event.lng }}</p>
+                <p> <b>Date: </b> {{ event.date }}</p>
+                <p> <b>Time: </b> {{ event.time }}</p>
+                <p> <b>Bio: </b> {{ event.bio }}</p>
                 </div>
             </mat-grid-tile>
             <mat-grid-tile>

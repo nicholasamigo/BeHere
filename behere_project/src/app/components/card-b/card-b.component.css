@@ -6,9 +6,9 @@
     z-index: 10;
     height: 50vh;
     width: 50vw;
-  }
+  } */
   
-  #overlay {
+  /* #overlay {
     position: fixed; 
     display: flex; 
     width: 100%; 
@@ -20,9 +20,15 @@
     background-color: rgba(0,0,0,0.5); 
     z-index: 2; 
     cursor: pointer; 
-  } */
+  } */ 
 
   /* .container {
     display: flex;
     justify-content: space-between;
-  } */
+  }
+  */
+
+  .event-name {
+    justify-content: left;
+    font-size: xx-large;
+  }
