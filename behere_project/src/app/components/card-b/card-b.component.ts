@@ -18,12 +18,12 @@ export class CardBComponent implements OnInit{
   constructor(@Inject(MAT_DIALOG_DATA) public event: Event_t, public ems : EventsMiddlemanService) {}
 
   ngOnInit(): void {
-    //this.event=this.input_event
 
     this.gmap_options = {
       center: {lat: this.event.lat, lng: this.event.lng},
       minZoom: 10,
-      zoom: 14
+      zoom: 14,
+      draggable: false
     };
 
     this.markerOptions = {
@@ -31,11 +31,6 @@ export class CardBComponent implements OnInit{
       position: {lat: this.event.lat, lng: this.event.lng}
     }
   }
-
-  // Emits closeCardBEvent to map-and-feed.html
-  // onClickCloseB() {
-  //   this.closeCardBEvent.emit();
-  // }
 
   onAttend() {
     if (this.ems.auth.user) {
