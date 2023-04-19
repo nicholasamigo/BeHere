@@ -9,6 +9,7 @@
 <div class="flex-container">
 <div class="maps-container" style="flex: 2;">
 <button mat-stroked-button (click)="updateEventList()">Reload Nearby Events</button>
+<button mat-stroked-button (click)="recenterMapView()">Recenter Map View</button>
 <google-map #primary_google_map
             height="600px"
             width="100%"
