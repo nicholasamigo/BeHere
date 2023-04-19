@@ -4,7 +4,8 @@
       <button 
         mat-button 
         routerLink="/feed"
-        matTooltip="BeHere Home">
+        matTooltip="Home">
+        <mat-icon class="logo-display">room</mat-icon>
         <h1>BeHere</h1>
       </button>
       <div style="width: 20px;"></div>
@@ -15,7 +16,7 @@
         routerLink="/create"
         matTooltip="My Events" >
         My Events
-        <mat-icon>
+        <mat-icon class="events-icon">
           assignment
         </mat-icon>
       </button>
@@ -26,16 +27,17 @@
           mat-icon-button
           matTooltip="Login to Access Your Events"
           >
-          <mat-icon
+          <mat-icon class="lock-icon"
             aria-hidden="false"
             >
-            lock
+            lock 
           </mat-icon>
         </button>
       </ng-template>
       
 
-      <span class="spacer"></span>
+      <span class="spacer">
+      </span>
       
       <ng-container *ngIf="this.auth.user; else loginIcon">
   
