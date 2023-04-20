@@ -16,36 +16,19 @@
         <p>Number of Attendees: {{count}}</p>
       </mat-card-content>
       <mat-card-actions>
-        <!-- TODO - add ngif conditional to show button "Unattend"
-        Perhaps track attending eids in event middleman service -->
         <div *ngIf="this.auth.user" class="signedInButtons">
           <ng-container *ngIf="this.auth.user.uid == event.hostid; then isHost; else notHost" class="hostOrNot">
           </ng-container>
-
-          <!-- If not host, show the attend/unattend buttons -->
           <ng-template #notHost>
-            <!-- <ng-container
-              *ngIf="ems.currentlyAttendingEventIDs.includes(this.event.id); then alreadyAttending; else notAttending">
-            </ng-container>
-            <ng-template #alreadyAttending>
-              <button mat-stroked-button (click)="onUnattend()">UNATTEND</button>
-            </ng-template>
-            <ng-template #notAttending>
-              <button mat-stroked-button (click)="onAttend()">ATTEND</button>
-            </ng-template>-->
           </ng-template>
 
           <!-- If the host, show the edit button instead -->
-          <!-- To Do - add an indicator icon (with hover hint) that you are hosting this event -->
           <ng-template #isHost style="display: flex; align-items: center;">
             <button mat-icon-button matTooltip="You were the host of this event!">
               <mat-icon aria-hidden="false">front_hand</mat-icon>
             </button>
-            <!-- <button mat-stroked-button (click) = "onClickShowC()" matTooltip="Edit event">EDIT</button> -->
           </ng-template>
         </div>
-        
-        <!-- <button mat-raised-button>SHARE</button> -->
         <button mat-stroked-button (click) = "onClickShowB()" style="position: absolute; right: 10px;">INFO</button>
       </mat-card-actions>
   </mat-card>

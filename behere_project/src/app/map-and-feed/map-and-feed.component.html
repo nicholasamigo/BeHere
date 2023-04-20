@@ -20,14 +20,6 @@
             (mapClick)="updateSelectedLocation($event)"
             (mapMousemove)="move($event)"
             (tilesloaded)="initEventList()">
-
-    <!-- <style>
-        #container {
-            width: 50%;
-        float: left;
-        padding: 20px;
-        }
-    </style> -->
     
     <div *ngFor="let event_t of eventList">
 
@@ -41,22 +33,8 @@
 
     
     <map-info-window></map-info-window>
-    <!-- <map-marker class="selected"
-    #bluemarker
-    [options]="markerOptions2"
-    *ngIf="selectedEvent"
-    [position]="{'lat': selectedEvent.lat, 'lng': selectedEvent.lng}"
-    >
-
-    </map-marker> -->
 </google-map>
 </div>
-
-<!--
-      constructor(public id: number, public name: string, 
-    public hostid: number, public lat: number, public lng: number, 
-    public address: string, public date: string, public time: string) {}
--->
 
 <div class="events-tab" style="margin-left: 5px; flex: 1;">
     <mat-tab-group #tabGroup style = "height:  636px;"

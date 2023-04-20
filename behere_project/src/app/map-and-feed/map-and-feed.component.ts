@@ -26,7 +26,6 @@ export class MapAndFeedComponent implements OnInit{
   // Allow direct reading of the big google map Angular component in "map"
   @ViewChild('primary_google_map', { static: false }) map: GoogleMap
 
-  //@ViewChild('bluemarker', { static: false }) bluemarker: MapMarker;
   bluemarker: google.maps.Marker
 
   @ViewChild('tabGroup', { static: false }) tabGroup: MatTabGroup;
@@ -77,9 +76,6 @@ export class MapAndFeedComponent implements OnInit{
 
 
   ngOnInit() {
-    /* load in events */
-    /* TODO - update this to interface with backend */
-
     // Read from getTitle which is on backend API. Convert back from JSON into a struct
     this.hw.getTitle()
       .subscribe(data => this.title = JSON.parse(JSON.stringify(data)).title);
@@ -110,8 +106,6 @@ export class MapAndFeedComponent implements OnInit{
 
     console.log("Got lat=", lat, " and lng=", lng, "and radius=", radius);
     
-    // TODO - reimplement with a call to getEventsWithinBounds
-    // Will be simpler and probably faster
     this.ems.getEventsAroundLocation(lat, lng, radius)
     .subscribe(data => this.eventList = JSON.parse(JSON.stringify(data)));
     console.log("Event list updated");
@@ -124,26 +118,10 @@ export class MapAndFeedComponent implements OnInit{
     }
   }
 
-  addMarker(event: google.maps.MapMouseEvent) {
-    //this.markerPositions.pop();
-    //this.markerPositions.push(event.latLng.toJSON());
-  }
-
   updateSelectedLocation(event: google.maps.MapMouseEvent){
     this.d = event.latLng.toJSON();
     this.lat = this.d.lat;
     this.lng = this.d.lng;
-  }
-
-  openInfoWindow(marker: MapMarker, currevent : Event_t) {
-    // this.infoContent = currevent;
-    // this.infoWindow.open(marker);
-    //this.currevent = currevent;
-    
-    // does nothing lmao
-    
-    // TODO NEXT - Use getEventsAroundLocation
-    // to refresh the map using dummy data
   }
 
   move(event: google.maps.MapMouseEvent) {
@@ -158,17 +136,14 @@ export class MapAndFeedComponent implements OnInit{
   currentLong: any;
 
   /* Handle user GPS tracking */
-
   trackUser() {
     if (navigator.geolocation) {
       navigator.geolocation.watchPosition((position) => {
-        //this.showTrackingPosition(position);
       });
     } else {
       alert("Geolocation is not supported by this browser.");
     }
   }
-
 
   onAddTimestamp() {
     this.dataArr.push(this.display.lat);
@@ -190,21 +165,9 @@ export class MapAndFeedComponent implements OnInit{
 
   scrollToCard() {
     const card = document.getElementById(this.selectedEvent.id.toString());
-    //this.bluemarker = new google.maps.Marker(this.markerOptions2)
     this.bluemarker.setAnimation(google.maps.Animation.BOUNCE)
     this.bluemarker.setPosition({lat: this.selectedEvent.lat, lng: this.selectedEvent.lng})
     this.bluemarker.setMap(this.map.googleMap)
-    // redraw
-
-    // Remove highlight on previous card
-    // if (this.highlightedCard) {
-    //   this.highlightedCard.classList.remove('selected');
-    // }
-
-    // if (card) {
-    //   card.classList.add('selected')
-    //   this.highlightedCard = card
-    // }
     if (card)
       card.scrollIntoView({ behavior: 'smooth' })
   }

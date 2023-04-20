@@ -3,7 +3,6 @@ import { Event_t, EventsMiddlemanService } from 'src/app/services/events-middlem
 import { MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-
 @Component({
   selector: 'app-card-c',
   templateUrl: './card-c.component.html',
@@ -33,8 +32,6 @@ export class CardCComponent {
   @ViewChild('bioInput')
   bioInputReference!: ElementRef;
 
-  //@Input() input_event : Event_t
-
   @Output() closeCardBEvent: EventEmitter<void> = new EventEmitter()
 
   constructor(@Inject(MAT_DIALOG_DATA) public event: Event_t, 
@@ -44,7 +41,6 @@ export class CardCComponent {
       ) {}
 
   ngOnInit(): void {
-    //this.event=this.input_event
 
     this.gmap_options = {
       center: {lat: this.event.lat, lng: this.event.lng},
@@ -93,11 +89,6 @@ export class CardCComponent {
       )
     }
   }
-
-  // Emits closeCardBEvent to map-and-feed.html
-  // onClickCloseB() {
-  //   this.closeCardBEvent.emit();
-  // }
 
   editEvent(){
     let e = new Event_t(this.event.id,              //id

@@ -1,41 +1,6 @@
 <div id="overlay" class="overlay">
-    <!-- <mat-card class="cardB" id="cardB" style="display: flex;">
-    <mat-card-header>
-        <mat-card-title>{{ event.name }} TYPE B</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-        <p>Host: {{ event.hostid }}</p>
-        <p>Address: {{ event.lat }} | {{ event.lng }}</p>
-        <p>Date: {{ event.date }}</p>
-        <p>Time: {{ event.time }}</p>
-        <p>Attendees: A Billy</p>
-        <p>Bio: {{ event.bio }}</p>
-        <google-map #cardb_google_map
-            [options]="gmap_options">
-
-            <style>
-                #container {
-                width: 50%;
-                float: left;
-                padding: 20px;
-                }
-            </style>
-            
-            <map-marker class="marker-class" #marker="mapMarker"
-                [options]="markerOptions"></map-marker>
-        </google-map>
-
-    </mat-card-content>
-    <mat-card-actions>
-        <button mat-button style="position: absolute; bottom: 10px;">ATTEND</button>
-        <button mat-button style="position: absolute; left: 90px; bottom: 10px;">SHARE</button>
-        <button mat-button (click) = "onClickCloseB()" style="position: absolute; right: 10px; bottom: 10px;">CLOSE</button>
-    </mat-card-actions>
-    </mat-card> -->
-
     <h2 mat-dialog-title>Edit Event</h2>
     <mat-dialog-content class="mat-typography">
-
         <div class="flex-container">
             <!-- <mat-grid-list cols="2" rowHeight="1:1"> -->
                 <!-- <mat-grid-tile> -->
@@ -57,11 +22,6 @@
                         <textarea matInput #bioInput ng-model="bio" placeholder="Bio" value="{{event.bio}}"></textarea>
                       </mat-form-field>
                 </div>
-                <!-- <google-map #cardb_google_map
-                (mapClick)="updateSelectedLocation($event)"
-                [center]="center"
-                [options]="gmap_options">                    
-                </google-map>    -->
                 <google-map #cardb_google_map
                 [options]="gmap_options">                    
                 <map-marker class="marker-class" #marker="mapMarker"
@@ -71,56 +31,6 @@
                     [options]="markerCenterOptions"></map-marker>
                 </google-map>    
         </div>
-
-
-<!-- 
-        <mat-grid-list cols="2" rowHeight="1:1">
-            <mat-grid-tile>
-            <div>
-                <table class="table" cellspacing="0"><tr>
-                    <td><mat-form-field class="example-full-width">
-                      <mat-label>Event Name</mat-label>
-                      <textarea matInput #nameInput placeholder="Event Name">{{ event.name }}</textarea>
-                    </mat-form-field></td>
-                </tr></table>
-                <table class="table" cellspacing="0"><tr>
-                    <td><mat-form-field class="example-full-width">
-                      <mat-label>Date</mat-label>
-                      <textarea matInput #dateInput ng-model="date" placeholder="Date">{{event.date}}</textarea>
-                    </mat-form-field></td>
-                </tr></table>
-                <table class="table" cellspacing="0"><tr>
-                    <td><mat-form-field class="example-full-width">
-                      <mat-label>Time</mat-label>
-                      <textarea matInput #timeInput ng-model="time" placeholder="Time">{{event.time}}</textarea>
-                    </mat-form-field></td>
-                </tr></table>
-                <table class="table" cellspacing="0"><tr>
-                    <td><mat-form-field class="example-full-width">
-                      <mat-label>Bio</mat-label>
-                      <textarea matInput #bioInput ng-model="bio" placeholder="Bio">{{event.bio}}</textarea>
-                    </mat-form-field></td>
-                </tr></table>
-            </div>
-            
-        </mat-grid-tile>
-
-            <mat-grid-tile>
-                <google-map #cardb_google_map
-                [options]="gmap_options">                    
-                <map-marker class="marker-class" #marker="mapMarker"
-                    [options]="markerOptions"></map-marker>
-
-                <map-marker class="marker-class" #marker="mapMarker"
-                    [options]="markerCenterOptions"></map-marker>
-                </google-map>
-
-
-
-                
-            </mat-grid-tile>
-        </mat-grid-list> -->
-                
     </mat-dialog-content>
     <mat-dialog-actions>
         <button mat-raised-button (click) = "editEvent()">SAVE</button>

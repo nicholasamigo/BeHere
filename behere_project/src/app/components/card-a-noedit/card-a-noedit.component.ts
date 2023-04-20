@@ -5,10 +5,6 @@ import { CardBComponent } from '../card-b/card-b.component';
 import { CardCComponent } from '../card-c/card-c.component';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { EventsMiddlemanService } from 'src/app/services/events-middleman.service';
-// import { CardDComponent } from 'src/app/card-d/card-d.component';
-
-// use these to trigger an event in the map-n-feed component
-// when a card C (edit) dialog gets closed. 
 
 @Component({
   selector: 'app-card-a-noedit',
@@ -16,7 +12,6 @@ import { EventsMiddlemanService } from 'src/app/services/events-middleman.servic
   styleUrls: ['./card-a-noedit.component.css']
 })
 export class CardAComponentNoEdit implements OnInit{
-
 
   event : Event_t
   count : number
@@ -52,12 +47,4 @@ export class CardAComponentNoEdit implements OnInit{
       console.log(`Dialog result: ${result}`);
     })
   }
-
-  // onClickShowD(){
-
-  //   const dialogRef = this.dialog.open(CardDComponent, {
-  //     width: '70%',
-  //     data : this.event
-  //   });
-  // }
 }

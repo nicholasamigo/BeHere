@@ -2,8 +2,7 @@
   mat-mini-fab
   color="primary"
   class="avatar-button"
-  [matMenuTriggerFor]="beforeMenu"
->
+  [matMenuTriggerFor]="beforeMenu">
   <img 
     [alt]="user.displayName"
     [src]="user.photoURL"
@@ -21,9 +20,5 @@
     <button mat-stroked-button (click)="logout()">
       Sign Out
     </button>
-    <!-- <mat-divider></mat-divider>
-    <p class="profile-footer">
-      Header made with <3 by <a href="https://twitter.com/SiddAjmera">@SiddAjmera</a>
-    </p> -->
   </div>
 </mat-menu>

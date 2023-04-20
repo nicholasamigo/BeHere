@@ -43,7 +43,6 @@ export class CardDComponent {
   marker : google.maps.Marker
 
 
-
   constructor(private ems: EventsMiddlemanService, 
     private readonly snackBar : MatSnackBar,
     public dialogRef : MatDialogRef<CardDComponent>) {}
@@ -77,11 +76,6 @@ export class CardDComponent {
     this.marker.setPosition({lat: this.lat, lng: this.lng})
     this.marker.setMap(this.map.googleMap)
   }
-
-  // Emits closeCardBEvent to map-and-feed.html
-  // onClickCloseB() {
-  //   this.closeCardBEvent.emit();
-  // }
 
   createEvent(){
     if (this.lat == 0) {

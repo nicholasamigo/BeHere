@@ -80,7 +80,6 @@ export class EventsMiddlemanService {
     this.http.post(url, ar).subscribe({
       next: data => {console.log("Sucess creating attend");
       this.refreshCurrentAttend();
-      //this.countAttend(event);
     },
       error: error => console.log("Error!", error)
     })
@@ -95,7 +94,6 @@ export class EventsMiddlemanService {
     this.http.post(url, ar).subscribe({
       next: data => {console.log("Sucess deleting attend");
       this.refreshCurrentAttend();
-      //this.countAttend(event);
     },
       error: error => console.log("Error!", error)
     })
@@ -112,7 +110,6 @@ export class EventsMiddlemanService {
   }
 
   // Updates the list of EIDs of current user
-  // This should be called upon login as well.
   refreshCurrentAttend() : void {
     if (!this.auth.user) {
       this.currentlyAttendingEventIDs = []
@@ -294,16 +291,11 @@ export class EventsMiddlemanService {
 }
 
 export class Event_t {
-  // TODO - update these structs
-  // This needs to match the Event struct definition in main.go
   constructor(public id: number, public name: string, public bio: string,
     public hostid: string, public lat: number, public lng: number, 
     public address: string, public date: string, public time: string, public completed: boolean) {}
 }
 
-/**
- * getLatLng
- */
 export function getGoogleLatLngFromEvent(event_t : Event_t) {
   return new google.maps.LatLng(event_t.lat, event_t.lng);
 }
