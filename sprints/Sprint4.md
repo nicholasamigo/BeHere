@@ -70,8 +70,10 @@ Because we overhauled most of our website since the past sprint, we also decided
 - Is fully linked to the front-end.
 
 # Implemented Functions
-There are multiple new functions we implemented into our project for this sprint, so here are a few of the most prominent ones.
+There are multiple new functions we implemented into our project for this sprint, so here are some that encapsulate both front end and back end changes.
 
+func restDeleteEvent - Function to restfully delete an event as requested by the Front-End.
+```
 func restDeleteEvent(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Deleting event...")
 	reqBody, err := io.ReadAll(r.Body)
@@ -95,7 +97,11 @@ func restDeleteEvent(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(deletingEvent)
 }
+```
+---
 
+func restCompleteEvent - Function to restfully complete an event as requested by the Front-End.
+```
 func restCompleteEvent(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Completing event...")
 	reqBody, err := io.ReadAll(r.Body)
@@ -119,7 +125,12 @@ func restCompleteEvent(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(completingEvent)
 }
+```
+---
 
+func restEditEvent - Function to restfully edit an event as requested by the Front-End.
+
+```
 func restEditEvent(w http.ResponseWriter, r *http.Request) {
 
 	reqBody, err := io.ReadAll(r.Body)
@@ -142,18 +153,25 @@ func restEditEvent(w http.ResponseWriter, r *http.Request) {
 	// Send something back as proof of life. THis value probably ignored by
 	// front end
 	json.NewEncoder(w).Encode(newEvent)
-
 }
+```
+---
 
+func onClickShowD - Called by the "Create Event" button and displays an editable Card-D component.
+```
 onClickShowD(){
     console.log("asd")
 
     const dialogRef = this.dialog.open(CardDComponent, {
       width: '80%'
     });
-  }
+}
+```
+---
 
-  scrollToCard() {
+func scrollToCard - Connected with the map-and-feed component and scrolls to a certain event card when a specific event is clicked, and vice-versa.
+```
+scrollToCard() {
     const card = document.getElementById(this.selectedEvent.id.toString());
     this.bluemarker.setAnimation(google.maps.Animation.BOUNCE)
     this.bluemarker.setPosition({lat: this.selectedEvent.lat, lng: this.selectedEvent.lng})
@@ -161,8 +179,12 @@ onClickShowD(){
     if (card)
       card.scrollIntoView({ behavior: 'smooth' })
   }
+```
+---
 
-  onMarkerClick(event: Event_t) {
+func onMarkerClick - Scrolls to the corresponding card in the card container that matches the event marker clicked.
+```
+onMarkerClick(event: Event_t) {
     this.selectedEvent = event
     const card = document.getElementById(event.id.toString());
     if (!card) // card not found, go to Nearby Events tab
@@ -174,4 +196,5 @@ onClickShowD(){
       this.scrollToCard()
     }
   }
-	
+```
+---
