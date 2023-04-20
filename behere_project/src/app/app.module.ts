@@ -32,7 +32,7 @@ import { EventsMiddlemanService } from './services/events-middleman.service';
 import { MapAndFeedComponent } from './map-and-feed/map-and-feed.component';
 import { CardCComponent } from './components/card-c/card-c.component';
 import {MatInputModule} from '@angular/material/input';
-import { CardDComponent } from './card-d/card-d.component';
+import { CardDComponent } from './components/card-d/card-d.component';
 import { MyEventsComponent } from './components/my-events/my-events.component';
 import { CreateEventComponent } from './create-event/create-event.component';
 import { CardAComponentNoEdit } from './components/card-a-noedit/card-a-noedit.component';

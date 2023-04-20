@@ -6,7 +6,7 @@ import { CardBComponent } from '../card-b/card-b.component';
 import { MatDialog } from '@angular/material/dialog';
 import {MatTabsModule} from '@angular/material/tabs';
 import {GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
-import { CardDComponent } from 'src/app/card-d/card-d.component';
+import { CardDComponent } from 'src/app/components/card-d/card-d.component';
 import { CreateEventComponent } from 'src/app/create-event/create-event.component';
 import { NgModule } from '@angular/core'
 
