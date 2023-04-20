@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CardAComponentNoEdit } from './card-a-noedit.component';
 
 describe('CardAComponent', () => {

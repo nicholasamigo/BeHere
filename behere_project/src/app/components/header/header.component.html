@@ -1,6 +1,5 @@
 <mat-toolbar color="primary">
     <mat-toolbar-row>
-      <!-- <button mat-button *ngIf="this.auth.user">{{auth.user.uid}}</button> -->
       <button 
         mat-button 
         routerLink="/feed"
@@ -40,20 +39,6 @@
       </span>
       
       <ng-container *ngIf="this.auth.user; else loginIcon">
-  
-        <!-- <button 
-          mat-button
-          routerLink="/create"
-          matTooltip="Create an event"
-          id="createAnEvent"
-          >
-          <mat-icon
-            aria-hidden="false"
-            aria-label="Create an event"
-            >
-            cloud_upload
-          </mat-icon>
-        </button> -->
 
         <app-create-event></app-create-event>
 

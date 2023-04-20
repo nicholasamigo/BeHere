@@ -1,16 +1,7 @@
 <div id="overlay" class="overlay">
     <h2 mat-dialog-title>Create Event</h2>
     <mat-dialog-content class="mat-typography">
-
-        <!-- <mat-form-field class="example-full-width">
-                        <mat-label>Event Name</mat-label>
-                        <textarea matInput  placeholder="Event Name"></textarea>
-                      </mat-form-field> -->
-
-
         <div class="flex-container">
-        <!-- <mat-grid-list cols="2" rowHeight="1:1"> -->
-            <!-- <mat-grid-tile> -->
             <div class="input-container">
                 <mat-form-field class="example-full-width" style="width: 90%;">
                     <mat-label>Event Name</mat-label>
@@ -31,33 +22,6 @@
                 <p>Selected Lat: {{ lat }}</p>
                 <p>Selected Longitude: {{ lng }}</p>
             </div>
-                <!-- <table class="table" cellspacing="0"><tr>
-                    <td><mat-form-field class="example-full-width">
-                      <mat-label>Event Name</mat-label>
-                      <textarea matInput #nameInput placeholder="Event Name"></textarea>
-                    </mat-form-field></td>
-                </tr></table>
-                <table class="table" cellspacing="0"><tr>
-                    <td><mat-form-field class="example-full-width">
-                      <mat-label>Date</mat-label>
-                      <textarea matInput #dateInput ng-model="date" placeholder="Date"></textarea>
-                    </mat-form-field></td>
-                </tr></table>
-                <table class="table" cellspacing="0"><tr>
-                    <td><mat-form-field class="example-full-width">
-                      <mat-label>Time</mat-label>
-                      <textarea matInput #timeInput ng-model="time" placeholder="Time"></textarea>
-                    </mat-form-field></td>
-                </tr></table>
-                <table class="table" cellspacing="0"><tr>
-                    <td><mat-form-field class="example-full-width">
-                      <mat-label>Bio</mat-label>
-                      <textarea matInput #bioInput ng-model="bio" placeholder="Bio"></textarea>
-                    </mat-form-field></td>
-                </tr></table> -->
-            
-        <!-- </mat-grid-tile> -->
-        <!-- <mat-grid-tile> -->
             <google-map #cardd_google_map
             (mapClick)="updateSelectedLocation($event)"
             [center]="center"
@@ -65,10 +29,7 @@
             <map-marker class="marker-class" #marker
                     [options]="markerOptions"></map-marker>                   
             </google-map>            
-        <!-- </mat-grid-tile> -->
-        <!-- </mat-grid-list> -->
-    </div>
-                
+    </div>        
     </mat-dialog-content>
     <mat-dialog-actions>
         <button mat-raised-button (click) = "createEvent()">SUBMIT</button>

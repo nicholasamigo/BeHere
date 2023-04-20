@@ -28,25 +28,10 @@ export class MyEventsComponent implements OnInit{
   lat:number = 0;
   lng:number = 0;
 
-
-  // This component has full access to the EMS services
-  // Which handle all requests from the Event DB
   constructor(public ems: EventsMiddlemanService) {}
 
-
-
   ngOnInit() {
-    /* load in events */
-    /* TODO - update this to interface with backend */
-
-
-
-    //window.addEventListener('load', () => {this.initCenter(); console.log('Load event triggered')})
     }
-  
-  // Called when card A info is clicked.
-  // This sets "selectedEvent" so that the cardB will pop up (it is *ngif'ed in)
-
 
   @ViewChild('nameInput')
   nameInputReference!: ElementRef;
@@ -54,29 +39,4 @@ export class MyEventsComponent implements OnInit{
   refreshEventLists() : void {
     this.ems.pullEMSEvents()
   }
-
-  // TODO - Rewrite the form, nameInputReference is DISGUSTING syntax
-  // John you absolute buffoon
-  // createEvent(){
-  //   let e = new Event_t(0, this.nameInputReference.nativeElement.value, "Bio",
-  //     "Placeholder",
-  //     this.lat, 
-  //     this.lng,
-  //     "Balls avenue",
-  //     "04/23/2022",
-  //     "4PM")
-  //   this.ems.createEvent(e)
-  // }
-
-  // openCreateEvent(){
-  //   var x = document.getElementById("cE") as HTMLSelectElement;
-  //   if (x.style.display === "none") {
-  //     x.style.display = "block";
-  //     this.cE = "Close";
-  //   } else {
-  //     x.style.display = "none";
-  //     this.cE = "Create Event";
-  //   }
-  // }
-
 }

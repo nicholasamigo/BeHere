@@ -7,11 +7,8 @@ import { MAT_DIALOG_DATA} from '@angular/material/dialog';
   styleUrls: ['./card-b.component.css']
 })
 export class CardBComponent implements OnInit{
-  //event : Event_t
   gmap_options : google.maps.MapOptions
   markerOptions : google.maps.MarkerOptions
-
-  //@Input() input_event : Event_t
 
   @Output() closeCardBEvent: EventEmitter<void> = new EventEmitter()
 
@@ -35,25 +32,12 @@ export class CardBComponent implements OnInit{
   onAttend() {
     if (this.ems.auth.user) {
       this.ems.createAttend(this.event)
-      // you dirty dirty boy
-      // this.count ++;
-
-      // this.ems.countAttend(this.event).subscribe({
-      //   next: (value) => this.count = value,
-      //   error: error => console.log("Error fetching attendee count")
-      // })
     }
-
   }
 
   onUnattend() {
     if (this.ems.auth.user) {
       this.ems.deleteAttend(this.event)
-      // this.count --;
-      // this.ems.countAttend(this.event).subscribe({
-      //   next: (value) => this.count = value,
-      //   error: error => console.log("Error fetching attendee count")
-      // })
     }
   }
 }

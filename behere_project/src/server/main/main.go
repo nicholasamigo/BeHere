@@ -26,9 +26,6 @@ type User struct {
 	Email string `gorm:"unique;not null"`
 }
 
-// FUCK OFF GORM
-// Make sure you USE CAPS or your shit won't show up
-// in the DB
 type Event struct {
 	gorm.Model
 	Name          string
@@ -41,12 +38,6 @@ type Event struct {
 	Time          string
 	DeletedFlag   bool
 	CompletedFlag bool
-
-	// Will be implemented later with specific classes because they are dynamic.
-	//FriendsInvolved AttendRelation
-	//Attendees uint
-	//EventTags VAR
-	//Distance float32
 }
 type AttendRelation struct {
 	PID       string `gorm:"primaryKey"`
@@ -54,25 +45,6 @@ type AttendRelation struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
-
-/*-------------STRUCT DEF END------------------*/
-
-/*--Start Pseudo code for database access------*/
-/*
-
-Events
-- Get Events around a radius: reduces load on the browser, don't need to store EVERY event.
-	- Used on feed screen
-	- Should not pull archived (deleted/completed events)
-- Get all events hosting
-	- Used on both Feed and My Events screen
-- Get all events attending (splitting because easier to implement in Go)
-	- Used on both Feed and My Events screen
-	- Whether completed or archived is handled by front-end, don't worry about it
-- User exists?
-
-*/
-/*--End Pseudo code for database access--------*/
 
 // Global declaration of the database
 var db *gorm.DB
@@ -88,12 +60,6 @@ func main() {
 
 	// Migrate the schema
 	db.AutoMigrate(User{}, Event{}, AttendRelation{})
-
-	// Testing here. Comment these out when running the server
-	//john_test_funcs()
-	//aj_populate()
-
-	//nick_test()
 
 	/* Server initializaiton */
 	r := mux.NewRouter()
@@ -113,11 +79,6 @@ func main() {
 	r.HandleFunc("/deleteEvent", restDeleteEvent).Methods("POST")
 	r.HandleFunc("/completeEvent", restCompleteEvent).Methods("POST")
 
-	//r.HandleFunc("/getUserID", restGetUserID)
-	//r.HandleFunc("/putUser", restPutUser).Methods("PUT")
-	//r.HandleFunc("/create-account", createAccount)
-	//r.HandleFunc("/delete-account", deleteAccount)
-
 	// Solves Cross Origin Access Issue
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"http://localhost:4200"},
@@ -129,14 +90,10 @@ func main() {
 		Handler: handler,
 		Addr:    ":" + os.Getenv("PORT"),
 	}
-	//fmt.Print(srv.Addr)
 	log.Fatal(srv.ListenAndServe())
 }
 
 func aj_populate() {
-	// let dummy1 = new Event_t(1, "Party at AJs!", 1, 29.644954782334302, -82.35255807676796);
-	// let dummy2 = new Event_t(2, "Dinner at Johns", 1, 29.669247750220627, -82.33697355656128);
-	// let dummy3 = new Event_t(3, "Pool Night at Nicks", 1, 29.685355319870283, -82.38572538761596);
 	e1 := Event{Name: "Party at AJs!", HostId: "1", Lat: 29.644954782334302, Lng: -82.35255807676796}
 	e2 := Event{Name: "Dinner at Johns", HostId: "1", Lat: 29.669247750220627, Lng: -82.33697355656128}
 	e3 := Event{Name: "Pool Night at Nicks", HostId: "1", Lat: 29.685355319870283, Lng: -82.38572538761596}
@@ -172,12 +129,6 @@ func john_test_funcs() {
 	a3.Name = "Attendee_3"
 	a1.Email = "John@butts.com"
 
-	/*
-		var hostArray = []Person{h1}
-		var attendeeArray1 = []Person{a1, a2}
-		var attendeeArray2 = []Person{a3}
-	*/
-
 	var e1 Event
 	e1.Name = "metro ping"
 	e1.Lat, e1.Lng = 29.633665697496742, -82.37285317141043
@@ -193,11 +144,6 @@ func john_test_funcs() {
 	db.Create(&e2)
 
 	db.Create(&User{Name: "Golang w GORM Sqlite", Email: "Test@yahoo.com"})
-	/*
-		db.Create(&Person{ID: 2, Name: "aj", Age: 20})
-		db.Create(&Person{ID: 3, Name: "john", Age: 19})
-		db.Create(&Person{ID: 4, Name: "Nick", Age: 21})
-	*/
 
 	// Read
 	var p1 User
@@ -222,11 +168,6 @@ func john_test_funcs() {
 	fmt.Println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
 	getEventsAroundLocation(db, e3.Lat, e3.Lng, 50)
 	fmt.Println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-
-	// Update - update person's name
-	//db.Model(&p1).Update("name", "John")
-	// Delete - delete product
-	//db.Delete(&p1, 1)
 
 }
 
@@ -290,12 +231,6 @@ func restGetEventsAroundLocation(w http.ResponseWriter, r *http.Request) {
 
 func restCreateEvent(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Creating event...")
-	/*
-		query := r.URL.Query()
-		name := query.Get("name")
-		lat := query.Get("lat")
-		lng := query.Get("lng")
-	*/
 
 	// Read the request body into a byte array
 	reqBody, err := io.ReadAll(r.Body)
@@ -319,7 +254,6 @@ func restCreateEvent(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	// Return the event ID! this will be helpful for the front end to get immediate feedback.
 
 	json.NewEncoder(w).Encode(id)
 }
@@ -525,9 +459,6 @@ func restGetAttendingEventIDs(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("Received uid:", uid)
 
-	// stringy already
-
-	//count := countAttend(db, uint(eidValue))
 	EIDS := getEIDsByUID(db, uid)
 
 	fmt.Println("Query res:", EIDS)
@@ -536,71 +467,12 @@ func restGetAttendingEventIDs(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(EIDS)
 }
 
-// Useless now
-func restGetUserID(w http.ResponseWriter, r *http.Request) {
-	// Read the request body into a byte array
-	reqBody, err := io.ReadAll(r.Body)
-	if err != nil {
-		http.Error(w, "Failed to read request body", http.StatusBadRequest)
-		return
-	}
-
-	// Parse the request body into a JSON object
-	var usr User
-	err = json.Unmarshal(reqBody, &usr)
-	if err != nil {
-		http.Error(w, "Failed to parse request body", http.StatusBadRequest)
-		return
-	}
-
-	usr_id := getUserIDbyEmail(db, usr.Email)
-	if usr_id == -1 {
-		http.Error(w, "User not found", http.StatusNotFound)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(usr_id)
-}
-
-// Useless now
-func restPutUser(w http.ResponseWriter, r *http.Request) {
-
-	// Read the request body into a byte array
-	reqBody, err := io.ReadAll(r.Body)
-	if err != nil {
-		http.Error(w, "Failed to read request body", http.StatusBadRequest)
-		return
-	}
-
-	// Parse the request body into a JSON object
-	var usr User
-	err = json.Unmarshal(reqBody, &usr)
-	if err != nil {
-		http.Error(w, "Failed to parse request body", http.StatusBadRequest)
-		return
-	}
-
-	// Check if exists
-	fmt.Println("Checking if user exists in db")
-	if !checkUser(db, usr.Email) {
-		// If not, create the User
-		createUser(db, usr)
-	}
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(usr)
-}
-
-// ------------------ REST FUNCTIONS END -----------------------
-
 // ------------------ GORM DB FUNCTIONS BEGIN ------------------
 
 // Function that returns the Events within a specified square radius around a location
 // Returns a list of Events
 func getEventsAroundLocation(db *gorm.DB, Lat float64, Lng float64, radius float64) []Event {
 	var result []Event
-	//db.Where("((Lat <= ? AND Lat >= ?) OR (Lat >= ? AND Lat <= ?)) AND ((Lng <= ? AND Lng >= ?) OR (Lng >= ? AND Lng <= ?))", float32(math.Abs(float64(Lat)))+float32(math.Abs(float64(radius))), float32(math.Abs(float64(Lat)))-float32(math.Abs(float64(radius))), float32(math.Abs(float64(Lng)))+float32(math.Abs(float64(radius))),
-	//	float32(math.Abs(float64(Lng)))+float32(math.Abs(float64(radius))), float32(math.Abs(float64(Lat)))+float32(math.Abs(float64(radius))), float32(math.Abs(float64(Lat)))-float32(math.Abs(float64(radius))), float32(math.Abs(float64(Lng)))+float32(math.Abs(float64(radius))),
-	//	float32(math.Abs(float64(Lng)))+float32(math.Abs(float64(radius)))).Find(&result)
 
 	eastBar := Lat + radius
 	westBar := Lat - radius
@@ -643,7 +515,6 @@ func getEventsWithinBounds(db *gorm.DB, swLat float64, swLng float64, neLat floa
 // Function that returns the ID of a passed in event
 func getEventID(db *gorm.DB, e Event) uint {
 	var result Event
-	// db.Where("host_id = ? AND Name = ? AND Lat = ? AND Lng = ?", e.HostId, e.Name, e.Lat, e.Lng).Find(&result)
 	db.Where(&e).First(&result)
 	return result.Model.ID
 }
@@ -654,19 +525,15 @@ func getEventByID(db *gorm.DB, id uint) Event {
 	var result Event
 	// Get all records
 	db.Find(&result, id)
-	//fmt.Print(result.Name)
-	// SELECT * FROM users;
 	return result
 }
 
 // Function that takes in a passed in event and creates it within the database
-// ret : error
 func createEvent(edb *gorm.DB, event Event) (uint, error) {
 	result := edb.Create(&event)
 	return event.Model.ID, result.Error
 }
 
-// ret : error
 func deleteEvent(edb *gorm.DB, event Event) error {
 	result := edb.Delete(&event)
 	return result.Error
@@ -706,14 +573,6 @@ func getHostingEvents(edb *gorm.DB, uid string) []Event {
 // Takes in an event id and replaces it with all the member attributes of a given event
 func editEvent(edb *gorm.DB, id uint, event Event) bool {
 	// Get all records
-	// db.Model(&Event{}).Where("id = ?", id).Update("Name", event.Name)
-	// db.Model(&Event{}).Where("id = ?", id).Update("host_id", event.HostId)
-	// db.Model(&Event{}).Where("id = ?", id).Update("Lat", event.Lat)
-	// db.Model(&Event{}).Where("id = ?", id).Update("Lng", event.Lng)
-	// db.Model(&Event{}).Where("id = ?", id).Update("Date", event.Date)
-	// db.Model(&Event{}).Where("id = ?", id).Update("Time", event.Time)
-	// db.Model(&Event{}).Where("id = ?", id).Update("Bio", event.Bio)
-	//edb.Save(&event)
 	edb.Model(&event).Omit("host_id").Updates(event)
 
 	fmt.Print(id)

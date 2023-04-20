@@ -58,7 +58,6 @@ p {
 
 .content {
   display: flex;
-  /* margin: 82px auto 32px; */
   padding: 0 16px 45px;
   max-width: 100%;
   flex-direction: column;
@@ -89,13 +88,6 @@ a:hover {
 a:hover {
   color: #125699;
 }
-
-/* footer {
-  margin-top: 8px;
-  display: flex;
-  align-items: center;
-  line-height: 20px;
-} */
 
 footer a {
   display: flex;
