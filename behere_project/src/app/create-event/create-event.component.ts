@@ -3,7 +3,7 @@ import { Event_t, EventsMiddlemanService } from '../services/events-middleman.se
 import { DataServiceService } from '../data-service.service';
 import { MatDialog } from '@angular/material/dialog';
 import {MatTabsModule} from '@angular/material/tabs';
-import { CardDComponent } from 'src/app/card-d/card-d.component';
+import { CardDComponent } from 'src/app/components/card-d/card-d.component';
 
 @Component({
   selector: 'app-create-event',
